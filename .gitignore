@@ -5,7 +5,6 @@
 !.elasticbeanstalk/*.global.yml
 
 __pycache__/
-app.db
 app/__init__.pyc
 app/__pycache__/
 app/sms/__pycache__/
