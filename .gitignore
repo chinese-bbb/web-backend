@@ -12,3 +12,5 @@ app/sms/__pycache__/
 app/templates/
 env/
 templates/
+.idea/
+

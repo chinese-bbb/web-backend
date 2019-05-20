@@ -39,7 +39,7 @@ class PhoneExist(Resource):
         return {"state": "Success"},200
 
 sms_parser = api.parser()
-sms_parser.add_argument('v_code', type=str, required=True, help='verification code', location='form')
+sms_parser.add_argument('v_code', type=str, required=True, help='verification code', location='json')
 
 @ns.route('/sms/<string:phone_num>')
 @api.doc(params={'phone_num': 'A phone number'})
@@ -66,8 +66,8 @@ class SMS(Resource):
 
 
 login_parser = api.parser()
-login_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='form')
-login_parser.add_argument('password',  type=str, required=True, help='password', location='form')
+login_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='json')
+login_parser.add_argument('password',  type=str, required=True, help='password', location='json')
 
 @ns.route('/login')
 @api.doc(responses={
@@ -95,9 +95,9 @@ class Login(Resource):
 
 
 register_parser = api.parser()
-register_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='form')
-register_parser.add_argument('password',  type=str, required=True, help='password', location='form')
-register_parser.add_argument('sex',       type=str, required=True, help='sex', location='form')
+register_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='json')
+register_parser.add_argument('password',  type=str, required=True, help='password', location='json')
+register_parser.add_argument('sex',       type=str, required=True, help='sex', location='json')
 
 @ns.route('/register')
 @api.doc(responses={
@@ -126,9 +126,9 @@ class Register(Resource):
 
 
 changepwd_parser = api.parser()
-changepwd_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='form')
-changepwd_parser.add_argument('old_password',  type=str, required=True, help='password', location='form')
-changepwd_parser.add_argument('new_password',  type=str, required=True, help='password', location='form')
+changepwd_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='json')
+changepwd_parser.add_argument('old_password',  type=str, required=True, help='password', location='json')
+changepwd_parser.add_argument('new_password',  type=str, required=True, help='password', location='json')
 
 
 @ns.route('/changepw')

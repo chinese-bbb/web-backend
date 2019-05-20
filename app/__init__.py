@@ -14,11 +14,10 @@ application.config.from_object(Config)
 db = SQLAlchemy(application)
 migrate = Migrate(application, db)
 login = LoginManager(application)
-login.login_view = 'login'
 
 api = Api(application, version='1.0', title='HuXin API',
     description='Huxin API v1', doc='/doc/'
 )
 
-from app import routes, models
+from app import models
 from app import routes2
