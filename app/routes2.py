@@ -4,8 +4,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import application, db, api
 from app.forms import LoginForm, RegistrationForm, LoginInputs, PhoneNumInputs, PhoneVeifyInputs
-from app.models import User
+from app.models import User, MerchantRaw
 from app.sms.send_sms import send_message
+from app.qichacha.send_qichacha import send_qichacha
 from flask_restplus import Resource, fields
 import datetime
 
@@ -159,3 +160,36 @@ class ChangePassword(Resource):
         db.session.commit()
         flash('Congratulations, successfully updated user password!')
         return flask.jsonify("OK")
+
+
+qichacha_fuzzy = api.parser()
+qichacha_fuzzy.add_argument('keyword', type=str, required=True, help='keyword', location='json')
+
+@ns.route('/fuzzy_query')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class FuzzyQuery(Resource):
+
+    @login_required
+    @api.doc(parser=qichacha_fuzzy)
+    def post(self):
+        '''fuzzy_query'''
+
+        args = qichacha_fuzzy.parse_args()
+        keyword = args['keyword']
+
+        db_merchant = MerchantRaw.query.filter_by(keyword=keyword).first()
+        if db_merchant is None:
+            raw_data, str_data = send_qichacha(keyword)
+
+            merchant = MerchantRaw(keyword=keyword)
+            merchant.set_storage(raw_data)
+            db.session.add(merchant)
+            db.session.commit()
+            return {"return": str_data}
+        else:
+            storage = db_merchant.get_storage()
+            print(storage.decode)
+            return {"return": storage.decode()}

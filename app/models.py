@@ -49,3 +49,21 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+
+class MerchantRaw(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    keyword = db.Column(db.String(140))
+    storage = db.Column(db.Binary())
+
+    def __init__(self, keyword):
+        self.keyword = keyword
+
+    def set_storage(self, storage):
+        self.storage = storage
+
+    def get_storage(self):
+        return self.storage
+
+    def __repr__(self):
+        return '<MerchantRaw {}>'.format(self.keyword)

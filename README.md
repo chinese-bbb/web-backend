@@ -12,7 +12,7 @@
 ### Steps to Verify API:
 1. Login:
 
-curl -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/login' -d '{"phone_num":"az", "password":"az"}'
+curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/login' -d '{"phone_num":"az", "password":"az"}'
 
 2. Whether a phone number exists:
 
@@ -20,6 +20,10 @@ curl -H "Content-Type: application/json" -X GET 'http://localhost:5000/api/phone
 
 3. Register:
 curl -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/register' -d '{"phone_num": "133", "password":"133", "sex":"female"}'
+
+4. fuzzy Qichacha query:
+curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/fuzzy_query' -d '{"keyword": "baidu"}'
+
 
 ### To do List:
 
