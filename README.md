@@ -64,3 +64,11 @@ Done! The database should have evolved schema.
 	eb ssh <EB environment name>
 
 
+### Steps to add Environment Variables:
+
+1. Log in Aws Console and access Application page
+
+2. Modify Configuration and Add Environment Variables
+
+3. Call os.environ[KEY] to fetch the Value of Environment Variable.
+

@@ -142,7 +142,7 @@ class ChangePassword(Resource):
 
     @api.doc(parser=changepwd_parser)
     def post(self):
-        '''Register'''
+        '''Change Password'''
 
         args = changepwd_parser.parse_args()
         username = args['phone_num']
