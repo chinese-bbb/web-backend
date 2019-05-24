@@ -93,7 +93,7 @@ class Login(Resource):
                 "error": "Invalid phone num or password"
             })
         login_user(user, remember=True)
-        return flask.jsonify(os.environ['FOO'])
+        return flask.jsonify("OK")
 
 
 register_parser = api.parser()

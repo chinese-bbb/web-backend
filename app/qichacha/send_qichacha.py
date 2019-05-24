@@ -5,12 +5,12 @@ import requests
 import time
 import hashlib
 import json
-
+import os
 
 def send_qichacha(keyword):
     #  请求参数
-    appkey = "c7b15705d65f4ce8877b09407c49d2b0"
-    seckey = "F753614D3E32BB11E592681376329CE8"
+    appkey = os.environ['QICHACHA_APPKEY']
+    seckey = os.environ['QICHACHA_SECRET']
     encode = 'utf-8'
 
     # Http请求头设置

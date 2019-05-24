@@ -1,12 +1,14 @@
 #!/usr/bin/python
 #-*-coding:utf-8-*-
+import os
+
 
 def send_message(phone):
 
     appid = 1400205630  # SDK AppID 是1400开头
 
     # 短信应用 SDK AppKey
-    appkey = "b228ae9003292b48327087ab50810cda"
+    appkey = os.environ['TENCENT_APPKEY']
 
     # 需要发送短信的手机号码
     phone_numbers = [phone]
