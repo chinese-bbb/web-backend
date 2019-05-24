@@ -9,6 +9,7 @@ from app.sms.send_sms import send_message
 from app.qichacha.send_qichacha import send_qichacha
 from flask_restplus import Resource, fields
 import datetime
+import os
 
 ns = api.namespace('api', description='Login Module')
 
@@ -92,7 +93,7 @@ class Login(Resource):
                 "error": "Invalid phone num or password"
             })
         login_user(user, remember=True)
-        return flask.jsonify("OK")
+        return flask.jsonify(os.environ['FOO'])
 
 
 register_parser = api.parser()
