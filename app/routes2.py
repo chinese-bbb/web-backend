@@ -103,6 +103,18 @@ class Login(Resource):
         login_user(user, remember=True)
         return flask.jsonify("OK")
 
+@ns.route('/logout')
+@api.doc(responses={
+    200: 'Success'
+})
+class Login(Resource):
+
+    @login_required
+    def post(self):
+        '''Log out'''
+        logout_user()
+        return {"state": "Success"},200
+
 
 register_parser = api.parser()
 register_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='json')
