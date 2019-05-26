@@ -5,9 +5,12 @@ from flask_login import LoginManager
 from config import Config
 from flasgger import Swagger
 from flask_restplus import Resource, Api
+from flask_cors import CORS
 
 
 application = Flask(__name__)
+CORS(application, supports_credentials=True)
+
 swagger = Swagger(application)
 
 application.config.from_object(Config)
