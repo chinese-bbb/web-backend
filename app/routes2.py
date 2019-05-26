@@ -63,7 +63,7 @@ class SMS(Resource):
 
         if v_code != '9273':
             return {"error" : "verification code is not correct"}, 400
-        return flask.jsonify("OK"),200
+        return {"state": "Success"},200
 
 
 login_parser = api.parser()
