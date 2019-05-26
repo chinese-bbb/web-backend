@@ -140,7 +140,6 @@ changepwd_parser.add_argument('phone_num', type=str, required=True, help='Phone 
 changepwd_parser.add_argument('old_password',  type=str, required=True, help='password', location='json')
 changepwd_parser.add_argument('new_password',  type=str, required=True, help='password', location='json')
 
-
 @ns.route('/changepw')
 @api.doc(responses={
     200: 'Success',
