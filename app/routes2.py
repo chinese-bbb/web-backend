@@ -46,7 +46,8 @@ sms_parser.add_argument('v_code', type=str, required=True, help='verification co
 @api.doc(params={'phone_num': 'A phone number'})
 @api.doc(responses={
     200: 'Success',
-    400: 'Validation Error'
+    400: 'Validation Error',
+    401: 'Passcode is not correct'
 })
 class SMS(Resource):
 
@@ -62,7 +63,7 @@ class SMS(Resource):
         v_code = args['v_code']
 
         if v_code != '9273':
-            return {"error" : "verification code is not correct"}, 400
+            return {"error" : "verification code is not correct"}, 401
         return {"state": "Success"},200
 
 
@@ -73,6 +74,8 @@ login_parser.add_argument('password',  type=str, required=True, help='password',
 @ns.route('/login')
 @api.doc(responses={
     200: 'Success',
+    401: 'Invalid password',
+    404: 'User Cannot be found',
     400: 'Validation Error'
 })
 class Login(Resource):
@@ -86,11 +89,17 @@ class Login(Resource):
 
         user = User.query.filter_by(username=username).first()
         print(user)
-        if user is None or not user.check_password(password):
+        if user is None:
+            return {
+                "error": "User cannot be found"
+            }, 404
+
+        if not user.check_password(password):
             print("Invalid username or password")
-            return flask.jsonify({
+            return {
                 "error": "Invalid phone num or password"
-            })
+            }, 401
+
         login_user(user, remember=True)
         return flask.jsonify("OK")
 
@@ -102,7 +111,7 @@ register_parser.add_argument('sex',       type=str, required=True, help='sex', l
 
 @ns.route('/register')
 @api.doc(responses={
-    200: 'Success',
+    200: 'Register Success',
     400: 'Validation Error'
 })
 class Register(Resource):
@@ -123,7 +132,7 @@ class Register(Resource):
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
 
-        return flask.jsonify("OK")
+        return {"state": "Success"},200
 
 
 changepwd_parser = api.parser()
