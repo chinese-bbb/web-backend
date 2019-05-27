@@ -210,11 +210,11 @@ class FuzzyQuery(Resource):
             db.session.add(search_content)
             db.session.commit()
 
-            return {"return": fuzzy_result_json_str}
+            return {"return": json.loads(fuzzy_result_json_str)}
         else:
             storage = fuzzy_search_res.get_storage()
-            print("has storage")
-            return {"return": storage}
+            obj = json.loads(storage)
+            return {"return": obj}
 
 
 @ns.route('/merchant_query')
@@ -242,8 +242,8 @@ class MerchantQuery(Resource):
             db.session.add(search_content)
             db.session.commit()
 
-            return {"return": merchant_json_str}
+            return {"return": json.loads(merchant_json_str)}
         else:
             storage = merchant_query_res.get_storage()
             print("has merchant query storage")
-            return {"return": storage}
+            return {"return": json.loads(storage)}
