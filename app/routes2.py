@@ -1,15 +1,15 @@
 import flask
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
-from werkzeug.urls import url_parse
 from app import application, db, api
-from app.models import User, MerchantRaw
+from app.models import User, FuzzySearchRaw, MerchantQueryRaw
 from app.sms.send_sms import send_message
-from app.qichacha.send_qichacha import send_qichacha
+from app.qichacha.qichacha_api import fuzzy_search, basic_detail
 from flask_restplus import Resource, fields
 import datetime
-import os
+import json
 
+from app.utils import text_from_bits, text_to_bits
 ns = api.namespace('api', description='Login Module')
 
 @ns.route('/testLogin')
@@ -182,8 +182,8 @@ class ChangePassword(Resource):
         return flask.jsonify("OK")
 
 
-qichacha_fuzzy = api.parser()
-qichacha_fuzzy.add_argument('keyword', type=str, required=True, help='keyword', location='json')
+qichacha_parser = api.parser()
+qichacha_parser.add_argument('keyword', type=str, required=True, help='keyword', location='json')
 
 @ns.route('/fuzzy_query')
 @api.doc(responses={
@@ -193,23 +193,57 @@ qichacha_fuzzy.add_argument('keyword', type=str, required=True, help='keyword', 
 class FuzzyQuery(Resource):
 
     @login_required
-    @api.doc(parser=qichacha_fuzzy)
+    @api.doc(parser=qichacha_parser)
     def post(self):
         '''fuzzy_query'''
 
-        args = qichacha_fuzzy.parse_args()
+        args = qichacha_parser.parse_args()
         keyword = args['keyword']
 
-        db_merchant = MerchantRaw.query.filter_by(keyword=keyword).first()
-        if db_merchant is None:
-            raw_data, str_data = send_qichacha(keyword)
+        fuzzy_search_res = FuzzySearchRaw.query.filter_by(keyword=keyword).first()
+        if fuzzy_search_res is None:
+            fuzzy_result_json_dict = fuzzy_search(keyword)
+            fuzzy_result_json_str = json.dumps(fuzzy_result_json_dict)
 
-            merchant = MerchantRaw(keyword=keyword)
-            merchant.set_storage(raw_data)
-            db.session.add(merchant)
+            search_content = FuzzySearchRaw(keyword=keyword)
+            search_content.set_storage(fuzzy_result_json_str)
+            db.session.add(search_content)
             db.session.commit()
-            return {"return": str_data}
+
+            return {"return": fuzzy_result_json_str}
         else:
-            storage = db_merchant.get_storage()
-            print(storage.decode)
-            return {"return": storage.decode()}
+            storage = fuzzy_search_res.get_storage()
+            print("has storage")
+            return {"return": storage}
+
+
+@ns.route('/merchant_query')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class MerchantQuery(Resource):
+
+    @login_required
+    @api.doc(parser=qichacha_parser)
+    def post(self):
+        '''fuzzy_query'''
+
+        args = qichacha_parser.parse_args()
+        keyword = args['keyword']
+
+        merchant_query_res = MerchantQueryRaw.query.filter_by(keyword=keyword).first()
+        if merchant_query_res is None:
+            merchant_json_dict = basic_detail(keyword)
+            merchant_json_str = json.dumps(merchant_json_dict)
+
+            search_content = MerchantQueryRaw(keyword=keyword)
+            search_content.set_storage(merchant_json_str)
+            db.session.add(search_content)
+            db.session.commit()
+
+            return {"return": merchant_json_str}
+        else:
+            storage = merchant_query_res.get_storage()
+            print("has merchant query storage")
+            return {"return": storage}
