@@ -14,3 +14,4 @@ def fun(d):
             for i in d[k]:
                 for j in fun(i):
                     yield j
+
