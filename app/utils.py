@@ -15,3 +15,6 @@ def fun(d):
                 for j in fun(i):
                     yield j
 
+
+def parseBoolean(s):
+    return s in ['true', '1', 't', 'True', 'yes', 'y']
