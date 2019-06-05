@@ -10,3 +10,5 @@ class Config(object):
     WORKING_FOLDER = os.getcwd()
     INVOICE_FOLDER = 'Invoices'
     ID_FOLDER = 'ID'
+    REMEMBER_COOKIE_DOMAIN = ".huxingongyi.com"
+    SESSION_COOKIE_DOMAIN = ".huxingongyi.com"
