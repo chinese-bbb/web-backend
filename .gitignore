@@ -132,3 +132,13 @@ dmypy.json
 !.elasticbeanstalk/*.global.yml
 templates/
 .idea/
+
+#aws settings
+.ebextensions/
+
+# Local Test files
+Complaint_Files/
+cookies.txt
+frequently_used_api.txt
+test_pic.jpg
+header.txt

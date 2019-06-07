@@ -6,7 +6,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 load_dotenv(find_dotenv())
 
-
 class Config(object):
 
     SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -20,5 +19,8 @@ class Config(object):
     WORKING_FOLDER = os.getcwd()
     INVOICE_FOLDER = 'Invoices'
     ID_FOLDER = 'ID'
-    REMEMBER_COOKIE_DOMAIN = ".huxingongyi.com"
-    SESSION_COOKIE_DOMAIN = ".huxingongyi.com"
+    if os.environ.get("REMEMBER_COOKIE_DOMAIN"):
+        REMEMBER_COOKIE_DOMAIN = os.environ.get("REMEMBER_COOKIE_DOMAIN")
+
+    if os.environ.get("SESSION_COOKIE_DOMAIN"):
+        SESSION_COOKIE_DOMAIN = os.environ.get("SESSION_COOKIE_DOMAIN")
