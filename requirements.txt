@@ -22,6 +22,7 @@ Flask==1.0.2
 Flask-Cors==3.0.7
 Flask-Inputs==0.3.0
 Flask-Login==0.4.1
+flask-marshmallow==0.10.1
 Flask-Migrate==2.4.0
 flask-restplus==0.12.1
 Flask-SQLAlchemy==2.4.0
@@ -34,6 +35,7 @@ jmespath==0.9.4
 jsonschema==2.6.0
 Mako==1.0.10
 MarkupSafe==1.1.1
+marshmallow==2.19.2
 mistune==0.8.4
 pathspec==0.5.9
 pyrsistent==0.15.2

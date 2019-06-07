@@ -1,18 +1,10 @@
-import flask
-from flask import session, flash, redirect, url_for, request, Blueprint
+from flask import session
 from flask_login import login_user, logout_user, current_user, login_required
 from app import application, db, api
-from app.models import User, FuzzySearchRaw, MerchantQueryRaw
-from app.sms.send_sms import send_message
-from app.qichacha.qichacha_api import fuzzy_search, basic_detail
 from flask_restplus import Resource, fields
-import datetime
-import json
 import werkzeug
 import os
 from app.complaintDAO import ComplaintDAO
-from datetime import datetime
-from dateutil import parser
 from app.utils import parseBoolean
 
 ns = api.namespace('api', description='All API descriptions')
@@ -85,18 +77,35 @@ class IDUpload(Resource):
             return {"state": "failed uploading"}, 401
 
 
+file_fields = api.model('file', {
+    'id': fields.Integer,
+    's3_path': fields.String
+})
+
 complaint_fields = api.model('ComplaintModel', {
     'complaint_body': fields.String(description='complaint body', required=True),
     'expected_solution_body': fields.String(description='expected_solution_body'),
     'complain_type': fields.String(description='complain_type'),
-    'if_public': fields.Boolean(description='whether to be public'),
-    'if_comm_by_merchant': fields.Boolean(description='whether to communicated by merchant'),
-    'if_media_report': fields.Boolean(description='whether to have media report it'),
+    'if_negotiated_by_merchant': fields.Boolean(description='if_negotiated'),
+    'negotiate_timestamp': fields.DateTime(description='negotiate_timestamp'),
+    'allow_public': fields.Boolean(description='whether to be public'),
+    'allow_contact_by_merchant': fields.Boolean(description='whether to communicated by merchant'),
+    'allow_press': fields.Boolean(description='whether to have media report it'),
     'item_price': fields.String(description='item_price'),
     'item_model': fields.String(description='item_model'),
-    'purchase_timestamp': fields.DateTime(description='purchase_timestamp')
+    'tradeInfo': fields.String(description='tradeInfo'),
+    'relatedProducts': fields.String(description='relatedProducts'),
+    'purchase_timestamp': fields.DateTime(description='purchase_timestamp'),
+    'invoice_files': fields.List(fields.Nested(file_fields)),
+    'id_files': fields.List(fields.Nested(file_fields))
 })
 
+complaint_list = api.model('ComplaintListModel', {
+    'complaint_list': fields.List(fields.Nested(complaint_fields))
+})
+
+complaint_parser = api.parser()
+complaint_parser.add_argument('complaint_id', type=str, required=True, help='complaint id', location='json')
 
 @ns.route('/complaint')
 @api.doc(responses={
@@ -105,12 +114,18 @@ complaint_fields = api.model('ComplaintModel', {
 })
 class Complaint(Resource):
 
-    # @ns.doc('get_todo')
-    # @ns.marshal_with(todo)
-    # def get(self, id):
-    #     '''Fetch a given resource'''
-    #     return DAO.get(id)
-    #
+    @ns.doc('get Complaint by complaint_id')
+    @api.doc(parser=complaint_parser)
+    @api.expect(complaint_parser)
+    def get(self):
+        '''get Complaint by complaint_id'''
+
+        args = complaint_parser.parse_args()
+        complaint_id = args['complaint_id']
+        res = complaintDAO.get(complaint_id)
+        return res
+
+
     # @ns.doc('delete_todo')
     # @ns.response(204, 'Todo deleted')
     # def delete(self, id):
@@ -127,14 +142,38 @@ class Complaint(Resource):
         user_id = session["user_id"]
 
         data['user_id'] = user_id
-        data['purchase_timestamp'] = parser.parse(data['purchase_timestamp'])
+        data['if_negotiated_by_merchant'] = parseBoolean(data['if_negotiated_by_merchant'])
+        data['allow_public'] = parseBoolean(data['allow_public'])
+        data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
+        data['allow_press'] = parseBoolean(data['allow_press'])
 
-        data['if_public'] = parseBoolean(data['if_public'])
-        data['if_comm_by_merchant'] = parseBoolean(data['if_comm_by_merchant'])
-        data['if_media_report'] = parseBoolean(data['if_media_report'])
-
+        print(data)
         res = complaintDAO.create(data)
         if res == "OK":
             return {"state": "Success"}, 200
         else:
             return {"state": "failed creating complaint"}, 401
+
+
+complaintByUser_parser = api.parser()
+complaintByUser_parser.add_argument('phone_num', type=str, required=True, help='complaint id', location='json')
+
+@ns.route('/complaintByUser')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class ComplaintByUser(Resource):
+
+    @ns.doc('get Complaint by username (phone_num)')
+    @api.doc(parser=complaintByUser_parser)
+    @api.expect(complaintByUser_parser)
+    @login_required
+    def get(self):
+        '''get Complaint by username  (phone_num)'''
+
+        args = complaintByUser_parser.parse_args()
+        phone_num = args['phone_num']
+        res = complaintDAO.fetchByUserId(phone_num)
+        return res
+

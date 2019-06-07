@@ -1,8 +1,11 @@
 from datetime import datetime
-from app import db, login
+from app import application, db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_marshmallow import Marshmallow
+from marshmallow import Schema, fields
 
+ma = Marshmallow(application)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -91,15 +94,44 @@ class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     complaint_body = db.Column(db.String(2000))
     expected_solution_body = db.Column(db.String(2000))
+    complain_type = db.Column(db.String(140))
     complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
-    complain_type = db.Column(db.String(140))
-    if_comm_by_merchant =  db.Column(db.Boolean(), default=False)
-    if_public =  db.Column(db.Boolean(), default=False)
-    if_media_report =  db.Column(db.Boolean(), default=False)
+    if_negotiated_by_merchant =  db.Column(db.Boolean(), default=False)
+    negotiate_timestamp = db.Column(db.DateTime, index=True)
+    allow_public =  db.Column(db.Boolean(), default=False)
+    allow_contact_by_merchant =  db.Column(db.Boolean(), default=False)
+    allow_press =  db.Column(db.Boolean(), default=False)
     item_price =  db.Column(db.String(200))
     item_model = db.Column(db.String(200))
+    trade_info = db.Column(db.String(2000))
+    relatedProducts = db.Column(db.String(200))
     purchase_timestamp = db.Column(db.DateTime, index=True)
 
-    def __repr__(self):
-        return '<Complaint {}>'.format(self.body)
+    invoce_files = db.Column(db.String(2000))
+    id_files = db.Column(db.String(2000))
+
+class ComplaintSchema(ma.Schema):
+    class Meta:
+        model = Complaint
+        # Fields to expose
+        fields = ("complaint_body",
+                  "expected_solution_body",
+                  "complain_type",
+                  "complaint_id",
+                  "complain_timestamp",
+                  "if_negotiated_by_merchant",
+                  "negotiate_timestamp",
+                  "allow_public",
+                  "allow_contact_by_merchant",
+                  "allow_press",
+                  "item_price",
+                  "item_model",
+                  "trade_info",
+                  "relatedProducts",
+                  "invoce_files",
+                  "id_files",
+                  "purchase_timestamp")
+
+
+    complaint_id = fields.String(attribute="id")
