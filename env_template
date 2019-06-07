@@ -1,0 +1,22 @@
+# cp env_template .env
+# all variables in .env file will be loaded into environment variables after application starts
+[base]
+FLASK_ENV=development # production
+#FLASK_DEBUG=True
+#TESTING=True
+
+APP_VERSION=1.0.0
+SECRET_KEY=b'\xb0S\x82\xea\xee#;\xe9\xb1P,m\x8f\xe0\xa9\x8e'  # python -c 'import os; print(os.urandom(16))'
+
+ENABLE_COOL_NEW_FEATURE=True
+
+[database]
+DATABASE_URL='sqlite:////Users/pistoolster/code/cbbb/web-backend/app.db'
+#DATABASE_URL=mysql://root:123456@127.0.0.1:3306/cbbb?charset=utf8mb4
+
+[app_token]
+QICHACHA_APPKEY = ''
+QICHACHA_SECRET = ''
+
+TENCENT_APPKEY = ''
+TENCENT_SECRET = ''
