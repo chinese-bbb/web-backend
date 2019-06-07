@@ -3,13 +3,14 @@
 Currently we support python3 only.
 ### Steps to run this app:
 0. Create Environment variables like QICHACHA_APPKEY or TENCENT_APPKEY
+(or define them in .env file)
 1. virtualenv -p python3 env
 
 2. source env/bin/activate
 
 3. pip install -r requirements.txt
 
-4. python application.py
+4. python application.py(use -p to specify binding port)
 
 ### Steps to Verify API:
 1. Login:

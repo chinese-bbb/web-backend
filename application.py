@@ -1,3 +1,4 @@
+import argparse
 import os
 from app import application
 
@@ -11,7 +12,10 @@ app_version = os.environ.get('APP_VERSION')
 enable_cool_new_feature = os.environ.get('ENABLE_COOL_NEW_FEATURE') in ['true', 'True']
 
 
-
 if __name__ == '__main__':
-    application.run(host='0.0.0.0')
+    parser = argparse.ArgumentParser(description='arguments options:')
+    parser.add_argument('-p', '--port', type=int, default=5000, help="Specify listening port.")
+    args = parser.parse_args()
+    port = args.port
 
+    application.run(host='0.0.0.0', port=port)
