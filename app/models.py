@@ -86,3 +86,20 @@ class MerchantQueryRaw(db.Model):
     def __repr__(self):
         return '<MerchantRaw {}>'.format(self.keyword)
 
+
+class Complaint(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    complaint_body = db.Column(db.String(2000))
+    expected_solution_body = db.Column(db.String(2000))
+    complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
+    complain_type = db.Column(db.String(140))
+    if_comm_by_merchant =  db.Column(db.Boolean(), default=False)
+    if_public =  db.Column(db.Boolean(), default=False)
+    if_media_report =  db.Column(db.Boolean(), default=False)
+    item_price =  db.Column(db.String(200))
+    item_model = db.Column(db.String(200))
+    purchase_timestamp = db.Column(db.DateTime, index=True)
+
+    def __repr__(self):
+        return '<Complaint {}>'.format(self.body)

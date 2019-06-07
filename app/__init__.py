@@ -24,3 +24,4 @@ api = Api(application, version='1.0', title='HuXin API',
 
 from app import models
 from app import routes2
+from app import complain_api

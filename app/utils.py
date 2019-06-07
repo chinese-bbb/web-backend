@@ -14,3 +14,7 @@ def fun(d):
             for i in d[k]:
                 for j in fun(i):
                     yield j
+
+
+def parseBoolean(s):
+    return s in ['true', '1', 't', 'True', 'yes', 'y']

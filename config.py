@@ -17,3 +17,8 @@ class Config(object):
         'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    WORKING_FOLDER = os.getcwd()
+    INVOICE_FOLDER = 'Invoices'
+    ID_FOLDER = 'ID'
+    REMEMBER_COOKIE_DOMAIN = ".huxingongyi.com"
+    SESSION_COOKIE_DOMAIN = ".huxingongyi.com"
