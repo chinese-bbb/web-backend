@@ -23,5 +23,6 @@ api = Api(application, version='1.0', title='HuXin API',
 )
 
 from app import models
-from app import routes2
-from app import complain_api
+from app import auth_api
+from app import complaint_api
+from app import merchant_query_api

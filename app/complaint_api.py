@@ -10,12 +10,12 @@ import datetime
 import json
 import werkzeug
 import os
-from app.complainDAO import ComplaintDAO
+from app.complaintDAO import ComplaintDAO
 from datetime import datetime
 from dateutil import parser
 from app.utils import parseBoolean
 
-ns = api.namespace('complain', description='Complaint Module')
+ns = api.namespace('api', description='All API descriptions')
 
 complaintDAO = ComplaintDAO()
 
@@ -98,7 +98,7 @@ complaint_fields = api.model('ComplaintModel', {
 })
 
 
-@ns.route('')
+@ns.route('/complaint')
 @api.doc(responses={
     200: 'Success',
     400: 'Validation Error'
