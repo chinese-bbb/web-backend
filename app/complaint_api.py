@@ -6,6 +6,7 @@ import werkzeug
 import os
 from app.complaintDAO import ComplaintDAO
 from app.utils import parseBoolean
+from app.aws.s3 import amazon_s3
 
 ns = api.namespace('api', description='All API descriptions')
 
@@ -45,7 +46,8 @@ class InvoiceFileUpload(Resource):
             pic_file = '%s%s' % (destination, args['sequence'] + '.jpeg')
             print(pic_file)
             args['pic_file'].save(pic_file)
-            return {"state": "Success", "path": pic_file}, 200
+            pic_path = amazon_s3.upload_file(pic_file, application.config.get('INVOICE_FOLDER'))
+            return {"state": "Success", "path": pic_path}, 200
         else:
             return {"state": "failed uploading"}, 401
 
@@ -71,7 +73,8 @@ class IDUpload(Resource):
             pic_file = '%s%s' % (destination, args['sequence'] + '.jpeg')
             print(pic_file)
             args['pic_file'].save(pic_file)
-            return {"state": "Success", "path": pic_file}, 200
+            pic_path = amazon_s3.upload_file(pic_file, application.config.get('ID_FOLDER'))
+            return {"state": "Success", "path": pic_path}, 200
 
         else:
             return {"state": "failed uploading"}, 401
@@ -176,4 +179,3 @@ class ComplaintByUser(Resource):
         phone_num = args['phone_num']
         res = complaintDAO.fetchByUserId(phone_num)
         return res
-
