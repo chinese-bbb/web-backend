@@ -1,9 +1,11 @@
+import time
+import os
+
 from flask import session
 from flask_login import login_user, logout_user, current_user, login_required
 from app import application, db, api
 from flask_restplus import Resource, fields
 import werkzeug
-import os
 from app.complaintDAO import ComplaintDAO
 from app.utils import parseBoolean
 from app.aws.s3 import amazon_s3
@@ -14,20 +16,20 @@ complaintDAO = ComplaintDAO()
 
 
 file_upload = ns.parser()
+file_upload.add_argument('upload_type',
+                         type=str,
+                         required=True,
+                         help='upload type(invoice/id)',
+                         location='form')
 file_upload.add_argument('pic_file',
                          type=werkzeug.datastructures.FileStorage,
                          location='files',
                          required=True,
                          help='file')
-file_upload.add_argument('sequence',
-                         type=str,
-                         required=True,
-                         help='the sequence order of pictures',
-                         location='form')
 
-@ns.route('/upload_invoice')
-class InvoiceFileUpload(Resource):
-    '''Upload Invoice'''
+@ns.route('/upload_file')
+class FileUpload(Resource):
+    '''Upload File'''
 
     @login_required
     @api.doc(parser=file_upload)
@@ -36,46 +38,22 @@ class InvoiceFileUpload(Resource):
         print(session)
         user_id = session["user_id"]
         args = file_upload.parse_args()
+        if args['upload_type'] not in ['invoice', 'id']:
+            return {"state": "incorrect upload type"}, 401
         print(args['pic_file'].mimetype)
         if args['pic_file'].mimetype == 'image/jpeg':
+            folder = application.config.get(
+                'INVOICE_FOLDER') if args['upload_type'] == 'invoice' else application.config.get('ID_FOLDER')
             destination = os.path.join(application.config.get('WORKING_FOLDER'),
                                        user_id,
-                                       application.config.get('INVOICE_FOLDER') + '/')
+                                       folder + '/')
             if not os.path.exists(destination):
                 os.makedirs(destination)
-            pic_file = '%s%s' % (destination, args['sequence'] + '.jpeg')
+            pic_file = '%s%s' % (destination, str(int(time.time())) + '.jpeg')
             print(pic_file)
             args['pic_file'].save(pic_file)
-            pic_path = amazon_s3.upload_file(pic_file, application.config.get('INVOICE_FOLDER'))
+            pic_path = amazon_s3.upload_file(pic_file, folder)
             return {"state": "Success", "path": pic_path}, 200
-        else:
-            return {"state": "failed uploading"}, 401
-
-
-@ns.route('/upload_id')
-class IDUpload(Resource):
-    '''Upload ID card'''
-
-    @login_required
-    @api.doc(parser=file_upload)
-    @api.expect(file_upload)
-    def post(self):
-        print(session)
-        user_id = session["user_id"]
-        args = file_upload.parse_args()
-        print(args['pic_file'].mimetype)
-        if args['pic_file'].mimetype == 'image/jpeg':
-            destination = os.path.join(application.config.get('WORKING_FOLDER'),
-                                       user_id,
-                                       application.config.get('ID_FOLDER') + '/')
-            if not os.path.exists(destination):
-                os.makedirs(destination)
-            pic_file = '%s%s' % (destination, args['sequence'] + '.jpeg')
-            print(pic_file)
-            args['pic_file'].save(pic_file)
-            pic_path = amazon_s3.upload_file(pic_file, application.config.get('ID_FOLDER'))
-            return {"state": "Success", "path": pic_path}, 200
-
         else:
             return {"state": "failed uploading"}, 401
 
