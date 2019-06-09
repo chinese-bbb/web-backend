@@ -39,6 +39,20 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+class UserSchema(ma.Schema):
+    class Meta:
+        model = User
+        # Fields to expose
+        fields = ("username",
+                  "email",
+                  "registered_date",
+                  "if_verified",
+                  "real_name",
+                  "sex",
+                  "minority",
+                  "account_active")
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

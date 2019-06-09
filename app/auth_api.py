@@ -1,8 +1,8 @@
 import flask
-from flask import render_template, flash, redirect, url_for, request, Blueprint
+from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, logout_user, current_user, login_required
 from app import application, db, api
-from app.models import User, FuzzySearchRaw, MerchantQueryRaw
+from app.models import User, FuzzySearchRaw, MerchantQueryRaw, UserSchema
 from app.sms.send_sms import send_message
 from app.qichacha.qichacha_api import fuzzy_search, basic_detail
 from flask_restplus import Resource, fields
@@ -12,13 +12,16 @@ import json
 from app.utils import text_from_bits, text_to_bits
 ns = api.namespace('api', description='All API descriptions')
 
-@ns.route('/testLogin')
-class TestLogin(Resource):
+user_schema = UserSchema()
+@ns.route('/user_me')
+class UserMe(Resource):
     '''Only Logged in user can see this page'''
 
     @login_required
     def get(self):
-        return {"state": "Success"},200
+        user_id = session["user_id"]
+        user = User.query.filter_by(id=user_id).first()
+        return user_schema.jsonify(user)
 
 
 @ns.route('/phone_exist/<string:phone_num>')
