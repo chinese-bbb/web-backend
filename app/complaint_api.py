@@ -63,6 +63,7 @@ file_fields = api.model('file', {
 })
 
 complaint_fields = api.model('ComplaintModel', {
+    'merchant_id': fields.Integer(description='merchant ID', required=True),
     'complaint_body': fields.String(description='complaint body', required=True),
     'expected_solution_body': fields.String(description='expected_solution_body'),
     'complain_type': fields.String(description='complain_type'),
@@ -128,6 +129,9 @@ class Complaint(Resource):
         data['allow_press'] = parseBoolean(data['allow_press'])
 
         print(data)
+
+        # TODO: check whether merchant_id exists or not
+
         res = complaintDAO.create(data)
         if res == "OK":
             return {"state": "Success"}, 200
@@ -155,4 +159,27 @@ class ComplaintByUser(Resource):
         args = complaintByUser_parser.parse_args()
         phone_num = args['phone_num']
         res = complaintDAO.fetchByUserId(phone_num)
+        return res
+
+
+complaintByMerchant_parser = api.parser()
+complaintByMerchant_parser.add_argument('merchant_id', type=str, required=True, help='complaint id', location='json')
+
+@ns.route('/complaintByMerchant')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class ComplaintByMerchant(Resource):
+
+    @ns.doc('get Complaint by merchant_id')
+    @api.doc(parser=complaintByMerchant_parser)
+    @api.expect(complaintByMerchant_parser)
+    @login_required
+    def get(self):
+        '''get Complaint by merchant_id (merchant_id)'''
+
+        args = complaintByMerchant_parser.parse_args()
+        merchant_id = args['merchant_id']
+        res = complaintDAO.fetchByMerchantId(merchant_id)
         return res

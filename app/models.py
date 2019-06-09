@@ -86,12 +86,16 @@ class MerchantQueryRaw(db.Model):
     def get_storage(self):
         return self.storage
 
+    def get_id(self):
+        return self.id
+
     def __repr__(self):
         return '<MerchantRaw {}>'.format(self.keyword)
 
 
 class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    merchant_id = db.Column(db.Integer, index=True)
     complaint_body = db.Column(db.String(2000))
     expected_solution_body = db.Column(db.String(2000))
     complain_type = db.Column(db.String(140))

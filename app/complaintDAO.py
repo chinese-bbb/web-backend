@@ -1,4 +1,4 @@
-from app.models import Complaint, ComplaintSchema, User
+from app.models import Complaint, ComplaintSchema, User, MerchantQueryRaw
 from app import db, api
 from dateutil import parser
 import json
@@ -23,7 +23,7 @@ class ComplaintDAO(object):
         complaint.complaint_body = data['complaint_body']
         complaint.expected_solution_body = data['expected_solution_body']
         complaint.complain_type = data['complain_type']
-
+        complaint.merchant_id = data['merchant_id']
         complaint.if_negotiated_by_merchant = data['if_negotiated_by_merchant']
 
         if 'negotiate_timestamp' in data:
@@ -61,6 +61,20 @@ class ComplaintDAO(object):
             return complaints_schema.jsonify(complaints)
         else:
             api.abort(404, "Complaint by user {} doesn't exist".format(phone_num))
+
+    def fetchByMerchantId(self, merchant_id):
+
+        merchant = MerchantQueryRaw.query.filter_by(id=merchant_id).first()
+        if merchant is None:
+            return {
+                       "error": "Merchant cannot be found by this merchant_id"
+                   }, 404
+
+        complaints = Complaint.query.filter_by(merchant_id=merchant_id)
+        if complaints:
+            return complaints_schema.jsonify(complaints)
+        else:
+            api.abort(404, "Complaint by Merchant id{} doesn't exist".format(merchant_id))
 
 
 

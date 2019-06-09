@@ -46,6 +46,14 @@ class FuzzyQuery(Resource):
             return {"return": obj}
 
 
+def getMerchantIdFromDB(keyword):
+    merchant_query_res = MerchantQueryRaw.query.filter_by(keyword=keyword).first()
+
+    if merchant_query_res:
+        return merchant_query_res.get_id()
+
+    api.abort(404, "Merchant by keyword {} doesn't exist".format(keyword))
+
 @ns.route('/merchant_query')
 @api.doc(responses={
     200: 'Success',
@@ -56,7 +64,7 @@ class MerchantQuery(Resource):
     @login_required
     @api.doc(parser=qichacha_parser)
     def post(self):
-        '''fuzzy_query'''
+        '''Detailed Merchant_query'''
 
         args = qichacha_parser.parse_args()
         keyword = args['keyword']
@@ -71,8 +79,11 @@ class MerchantQuery(Resource):
             db.session.add(search_content)
             db.session.commit()
 
-            return {"return": json.loads(merchant_json_str)}
+            merchant_id = getMerchantIdFromDB(keyword)
+            return {"return": json.loads(merchant_json_str), "merchant_id": merchant_id}, 200
         else:
             storage = merchant_query_res.get_storage()
             print("has merchant query storage")
-            return {"return": json.loads(storage)}
+
+            merchant_id = getMerchantIdFromDB(keyword)
+            return {"return": json.loads(storage), "merchant_id": merchant_id}, 200
