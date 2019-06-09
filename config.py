@@ -19,6 +19,7 @@ class Config(object):
     WORKING_FOLDER = os.getcwd()
     INVOICE_FOLDER = 'Invoices'
     ID_FOLDER = 'ID'
+    EVIDENCE_FOLDER = 'Evidence'
     if os.environ.get("REMEMBER_COOKIE_DOMAIN"):
         REMEMBER_COOKIE_DOMAIN = os.environ.get("REMEMBER_COOKIE_DOMAIN")
 

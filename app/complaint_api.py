@@ -38,12 +38,11 @@ class FileUpload(Resource):
         print(session)
         user_id = session["user_id"]
         args = file_upload.parse_args()
-        if args['upload_type'] not in ['invoice', 'id']:
+        if args['upload_type'] not in ['invoice', 'id', 'evidence']:
             return {"state": "incorrect upload type"}, 401
         print(args['pic_file'].mimetype)
         if args['pic_file'].mimetype == 'image/jpeg':
-            folder = application.config.get(
-                'INVOICE_FOLDER') if args['upload_type'] == 'invoice' else application.config.get('ID_FOLDER')
+            folder = application.config.get(f"{args['upload_type'].upper()}_FOLDER")
             destination = os.path.join(application.config.get('WORKING_FOLDER'),
                                        user_id,
                                        folder + '/')
