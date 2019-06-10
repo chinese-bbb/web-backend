@@ -15,6 +15,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
 
+    print(SQLALCHEMY_DATABASE_URI)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WORKING_FOLDER = os.getcwd()
     INVOICE_FOLDER = 'Invoices'

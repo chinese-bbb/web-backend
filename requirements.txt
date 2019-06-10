@@ -40,6 +40,7 @@ marshmallow==2.19.2
 marshmallow-sqlalchemy==0.16.3
 mistune==0.8.4
 pathspec==0.5.9
+pymysql==0.9.3
 pyrsistent==0.15.2
 python-dateutil==2.8.0
 python-dotenv==0.10.3
