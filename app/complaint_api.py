@@ -140,7 +140,7 @@ class Complaint(Resource):
 
 
 complaintByUser_parser = api.parser()
-complaintByUser_parser.add_argument('phone_num', type=str, required=True, help='complaint id', location='json')
+complaintByUser_parser.add_argument('phone_num', type=str, required=True, help='complaint id', location='values')
 
 @ns.route('/complaintByUser')
 @api.doc(responses={
@@ -163,7 +163,7 @@ class ComplaintByUser(Resource):
 
 
 complaintByMerchant_parser = api.parser()
-complaintByMerchant_parser.add_argument('merchant_id', type=str, required=True, help='complaint id', location='json')
+complaintByMerchant_parser.add_argument('merchant_id', type=str, required=True, help='complaint id', location='values')
 
 @ns.route('/complaintByMerchant')
 @api.doc(responses={
