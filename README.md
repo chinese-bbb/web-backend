@@ -33,10 +33,10 @@ curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST '
 - [x] build the fundamental backends based on flask rest plus and test out its functionality
 - [x] Adding [flask documentation generation](https://flask-restplus.readthedocs.io/en/0.2/documenting.html) support
 - [x] Initialize the work of sqlAlchemy framework using flask migration
-- [ ] Adding all API routing rules required from [API doc](https://github.com/chinese-bbb/documents/blob/master/api-summary.md)
-- [ ] Adding [flask unit test module](http://flask.pocoo.org/docs/1.0/testing/)
+- [x] Adding all API routing rules required from [API doc](https://github.com/chinese-bbb/documents/blob/master/api-summary.md)
+- [x] Adding [flask unit test module](http://flask.pocoo.org/docs/1.0/testing/)
 - [ ] Encrypt the app.db. Today the DB is plain and doesn't require credentials.
-- [ ] After MVP stage, move the db to production S3 storage.
+- [x] After MVP stage, move the file storage to S3.
 
 
 ### Steps to evolve database schema:
@@ -76,3 +76,13 @@ Done! The database should have evolved schema.
 
 3. Call os.environ[KEY] to fetch the Value of Environment Variable.
 
+
+### Unit Test 
+
+1. To run Unit test, firstly launch local host web server:
+`python application.py`
+
+2. open a new terminal interface, and simply run:
+`python -m unittest`
+
+Today, we only support verify localhost unit test. Will support production test in the later stage.
