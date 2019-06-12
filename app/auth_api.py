@@ -10,6 +10,9 @@ import datetime
 import json
 
 from app.utils import text_from_bits, text_to_bits
+from app.tencent.id_ocr import tencent_ocr
+
+
 ns = api.namespace('api', description='All API descriptions')
 
 user_schema = UserSchema()
@@ -216,3 +219,35 @@ class ResetPassword(Resource):
         db.session.commit()
         flash('Congratulations, successfully updated user password!')
         return flask.jsonify("OK")
+
+
+identify_parser = api.parser()
+identify_parser.add_argument('id_path', type=str, required=True, help='upload path', location='json')
+
+@ns.route('/identify')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class IdentifyIDCard(Resource):
+
+    @login_required
+    @api.doc(parser=identify_parser)
+    def post(self):
+        '''Identify user ID card'''
+
+        user_id = session["user_id"]
+        args = identify_parser.parse_args()
+        id_path = args['id_path']
+        if not id_path:
+            return flask.jsonify({"error": "Invalid image url"})
+        real_name, sex = tencent_ocr.identify(id_path)
+        if real_name and sex:
+            user = User.query.filter_by(id=user_id).first()
+            user.real_name = real_name
+            user.sex = sex
+            user.if_verified = True
+            db.session.commit()
+            flash('Congratulations, successfully verified your ID card!')
+            return flask.jsonify("OK")
+        return flask.jsonify({"error": "Please upload clear ID card photo(face side)."})
