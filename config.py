@@ -31,3 +31,6 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_S3_BUCKET = os.environ.get('AWS_S3_BUCKET')
     AWS_S3_PATH_PREFIX = os.environ.get('AWS_S3_PATH_PREFIX')
+
+    TENCENTCLOUD_SECRET_ID = os.environ.get("TENCENTCLOUD_SECRET_ID")
+    TENCENTCLOUD_SECRET_KEY = os.environ.get("TENCENTCLOUD_SECRET_KEY")

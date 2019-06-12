@@ -19,7 +19,7 @@ file_upload = ns.parser()
 file_upload.add_argument('upload_type',
                          type=str,
                          required=True,
-                         help='upload type(invoice/id)',
+                         help='upload type(invoice/id/evidence)',
                          location='form')
 file_upload.add_argument('pic_file',
                          type=werkzeug.datastructures.FileStorage,
