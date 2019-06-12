@@ -147,6 +147,7 @@ class ComplaintSchema(ma.Schema):
                   "item_model",
                   "trade_info",
                   "relatedProducts",
+                  "merchant_id",
                   "invoce_files",
                   "id_files",
                   "purchase_timestamp")
