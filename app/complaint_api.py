@@ -56,6 +56,12 @@ class FileUpload(Resource):
         else:
             return {"state": "failed uploading"}, 401
 
+import enum
+class EnumComplaintType(enum.Enum):
+    type1 = 'type1'
+    type2 = 'type2'
+    type3 = 'type3'
+
 
 file_fields = api.model('file', {
     'id': fields.Integer,
@@ -66,7 +72,7 @@ complaint_fields = api.model('ComplaintModel', {
     'merchant_id': fields.Integer(description='merchant ID', required=True),
     'complaint_body': fields.String(description='complaint body', required=True),
     'expected_solution_body': fields.String(description='expected_solution_body'),
-    'complain_type': fields.String(description='complain_type'),
+    'complain_type': fields.String(description='The complaint type', enum=EnumComplaintType._member_names_),
     'if_negotiated_by_merchant': fields.Boolean(description='if_negotiated'),
     'negotiate_timestamp': fields.DateTime(description='negotiate_timestamp'),
     'allow_public': fields.Boolean(description='whether to be public'),
