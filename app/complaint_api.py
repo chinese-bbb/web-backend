@@ -58,7 +58,7 @@ class FileUpload(Resource):
 
 import enum
 class EnumComplaintType(enum.Enum):
-    fake_add         = 'fake_add'
+    fake_add         = 'fake_ad'
     customer_service = 'customer_service'
     exchange_return  = 'exchange_return'
     warranty         = 'warranty'
@@ -85,7 +85,7 @@ complaint_fields = api.model('ComplaintModel', {
     'allow_press': fields.Boolean(description='whether to have media report it'),
     'item_price': fields.String(description='item_price'),
     'item_model': fields.String(description='item_model'),
-    'tradeInfo': fields.String(description='tradeInfo'),
+    'trade_info': fields.String(description='tradeInfo'),
     'relatedProducts': fields.String(description='relatedProducts'),
     'purchase_timestamp': fields.DateTime(description='purchase_timestamp'),
     'invoice_files': fields.List(fields.Nested(file_fields)),
@@ -138,11 +138,9 @@ class Complaint(Resource):
         data['allow_public'] = parseBoolean(data['allow_public'])
         data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
         data['allow_press'] = parseBoolean(data['allow_press'])
-
-        print(data)
+        data['complaint_status'] = 'initialized'
 
         # TODO: check whether merchant_id exists or not
-
         res = complaintDAO.create(data)
         if res == "OK":
             return {"state": "Success"}, 200

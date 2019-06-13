@@ -112,7 +112,8 @@ class Complaint(db.Model):
     merchant_id = db.Column(db.Integer, index=True)
     complaint_body = db.Column(db.String(2000))
     expected_solution_body = db.Column(db.String(2000))
-    complain_type = db.Column(db.String(140))
+    complain_type   = db.Column(db.String(140))
+    complaint_status = db.Column(db.String(140))
     complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     if_negotiated_by_merchant =  db.Column(db.Boolean(), default=False)
@@ -126,6 +127,7 @@ class Complaint(db.Model):
     relatedProducts = db.Column(db.String(200))
     purchase_timestamp = db.Column(db.DateTime, index=True)
 
+    # TODO: typo needs to be fixed.
     invoce_files = db.Column(db.String(2000))
     id_files = db.Column(db.String(2000))
 

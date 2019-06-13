@@ -19,31 +19,25 @@ class ComplaintDAO(object):
         api.abort(404, "Complaint {} doesn't exist".format(complaint_id))
 
     def create(self, data):
-        complaint = Complaint(user_id=data['user_id'])
-        complaint.complaint_body = data['complaint_body']
-        complaint.expected_solution_body = data['expected_solution_body']
-        complaint.complain_type = data['complain_type']
-        complaint.merchant_id = data['merchant_id']
-        complaint.if_negotiated_by_merchant = data['if_negotiated_by_merchant']
 
         if 'negotiate_timestamp' in data:
-            complaint.negotiate_timestamp = parser.parse(data['negotiate_timestamp'])
+            data['negotiate_timestamp'] = parser.parse(data['negotiate_timestamp'])
+        else:
+            data['negotiate_timestamp'] = "unknown"
 
-        complaint.allow_public = data['allow_public']
-        complaint.allow_contact_by_merchant = data['allow_contact_by_merchant']
-        complaint.allow_press = data['allow_press']
-
-        complaint.item_price = data['item_price']
-        complaint.item_model = data['item_model']
-        complaint.relatedProducts = data['relatedProducts']
-        complaint.purchase_timestamp = parser.parse(data['purchase_timestamp'])
+        data['purchase_timestamp'] = parser.parse(data['purchase_timestamp'])
 
         if 'invoice_files' in data:
-            complaint.invoce_files = json.dumps(data['invoice_files'])
+            data['invoice_files'] = json.dumps(data['invoice_files'])
+        else:
+            data['invoice_files'] = "unknown"
 
         if 'id_files' in data:
-            complaint.invoce_files = json.dumps(data['id_files'])
+            data['id_files'] = json.dumps(data['id_files'])
+        else:
+            data['id_files'] = "unknown"
 
+        complaint = Complaint(**data)
         db.session.add(complaint)
         db.session.commit()
         return "OK"
