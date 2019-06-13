@@ -58,9 +58,14 @@ class FileUpload(Resource):
 
 import enum
 class EnumComplaintType(enum.Enum):
-    type1 = 'type1'
-    type2 = 'type2'
-    type3 = 'type3'
+    fake_add         = 'fake_add'
+    customer_service = 'customer_service'
+    exchange_return  = 'exchange_return'
+    warranty         = 'warranty'
+    contract         = 'contract'
+    shipping         = 'shipping'
+    commercial       = 'commercial'
+    other = 'others'
 
 
 file_fields = api.model('file', {
