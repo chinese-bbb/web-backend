@@ -6,12 +6,18 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app import application, db, api
 from flask_restplus import Resource, fields
 import werkzeug
-from app.complaintDAO import ComplaintDAO, complaint_schema
+from app.db_models.complaint_model import ComplaintDAO, complaint_resp_schema, complaints_resp_schema
 from app.utils import parseBoolean
 from app.aws.s3 import amazon_s3
 from marshmallow_jsonschema import JSONSchema
 
 json_schema = JSONSchema()
+
+complaint_marshall_model = api.schema_model('ComplaintResponse',
+                                          json_schema.dump(complaint_resp_schema).data['definitions']['ComplaintResponse'])
+
+complaints_marshall_model = api.schema_model('ComplaintsResponse',
+                                          json_schema.dump(complaints_resp_schema).data['definitions']['ComplaintsResponse']['properties']['items'])
 
 
 ns = api.namespace('api', description='All API descriptions')
@@ -101,7 +107,7 @@ complaint_list = api.model('ComplaintListModel', {
 })
 
 complaint_parser = api.parser()
-complaint_parser.add_argument('complaint_id', type=str, required=True, help='complaint id', location='json')
+complaint_parser.add_argument('complaint_id', type=int, required=True, help='complaint id', location='args')
 
 @ns.route('/complaint')
 @api.doc(responses={
@@ -110,31 +116,11 @@ complaint_parser.add_argument('complaint_id', type=str, required=True, help='com
 })
 class Complaint(Resource):
 
-    @ns.doc('get Complaint by complaint_id')
-    @api.doc(parser=complaint_parser)
-    @api.expect(complaint_parser)
-    def get(self):
-        '''get Complaint by complaint_id'''
-
-        args = complaint_parser.parse_args()
-        complaint_id = args['complaint_id']
-        res = complaintDAO.get(complaint_id)
-        return res
-
-
-    # @ns.doc('delete_todo')
-    # @ns.response(204, 'Todo deleted')
-    # def delete(self, id):
-    #     '''Delete a task given its identifier'''
-    #     DAO.delete(id)
-    #     return '', 204
-
     @login_required
     @api.expect(complaint_fields)
     def post(self):
         '''Create a Complaint'''
         data = api.payload
-
         user_id = session["user_id"]
 
         data['user_id'] = user_id
@@ -151,9 +137,34 @@ class Complaint(Resource):
         else:
             return {"state": "failed creating complaint"}, 401
 
+@ns.route('/complaint/<int:id>')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+@ns.param('id', 'The Complaint Identifier')
+class Comment(Resource):
+
+    @login_required
+    @ns.response(200, 'Success', complaint_marshall_model)
+    def get(self, id):
+        '''get a Comment by comment_id'''
+        res = complaintDAO.get(id)
+        return res
+
+    @ns.doc('delete a comment')
+    @ns.response(204, 'Comment deleted')
+    def delete(self, id):
+        '''Delete a comment by comment id'''
+        res = complaintDAO.delete(id)
+        if res == "deleted":
+            return '', 204
+        else:
+            return {"state": "delete unsuccessful"}, 200
+
 
 complaintByUser_parser = api.parser()
-complaintByUser_parser.add_argument('phone_num', type=str, required=True, help='complaint id', location='values')
+complaintByUser_parser.add_argument('phone_num', type=str, required=True, help='complaint id', location='args')
 
 @ns.route('/complaintByUser')
 @api.doc(responses={
@@ -165,6 +176,7 @@ class ComplaintByUser(Resource):
     @ns.doc('get Complaint by username (phone_num)')
     @api.doc(parser=complaintByUser_parser)
     @api.expect(complaintByUser_parser)
+    @ns.response(200, 'Success', complaints_marshall_model)
     @login_required
     def get(self):
         '''get Complaint by username  (phone_num)'''
@@ -176,7 +188,7 @@ class ComplaintByUser(Resource):
 
 
 complaintByMerchant_parser = api.parser()
-complaintByMerchant_parser.add_argument('merchant_id', type=str, required=True, help='complaint id', location='values')
+complaintByMerchant_parser.add_argument('merchant_id', type=str, required=True, help='complaint id', location='args')
 
 @ns.route('/complaintByMerchant')
 @api.doc(responses={
@@ -188,6 +200,7 @@ class ComplaintByMerchant(Resource):
     @ns.doc('get Complaint by merchant_id')
     @api.doc(parser=complaintByMerchant_parser)
     @api.expect(complaintByMerchant_parser)
+    @ns.response(200, 'Success', complaints_marshall_model)
     @login_required
     def get(self):
         '''get Complaint by merchant_id (merchant_id)'''

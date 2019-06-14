@@ -1,6 +1,7 @@
 from datetime import datetime
-from app import application, db, api
-from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
+from app import db, api
+from marshmallow_sqlalchemy import TableSchema
+from marshmallow import fields
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,7 +10,7 @@ class Comment(db.Model):
     text = db.Column(db.String(5000))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
-class CommentSchema(TableSchema):
+class CommentResponse(TableSchema):
     class Meta:
         table = Comment.__table__
         include_fk = True
@@ -17,7 +18,13 @@ class CommentSchema(TableSchema):
         many= True
     # complaint_id = fields.String(attribute="id")
 
-comment_schema = CommentSchema()
+
+class CommentsResponse(TableSchema):
+    items = fields.List(fields.Nested(CommentResponse), required=True)
+
+
+comment_schema = CommentResponse()
+comments_schema = CommentsResponse()
 
 class CommentDAO(object):
     def __init__(self):
@@ -62,10 +69,6 @@ class CommentDAO(object):
     def fetch_all_by_complaintID(self, complaint_id):
         comments = Comment.query.filter(Comment.complaint_id == complaint_id).all()
         if comments:
-            ret = []
-            for comment in comments:
-                dump_data = comment_schema.dump(comment).data
-                ret.append(dump_data)
-            return ret
+            return comments_schema.dump(comments).data
         else:
             api.abort(404, "complaint_id by id {} doesn't exist in comment table".format(complaint_id))

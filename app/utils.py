@@ -17,4 +17,4 @@ def fun(d):
 
 
 def parseBoolean(s):
-    return s in ['true', '1', 't', 'True', 'yes', 'y']
+    return s in ['true', '1', 't', 'True', 'yes', 'y', True]

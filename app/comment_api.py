@@ -1,8 +1,8 @@
 from flask import session
 from flask_login import login_required
 from app import api
-from flask_restplus import Resource, fields, marshal_with
-from app.db_models.comment_model import CommentDAO, comment_schema
+from flask_restplus import Resource
+from app.db_models.comment_model import CommentDAO, comment_schema, comments_schema
 from marshmallow_jsonschema import JSONSchema
 
 json_schema = JSONSchema()
@@ -10,8 +10,10 @@ json_schema = JSONSchema()
 ns = api.namespace('api', description='All API descriptions')
 commentDAO = CommentDAO()
 
-comment_marshall_model = api.schema_model('Comment',
-                                          json_schema.dump(comment_schema).data['definitions']['CommentSchema'])
+comment_marshall_model = api.schema_model('CommentResponse',
+                                          json_schema.dump(comment_schema).data['definitions']['CommentResponse'])
+comments_marshall_model = api.schema_model('CommentsResponse',
+                                          json_schema.dump(comments_schema).data['definitions']['CommentsResponse'])
 
 upload_comment_parser = api.parser()
 upload_comment_parser.add_argument('text', type=str, required=True, help='comment text body', location='json')
@@ -89,7 +91,7 @@ class Comment(Resource):
 class CommentsByComplaint(Resource):
 
     @login_required
-    @ns.response(200, 'Success', comment_marshall_model)
+    @ns.response(200, 'Success', comments_marshall_model)
     def get(self, id):
         '''get all Comments given one complaint'''
         res = commentDAO.fetch_all_by_complaintID(id)
