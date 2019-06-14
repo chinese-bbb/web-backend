@@ -44,11 +44,11 @@ class ComplaintResponse(TableSchema):
 
 
 class ComplaintsResponse(TableSchema):
-    items = fields.List(fields.Nested(ComplaintResponse), required=True)
+    ComplaintsResponse = fields.List(fields.Nested(ComplaintResponse), required=True)
 
 
 complaint_resp_schema = ComplaintResponse()
-complaints_resp_schema = ComplaintsResponse(many=True, strict=True)
+complaints_resp_schema = ComplaintsResponse(many=True)
 
 class ComplaintDAO(object):
     def __init__(self):

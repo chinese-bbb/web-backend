@@ -17,7 +17,8 @@ complaint_marshall_model = api.schema_model('ComplaintResponse',
                                           json_schema.dump(complaint_resp_schema).data['definitions']['ComplaintResponse'])
 
 complaints_marshall_model = api.schema_model('ComplaintsResponse',
-                                          json_schema.dump(complaints_resp_schema).data['definitions']['ComplaintsResponse']['properties']['items'])
+            json_schema.dump(complaints_resp_schema)
+                       .data['definitions']['ComplaintsResponse']['properties']['ComplaintsResponse'])
 
 
 ns = api.namespace('api', description='All API descriptions')

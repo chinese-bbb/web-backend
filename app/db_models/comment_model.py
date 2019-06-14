@@ -20,7 +20,7 @@ class CommentResponse(TableSchema):
 
 
 class CommentsResponse(TableSchema):
-    items = fields.List(fields.Nested(CommentResponse), required=True)
+    CommentsResponse = fields.List(fields.Nested(CommentResponse), required=True)
 
 
 comment_schema = CommentResponse()
@@ -69,6 +69,10 @@ class CommentDAO(object):
     def fetch_all_by_complaintID(self, complaint_id):
         comments = Comment.query.filter(Comment.complaint_id == complaint_id).all()
         if comments:
-            return comments_schema.dump(comments).data
+            ret = []
+            for comment in comments:
+                dump_data = comments_schema.dump(comment).data
+                ret.append(dump_data)
+            return ret
         else:
             api.abort(404, "complaint_id by id {} doesn't exist in comment table".format(complaint_id))

@@ -13,7 +13,7 @@ commentDAO = CommentDAO()
 comment_marshall_model = api.schema_model('CommentResponse',
                                           json_schema.dump(comment_schema).data['definitions']['CommentResponse'])
 comments_marshall_model = api.schema_model('CommentsResponse',
-                                          json_schema.dump(comments_schema).data['definitions']['CommentsResponse'])
+                                          json_schema.dump(comments_schema).data['definitions']['CommentsResponse']['properties']['CommentsResponse'])
 
 upload_comment_parser = api.parser()
 upload_comment_parser.add_argument('text', type=str, required=True, help='comment text body', location='json')
