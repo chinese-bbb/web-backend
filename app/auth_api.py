@@ -1,17 +1,14 @@
-import flask
-from flask import render_template, flash, redirect, url_for, request, session
-from flask_login import login_user, logout_user, current_user, login_required
-from app import application, db, api
-from app.models import User, FuzzySearchRaw, MerchantQueryRaw, UserSchema
-from app.sms.send_sms import send_message
-from app.qichacha.qichacha_api import fuzzy_search, basic_detail
-from flask_restplus import Resource, fields
 import datetime
-import json
 
-from app.utils import text_from_bits, text_to_bits
+import flask
+from flask import flash, session
+from flask_login import login_user, logout_user, login_required
+from flask_restplus import Resource
+
+from app import db, api
+from app.models import User, UserSchema
 from app.tencent.id_ocr import tencent_ocr
-
+from app.tencent.send_sms import send_message
 
 ns = api.namespace('api', description='All API descriptions')
 

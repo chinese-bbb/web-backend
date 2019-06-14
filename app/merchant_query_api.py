@@ -1,13 +1,11 @@
-import flask
-from flask import render_template, flash, redirect, url_for, request, Blueprint
-from flask_login import login_user, logout_user, current_user, login_required
-from app import application, db, api
-from app.models import User, FuzzySearchRaw, MerchantQueryRaw
-from app.sms.send_sms import send_message
-from app.qichacha.qichacha_api import fuzzy_search, basic_detail
-from flask_restplus import Resource, fields
-import datetime
 import json
+
+from flask_login import login_required
+from flask_restplus import Resource
+
+from app import db, api
+from app.models import FuzzySearchRaw, MerchantQueryRaw
+from app.qichacha.qichacha_api import fuzzy_search, basic_detail
 
 ns = api.namespace('api', description='All API descriptions')
 
