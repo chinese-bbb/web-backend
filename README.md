@@ -37,6 +37,7 @@ curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST '
 - [x] Adding [flask unit test module](http://flask.pocoo.org/docs/1.0/testing/)
 - [ ] Encrypt the app.db. Today the DB is plain and doesn't require credentials.
 - [x] After MVP stage, move the file storage to S3.
+- [ ] Use the standard Marshmallow lib instead of flask-marshmallow.
 
 
 ### Steps to evolve database schema:

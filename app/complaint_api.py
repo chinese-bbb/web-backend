@@ -6,9 +6,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app import application, db, api
 from flask_restplus import Resource, fields
 import werkzeug
-from app.complaintDAO import ComplaintDAO
+from app.complaintDAO import ComplaintDAO, complaint_schema
 from app.utils import parseBoolean
 from app.aws.s3 import amazon_s3
+from marshmallow_jsonschema import JSONSchema
+
+json_schema = JSONSchema()
+
 
 ns = api.namespace('api', description='All API descriptions')
 

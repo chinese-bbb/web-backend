@@ -26,3 +26,4 @@ from app import models
 from app import auth_api
 from app import complaint_api
 from app import merchant_query_api
+from app import comment_api
