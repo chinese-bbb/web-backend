@@ -14,6 +14,7 @@ class CommentSchema(TableSchema):
         table = Comment.__table__
         include_fk = True
         exclude = ("id",)
+        many= True
     # complaint_id = fields.String(attribute="id")
 
 comment_schema = CommentSchema()
@@ -57,3 +58,14 @@ class CommentDAO(object):
         else:
             api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
 
+
+    def fetch_all_by_complaintID(self, complaint_id):
+        comments = Comment.query.filter(Comment.complaint_id == complaint_id).all()
+        if comments:
+            ret = []
+            for comment in comments:
+                dump_data = comment_schema.dump(comment).data
+                ret.append(dump_data)
+            return ret
+        else:
+            api.abort(404, "complaint_id by id {} doesn't exist in comment table".format(complaint_id))

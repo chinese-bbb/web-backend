@@ -79,3 +79,18 @@ class Comment(Resource):
 
         return commentDAO.update(id, text)
 
+
+@ns.route('/commentsByComplaint/<int:id>')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+@ns.param('id', 'The complaint identifier')
+class CommentsByComplaint(Resource):
+
+    @login_required
+    @ns.response(200, 'Success', comment_marshall_model)
+    def get(self, id):
+        '''get Comment by comment_id'''
+        res = commentDAO.fetch_all_by_complaintID(id)
+        return res
