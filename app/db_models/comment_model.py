@@ -5,6 +5,7 @@ from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
+    complaint_id = db.Column(db.Integer, db.ForeignKey('complaint.id'), index=True)
     text = db.Column(db.String(5000))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 

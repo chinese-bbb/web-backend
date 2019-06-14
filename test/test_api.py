@@ -37,7 +37,7 @@ class TestHuxinAppLocalhost(unittest.TestCase):
     def test_comment_comment(self):
 
         # Test create a comment
-        comment = {"text": "testtesttest"}
+        comment = {"text": "testtesttest", "complaint_id": 5}
         response = self.app.post(CREATE_COMMENT_URL,
                                  data = json.dumps(comment),
                                  content_type='application/json')

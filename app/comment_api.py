@@ -15,6 +15,7 @@ comment_marshall_model = api.schema_model('Comment',
 
 upload_comment_parser = api.parser()
 upload_comment_parser.add_argument('text', type=str, required=True, help='comment text body', location='json')
+upload_comment_parser.add_argument('complaint_id', type=int, required=True, help='complaint_id', location='json')
 
 @ns.route('/comment')
 @api.doc(responses={
