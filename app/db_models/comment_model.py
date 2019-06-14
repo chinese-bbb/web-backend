@@ -39,13 +39,20 @@ class CommentDAO(object):
         else:
             api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
 
-
     def create(self, data):
         comment = Comment(**data)
         db.session.add(comment)
         db.session.commit()
         return "OK"
 
-    def fetchByUserId(self, phone_num):
-        api.abort(404, "Complaint by user {} doesn't exist".format(phone_num))
+    def update(self, comment_id, text):
+        comment = Comment.query.filter_by(id=comment_id).first()
+        if comment:
+            Comment.query.filter_by(id = comment_id).update({'text': text})
+            db.session.commit()
+
+            comment = Comment.query.filter_by(id=comment_id).first()
+            return comment_schema.dump(comment).data
+        else:
+            api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
 

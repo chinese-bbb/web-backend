@@ -35,6 +35,8 @@ class TestHuxinAppLocalhost(unittest.TestCase):
         self.assertEqual(data, "OK")
 
     def test_comment_comment(self):
+
+        # Test create a comment
         comment = {"text": "testtesttest"}
         response = self.app.post(CREATE_COMMENT_URL,
                                  data = json.dumps(comment),
@@ -43,13 +45,25 @@ class TestHuxinAppLocalhost(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data, {"state": "Success"})
 
+
+        # Test get a comment
         response = self.app.get(MVC_COMMENT_URL + '1')
         data = json.loads(response.get_data())
         self.assertEqual(response.status_code, 200)
-
         self.assertEqual(data['text'], 'testtesttest')
         self.assertEqual(data['user_id'], 6)
 
+        # Test update a comment
+        data = {"text": "secondTest"}
+        response = self.app.put(MVC_COMMENT_URL + '1',
+                                data=json.dumps(data),
+                                content_type='application/json')
+        data = json.loads(response.get_data())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['text'], 'secondTest')
+        self.assertEqual(data['user_id'], 6)
+
+        # Test delete a comment
         response = self.app.delete(MVC_COMMENT_URL + '1',
                                    headers={'Content-Type': 'application/x-www-form-urlencoded'})
         self.assertEqual(response.status_code, 204)

@@ -16,9 +16,6 @@ comment_marshall_model = api.schema_model('Comment',
 upload_comment_parser = api.parser()
 upload_comment_parser.add_argument('text', type=str, required=True, help='comment text body', location='json')
 
-get_comment_parser = api.parser()
-get_comment_parser.add_argument('comment_id', type=str, required=True, help='comment', location='values')
-
 @ns.route('/comment')
 @api.doc(responses={
     200: 'Success',
@@ -27,7 +24,7 @@ get_comment_parser.add_argument('comment_id', type=str, required=True, help='com
 class Comment(Resource):
 
     @login_required
-    @api.expect(upload_comment_parser)
+    @ns.expect(upload_comment_parser)
     def post(self):
         '''Create a Comment'''
         data = api.payload
@@ -40,6 +37,11 @@ class Comment(Resource):
         else:
             return {"state": "failed creating comment"}, 401
 
+
+
+update_comment_parser = api.parser()
+update_comment_parser.add_argument('text', type=str, required=True, help='comment', location='json')
+
 @ns.route('/comment/<int:id>')
 @api.doc(responses={
     200: 'Success',
@@ -49,7 +51,6 @@ class Comment(Resource):
 class Comment(Resource):
 
     @login_required
-    @api.expect(get_comment_parser)
     @ns.response(200, 'Success', comment_marshall_model)
     def get(self, id):
         '''get Comment by comment_id'''
@@ -65,3 +66,15 @@ class Comment(Resource):
             return '', 204
         else:
             return {"state": "delete unsuccessful"}, 200
+
+    @ns.doc('update a comment')
+    @ns.expect(update_comment_parser)
+    @ns.response(200, 'Success', comment_marshall_model)
+    def put(self, id):
+        '''update a comment by comment id and text'''
+
+        args = update_comment_parser.parse_args()
+        text = args['text']
+
+        return commentDAO.update(id, text)
+
