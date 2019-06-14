@@ -54,7 +54,7 @@ class Comment(Resource):
     @login_required
     @ns.response(200, 'Success', comment_marshall_model)
     def get(self, id):
-        '''get Comment by comment_id'''
+        '''get a Comment by comment_id'''
         res = commentDAO.get(id)
         return res
 
@@ -91,6 +91,6 @@ class CommentsByComplaint(Resource):
     @login_required
     @ns.response(200, 'Success', comment_marshall_model)
     def get(self, id):
-        '''get Comment by comment_id'''
+        '''get all Comments given one complaint'''
         res = commentDAO.fetch_all_by_complaintID(id)
         return res
