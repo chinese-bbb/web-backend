@@ -13,7 +13,7 @@ class TestComplaintAPI(BaseTestClass):
     def setUp(self):
         super().setUp()
 
-    @unittest.skip
+    # @unittest.skip
     def test_complaint(self):
         # # Test create a comment
         complaint1 = {
@@ -31,10 +31,9 @@ class TestComplaintAPI(BaseTestClass):
             "trade_info": "string",
             "relatedProducts": "string",
             "purchase_timestamp": "2019-06-07T19:12:44.468Z",
-            "id_files": [
+            "evidence_files": [
                 {
-                    "id": 0,
-                    "s3_path": "string"
+                    "s3_path": "string1"
                 }
             ]
         }
@@ -56,8 +55,7 @@ class TestComplaintAPI(BaseTestClass):
             "purchase_timestamp": "2019-06-07T19:12:44.468Z",
             "invoice_files": [
                 {
-                    "id": 0,
-                    "s3_path": "string"
+                    "s3_path": "string2"
                 }
             ]
         }
@@ -83,7 +81,7 @@ class TestComplaintAPI(BaseTestClass):
 
         # Test get all complaints given a user_id
         response = self.app.get(FETCH_COMPLAINTS_BY_USER_URL,
-                                query_string=dict(phone_num='13333333333'))
+                                query_string=dict(phone_num='az'))
         data = json.loads(response.get_data())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data), 2)
@@ -96,7 +94,7 @@ class TestComplaintAPI(BaseTestClass):
         self.assertEqual(len(data), 2)
 
         # Test delete complaints
-        # response = self.app.delete(MVC_COMPLAINT_URL + '2')
-        # self.assertEqual(response.status_code, 204)
-        # response = self.app.delete(MVC_COMPLAINT_URL + '1')
-        # self.assertEqual(response.status_code, 204)
+        response = self.app.delete(MVC_COMPLAINT_URL + '2')
+        self.assertEqual(response.status_code, 204)
+        response = self.app.delete(MVC_COMPLAINT_URL + '1')
+        self.assertEqual(response.status_code, 204)

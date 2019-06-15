@@ -80,7 +80,6 @@ class EnumComplaintType(enum.Enum):
 
 
 file_fields = api.model('file', {
-    'id': fields.Integer,
     's3_path': fields.String
 })
 
@@ -100,7 +99,7 @@ complaint_fields = api.model('ComplaintModel', {
     'relatedProducts': fields.String(description='relatedProducts'),
     'purchase_timestamp': fields.DateTime(description='purchase_timestamp'),
     'invoice_files': fields.List(fields.Nested(file_fields)),
-    'id_files': fields.List(fields.Nested(file_fields))
+    'evidence_files': fields.List(fields.Nested(file_fields))
 })
 
 complaint_list = api.model('ComplaintListModel', {

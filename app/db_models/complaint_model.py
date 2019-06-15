@@ -14,8 +14,8 @@ ma = Marshmallow(application)
 class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     merchant_id = db.Column(db.Integer, index=True)
-    complaint_body = db.Column(db.String(2000))
-    expected_solution_body = db.Column(db.String(2000))
+    complaint_body = db.Column(db.String(20000))
+    expected_solution_body = db.Column(db.String(20000))
     complain_type   = db.Column(db.String(140))
     complaint_status = db.Column(db.String(140))
     complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -27,16 +27,17 @@ class Complaint(db.Model):
     allow_press =  db.Column(db.Boolean(), default=False)
     item_price =  db.Column(db.String(200))
     item_model = db.Column(db.String(200))
-    trade_info = db.Column(db.String(2000))
-    relatedProducts = db.Column(db.String(200))
+    trade_info = db.Column(db.String(20000))
+    relatedProducts = db.Column(db.String(5000))
     purchase_timestamp = db.Column(db.DateTime, index=True)
 
     invoice_files = db.Column(db.String(2000))
-    id_files = db.Column(db.String(2000))
+    evidence_files = db.Column(db.String(2000))
 
 class ComplaintResponse(TableSchema):
     class Meta:
         table = Complaint.__table__
+        include_fk = True
         exclude = ("id",)
         many= True
 
@@ -85,10 +86,10 @@ class ComplaintDAO(object):
         else:
             data['invoice_files'] = "[]"
 
-        if 'id_files' in data:
-            data['id_files'] = json.dumps(data['id_files'])
+        if 'evidence_files' in data:
+            data['evidence_files'] = json.dumps(data['evidence_files'])
         else:
-            data['id_files'] = "[]"
+            data['evidence_files'] = "[]"
 
         complaint = Complaint(**data)
         db.session.add(complaint)
