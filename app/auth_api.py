@@ -3,7 +3,7 @@ import datetime
 import flask
 from flask import flash, session
 from flask_login import login_user, logout_user, login_required
-from flask_restplus import Resource
+from flask_restplus import Resource, fields
 
 from app import db, api
 from app.models import User, UserSchema
@@ -127,10 +127,19 @@ class Login(Resource):
         return {"state": "Success"},200
 
 
-register_parser = api.parser()
-register_parser.add_argument('phone_num', type=str, required=True, help='Phone Number', location='json')
-register_parser.add_argument('password',  type=str, required=True, help='password', location='json')
-register_parser.add_argument('sex',       type=str, required=True, help='sex', location='json')
+import enum
+class EnumSexType(enum.Enum):
+    Male   = 'Male'
+    Female = 'Female'
+    other  = 'others'
+
+register_fields = api.model('RegisterModel', {
+    'sex': fields.String(description='gender type', enum=EnumSexType._member_names_, required=True),
+    'phone_num': fields.String(description='phone_num', required=True),
+    'password': fields.String(description='password', required=True),
+    'first_name': fields.String(description='first_name', required=True),
+    'last_name': fields.String(description='last_name', required=True)
+})
 
 @ns.route('/register')
 @api.doc(responses={
@@ -139,17 +148,21 @@ register_parser.add_argument('sex',       type=str, required=True, help='sex', l
 })
 class Register(Resource):
 
-    @api.doc(parser=register_parser)
+    @api.expect(register_fields)
     def post(self):
-        '''Register'''
+        '''Register a user'''
 
-        args = register_parser.parse_args()
-        username = args['phone_num']
-        password = args['password']
-        sex      = args['sex']
+        data = api.payload
+        username = data['phone_num']
+        sex      = data['sex']
+        password = data['password']
 
         today = datetime.date.today()
         user = User(username=username, sex=sex, registered_date=today)
+        user.first_name = data['first_name']
+        user.last_name  = data['last_name']
+        user.account_active = True
+        user.if_verified = False
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
