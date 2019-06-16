@@ -80,10 +80,7 @@ Done! The database should have evolved schema.
 
 ### Unit Test 
 
-1. To run Unit test, firstly launch local host web server:
-`python application.py`
-
-2. open a new terminal interface, and simply run:
+Open a new terminal interface, and simply run:
 `python -m unittest`
 
-Today, we only support verify localhost unit test. Will support production test in the later stage.
+Currently, we only support to verify localhost unit test. Will support production test in the later stage.

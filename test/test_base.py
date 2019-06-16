@@ -17,7 +17,7 @@ class BaseTestClass(TestCase):
     def setUp(self):
         self.app = application.test_client()
         self.app.testing = True
-        user = {"phone_num": "az", "password": "az"}
+        user = {"phone_num": "13333333333", "password": "Abcd3333"}
         self.app.post(LOGIN_URL,
                       data=json.dumps(user),
                       content_type='application/json')

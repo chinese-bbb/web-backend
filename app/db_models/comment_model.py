@@ -2,6 +2,7 @@ from datetime import datetime
 from app import db, api
 from marshmallow_sqlalchemy import TableSchema
 from marshmallow import fields
+from app.models import UserSchema
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,18 +14,27 @@ class Comment(db.Model):
 class CommentResponse(TableSchema):
     class Meta:
         table = Comment.__table__
-        include_fk = True
         exclude = ("id",)
         many= True
-    # complaint_id = fields.String(attribute="id")
 
+    complaint_id = fields.String(attribute="complaint_id")
+    user = fields.Nested('UserSchema', many=False)
 
 class CommentsResponse(TableSchema):
     CommentsResponse = fields.List(fields.Nested(CommentResponse), required=True)
 
-
 comment_schema = CommentResponse()
 comments_schema = CommentsResponse()
+
+# TODO: only select a subtset of fields not all.
+user_schema = UserSchema()
+
+def comment_to_json(comment):
+    user = comment.User
+    dump_user_data = user_schema.dump(user).data
+    dump_data = comment_schema.dump(comment).data
+    dump_data['user'] = dump_user_data
+    return dump_data
 
 class CommentDAO(object):
     def __init__(self):
@@ -33,8 +43,7 @@ class CommentDAO(object):
     def get(self, comment_id):
         comment = Comment.query.filter_by(id=comment_id).first()
         if comment:
-            dump_data = comment_schema.dump(comment).data
-            print(dump_data)
+            dump_data = comment_to_json(comment)
             return dump_data
 
         api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
@@ -61,7 +70,7 @@ class CommentDAO(object):
             db.session.commit()
 
             comment = Comment.query.filter_by(id=comment_id).first()
-            return comment_schema.dump(comment).data
+            return comment_to_json(comment)
         else:
             api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
 
@@ -71,7 +80,7 @@ class CommentDAO(object):
         if comments:
             ret = []
             for comment in comments:
-                dump_data = comments_schema.dump(comment).data
+                dump_data = comment_to_json(comment)
                 ret.append(dump_data)
             return ret
         else:

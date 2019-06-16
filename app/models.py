@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     complaints = db.relationship('Complaint', backref='User', lazy=True)
+    comments   = db.relationship('Comment', backref='User', lazy=True)
 
     def __init__(self, username):
         self.username = username
