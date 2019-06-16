@@ -69,13 +69,14 @@ class FileUpload(Resource):
 
 import enum
 class EnumComplaintType(enum.Enum):
+    product_issue    = 'product_issue'
     fake_add         = 'fake_ad'
     customer_service = 'customer_service'
     exchange_return  = 'exchange_return'
     warranty         = 'warranty'
     contract         = 'contract'
     shipping         = 'shipping'
-    commercial       = 'commercial'
+    infraction       = 'infraction'
     other = 'others'
 
 
