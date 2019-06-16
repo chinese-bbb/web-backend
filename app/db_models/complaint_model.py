@@ -32,14 +32,22 @@ class Complaint(db.Model):
     invoice_files = db.Column(db.String(2000))
     evidence_files = db.Column(db.String(2000))
 
+class ComplaintState(fields.String):
+    def _jsonschema_type_mapping(self):
+        return {
+            'type': 'string',
+            'enum': ['initialized', 'in_progress', 'resolved']
+        }
+
 class ComplaintResponse(TableSchema):
     class Meta:
         table = Complaint.__table__
-        exclude = ("id",)
+        exclude = ("id", "complaint_status")
         many= True
 
     complaint_id = fields.String(attribute="id")
     user = fields.Nested('UserSchema', many=False)
+    complaint_state = ComplaintState(attribute="complaint_status")
 
 class ComplaintsResponse(TableSchema):
     ComplaintsResponse = fields.List(fields.Nested(ComplaintResponse), required=True)
