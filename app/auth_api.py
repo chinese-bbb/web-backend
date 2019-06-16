@@ -9,19 +9,27 @@ from app import db, api
 from app.models import User, UserSchema
 from app.tencent.id_ocr import tencent_ocr
 from app.tencent.send_sms import send_message
+from marshmallow_jsonschema import JSONSchema
 
 ns = api.namespace('api', description='All API descriptions')
 
 user_schema = UserSchema()
+json_schema = JSONSchema()
+
+complaint_marshall_model = api.schema_model('UserSchema',
+                                          json_schema.dump(user_schema).data['definitions']['UserSchema'])
+
 @ns.route('/user_me')
 class UserMe(Resource):
     '''Only Logged in user can see this page'''
 
     @login_required
+    @ns.response(200, 'Success', complaint_marshall_model)
     def get(self):
         user_id = session["user_id"]
         user = User.query.filter_by(id=user_id).first()
-        return user_schema.jsonify(user)
+        dump_data = user_schema.dump(user).data
+        return dump_data
 
 
 @ns.route('/phone_exist/<string:phone_num>')

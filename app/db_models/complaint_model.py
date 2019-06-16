@@ -5,11 +5,9 @@ from app.models import User, MerchantQueryRaw
 from app import db, api
 from dateutil import parser
 import json
-from flask_marshmallow import Marshmallow
 from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
-
-ma = Marshmallow(application)
+from app.models import UserSchema
 
 class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,12 +35,11 @@ class Complaint(db.Model):
 class ComplaintResponse(TableSchema):
     class Meta:
         table = Complaint.__table__
-        include_fk = True
         exclude = ("id",)
         many= True
 
     complaint_id = fields.String(attribute="id")
-
+    user = fields.Nested('UserSchema', many=False)
 
 class ComplaintsResponse(TableSchema):
     ComplaintsResponse = fields.List(fields.Nested(ComplaintResponse), required=True)
@@ -50,6 +47,14 @@ class ComplaintsResponse(TableSchema):
 
 complaint_resp_schema = ComplaintResponse()
 complaints_resp_schema = ComplaintsResponse(many=True)
+user_schema = UserSchema()
+
+def complaint_to_json(complaint):
+    user = complaint.User
+    dump_user_data = user_schema.dump(user).data
+    dump_data = complaint_resp_schema.dump(complaint).data
+    dump_data['user'] = dump_user_data
+    return dump_data
 
 class ComplaintDAO(object):
     def __init__(self):
@@ -58,8 +63,7 @@ class ComplaintDAO(object):
     def get(self, complaint_id):
         complaint = Complaint.query.filter_by(id=complaint_id).first()
         if complaint:
-            dump_data = complaint_resp_schema.dump(complaint).data
-            return dump_data
+            return complaint_to_json(complaint)
 
         api.abort(404, "Complaint {} doesn't exist".format(complaint_id))
 
@@ -109,7 +113,7 @@ class ComplaintDAO(object):
         if complaints:
             ret = []
             for complaint in complaints:
-                dump_data = complaint_resp_schema.dump(complaint).data
+                dump_data = complaint_to_json(complaint)
                 ret.append(dump_data)
             return ret
         else:
@@ -127,7 +131,7 @@ class ComplaintDAO(object):
         if complaints:
             ret = []
             for complaint in complaints:
-                dump_data = complaint_resp_schema.dump(complaint).data
+                dump_data = complaint_to_json(complaint)
                 ret.append(dump_data)
             return ret
         else:

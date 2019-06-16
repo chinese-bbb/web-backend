@@ -13,7 +13,7 @@ class TestComplaintAPI(BaseTestClass):
     def setUp(self):
         super().setUp()
 
-    # @unittest.skip
+    @unittest.skip
     def test_complaint(self):
         # # Test create a comment
         complaint1 = {

@@ -4,8 +4,10 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_marshmallow import Marshmallow
 from marshmallow import Schema, fields
+from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
 
 ma = Marshmallow(application)
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,12 +16,15 @@ class User(UserMixin, db.Model):
     registered_date = db.Column(db.String(120))
     if_verified = db.Column(db.Boolean())
     real_name = db.Column(db.String(120))
-    sex       = db.Column(db.String(120))
-    minority  = db.Column(db.String(120))
-    account_active  = db.Column(db.Boolean())
+    sex = db.Column(db.String(120))
+    minority = db.Column(db.String(120))
+    account_active = db.Column(db.Boolean())
+    first_name = db.Column(db.String(120))
+    last_name = db.Column(db.String(120))
 
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    complaints = db.relationship('Complaint', backref='User', lazy=True)
 
     def __init__(self, username):
         self.username = username
@@ -39,18 +44,12 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-class UserSchema(ma.Schema):
+class UserSchema(TableSchema):
     class Meta:
-        model = User
-        # Fields to expose
-        fields = ("username",
-                  "email",
-                  "registered_date",
-                  "if_verified",
-                  "real_name",
-                  "sex",
-                  "minority",
-                  "account_active")
+        table = User.__table__
+        include_fk = True
+        exclude = ("id", "posts", "password_hash", "real_name")
+        many= True
 
 
 @login.user_loader
@@ -105,5 +104,3 @@ class MerchantQueryRaw(db.Model):
 
     def __repr__(self):
         return '<MerchantRaw {}>'.format(self.keyword)
-
-
