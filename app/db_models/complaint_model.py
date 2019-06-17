@@ -36,7 +36,7 @@ class ComplaintState(fields.String):
     def _jsonschema_type_mapping(self):
         return {
             'type': 'string',
-            'enum': ['initialized', 'in_progress', 'resolved']
+            'enum': ['initialized', 'Merchant_write_back', 'in_communication', 'unresolved', 'resolved']
         }
 
 class ComplaintResponse(TableSchema):
