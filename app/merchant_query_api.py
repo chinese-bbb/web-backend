@@ -16,7 +16,7 @@ merchant_marshall_model = api.schema_model('MerchantResponse',
                                           json_schema.dump(merchant_resp).data['definitions']['MerchantResponse'])
 
 qichacha_parser = api.parser()
-qichacha_parser.add_argument('keyword', type=str, required=True, help='keyword', location='json')
+qichacha_parser.add_argument('keyword', type=str, required=True, help='keyword', location='args')
 
 @ns.route('/fuzzy_query')
 @api.doc(responses={
