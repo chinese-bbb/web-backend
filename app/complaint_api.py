@@ -52,8 +52,8 @@ class FileUpload(Resource):
         if args['upload_type'] not in ['invoice', 'id', 'evidence']:
             return {"state": "incorrect upload type"}, 401
         print(args['pic_file'].mimetype)
-        if args['pic_file'].mimetype and len(args['pic_file'].split('/')) == 2:
-            file_type, file_format = args['pic_file'].split('/')
+        if args['pic_file'].mimetype and len(args['pic_file'].mimetype.split('/')) == 2:
+            file_type, file_format = args['pic_file'].mimetype.split('/')
             if file_type.lower() != 'image' or file_format.lower() not in ['jpeg', 'jpg', 'png']:
                 return {"state": "incorrect file type/format"}, 401
             folder = application.config.get(f"{args['upload_type'].upper()}_FOLDER")
