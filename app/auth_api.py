@@ -263,12 +263,14 @@ class IdentifyIDCard(Resource):
             user = User.query.filter_by(id=user_id).first()
             last_name = user.last_name or ''
             first_name = user.first_name or ''
-            if last_name and (last_name + first_name != real_name or not real_name.startwith(user.last_name)):
-                return {"error": "ID card name doesn't match your register name!"}, 401
-            user.real_name = real_name
-            user.sex = sex
-            user.if_verified = True
-            db.session.commit()
-            flash('Congratulations, successfully verified your ID card!')
-            return flask.jsonify("OK")
-        return {"error": "Please upload clear ID card photo(face side)."}, 401
+            if ((last_name and first_name and last_name + first_name == real_name) or (
+                    real_name.startswith(last_name))) and user.sex == sex:
+                user.real_name = real_name
+                user.sex = sex
+                user.if_verified = True
+                db.session.commit()
+                flash('Congratulations, successfully verified your ID card!')
+                return flask.jsonify("OK")
+            else:
+                return flask.jsonify({"error": "ID card name/sex doesn't match your register name/sex!"})
+        return flask.jsonify({"error": "Please upload clear ID card photo(face side)."})
