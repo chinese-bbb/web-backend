@@ -188,7 +188,7 @@ class ComplaintByUser(Resource):
         args = complaintByUser_parser.parse_args()
         phone_num = args['phone_num']
         res = complaintDAO.fetchByUserId(phone_num)
-        return res
+        return res, 200
 
 
 complaintByMerchant_parser = api.parser()
@@ -212,4 +212,4 @@ class ComplaintByMerchant(Resource):
         args = complaintByMerchant_parser.parse_args()
         merchant_id = args['merchant_id']
         res = complaintDAO.fetchByMerchantId(merchant_id)
-        return res
+        return res, 200

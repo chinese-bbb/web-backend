@@ -117,7 +117,6 @@ class ComplaintDAO(object):
                    }, 404
 
         complaints = Complaint.query.filter(Complaint.user_id==user.id).all()
-        print(complaints[0].user_id)
         if complaints:
             ret = []
             for complaint in complaints:
@@ -125,7 +124,7 @@ class ComplaintDAO(object):
                 ret.append(dump_data)
             return ret
         else:
-            api.abort(404, "Complaint by user {} doesn't exist".format(phone_num))
+            return {}
 
     def fetchByMerchantId(self, merchant_id):
 
@@ -143,4 +142,4 @@ class ComplaintDAO(object):
                 ret.append(dump_data)
             return ret
         else:
-            api.abort(404, "Complaint by Merchant id{} doesn't exist".format(merchant_id))
+            return {}
