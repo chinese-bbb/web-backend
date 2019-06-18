@@ -84,4 +84,4 @@ class CommentDAO(object):
                 ret.append(dump_data)
             return ret
         else:
-            api.abort(404, "complaint_id by id {} doesn't exist in comment table".format(complaint_id))
+            return {}

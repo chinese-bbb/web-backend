@@ -95,4 +95,4 @@ class CommentsByComplaint(Resource):
     def get(self, id):
         '''get all Comments given one complaint'''
         res = commentDAO.fetch_all_by_complaintID(id)
-        return res
+        return res, 200
