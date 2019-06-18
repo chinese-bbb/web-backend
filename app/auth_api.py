@@ -253,7 +253,6 @@ class IdentifyIDCard(Resource):
     @api.doc(parser=identify_parser)
     def post(self):
         '''Identify user ID card'''
-
         user_id = session["user_id"]
         args = identify_parser.parse_args()
         id_path = args['id_path']
@@ -262,10 +261,14 @@ class IdentifyIDCard(Resource):
         real_name, sex = tencent_ocr.identify(id_path)
         if real_name and sex:
             user = User.query.filter_by(id=user_id).first()
+            last_name = user.last_name or ''
+            first_name = user.first_name or ''
+            if last_name and (last_name + first_name != real_name or not real_name.startwith(user.last_name)):
+                return {"error": "ID card name doesn't match your register name!"}, 401
             user.real_name = real_name
             user.sex = sex
             user.if_verified = True
             db.session.commit()
             flash('Congratulations, successfully verified your ID card!')
             return flask.jsonify("OK")
-        return flask.jsonify({"error": "Please upload clear ID card photo(face side)."})
+        return {"error": "Please upload clear ID card photo(face side)."}, 401
