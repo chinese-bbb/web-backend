@@ -143,3 +143,16 @@ class ComplaintDAO(object):
             return ret
         else:
             return {}
+
+
+    def fetchByComplaintType(self, complain_type):
+
+        complaints = Complaint.query.filter_by(complain_type=complain_type).all()
+        if complaints:
+            ret = []
+            for complaint in complaints:
+                dump_data = complaint_to_json(complaint)
+                ret.append(dump_data)
+            return ret
+        else:
+            return {}

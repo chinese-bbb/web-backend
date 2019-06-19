@@ -213,3 +213,26 @@ class ComplaintByMerchant(Resource):
         merchant_id = args['merchant_id']
         res = complaintDAO.fetchByMerchantId(merchant_id)
         return res, 200
+
+complaintByType_parser = api.parser()
+complaintByType_parser.add_argument('complain_type', type=str, required=True, help='complaint type', location='args')
+
+@ns.route('/complaintByType')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class ComplaintByMerchant(Resource):
+
+    @ns.doc('get Complaints by complain_type')
+    @api.doc(parser=complaintByType_parser)
+    @api.expect(complaintByType_parser)
+    @ns.response(200, 'Success', complaints_marshall_model)
+    @login_required
+    def get(self):
+        '''get Complaint by complain_type'''
+
+        args = complaintByType_parser.parse_args()
+        complain_type = args['complain_type']
+        res = complaintDAO.fetchByComplaintType(complain_type)
+        return res, 200
