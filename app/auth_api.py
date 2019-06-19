@@ -168,7 +168,8 @@ class Register(Resource):
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
 
-        return {"state": "Success"},200
+        login_user(user, remember=True)
+        return flask.jsonify("OK")
 
 
 changepwd_parser = api.parser()
