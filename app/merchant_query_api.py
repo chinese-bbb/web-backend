@@ -75,7 +75,6 @@ class MerchantQuery(Resource):
         keyword = args['keyword']
 
         merchant_query_res = MerchantQueryRaw.query.filter_by(keyword=keyword).first()
-        dump_data = merchant_resp.dump(merchant_query_res).data
         if merchant_query_res is None:
             merchant_json_dict = basic_detail(keyword)
             merchant_json_str = json.dumps(merchant_json_dict)
@@ -87,10 +86,14 @@ class MerchantQuery(Resource):
 
             merchant_query_return = MerchantQueryRaw.query.filter_by(keyword=keyword).first()
             dump_data = merchant_resp.dump(merchant_query_return).data
+            ret_storage = json.loads(merchant_query_return.get_storage())
+            dump_data['storage'] = ret_storage
             return dump_data
         else:
             print("has merchant query storage")
             dump_data = merchant_resp.dump(merchant_query_res).data
+            ret_storage = json.loads(merchant_query_res.get_storage())
+            dump_data['storage'] = ret_storage
             return dump_data
 
 @ns.route('/merchant/<int:id>')
@@ -109,6 +112,8 @@ class Merchant(Resource):
 
         if merchant_query_res:
             dump_data = merchant_resp.dump(merchant_query_res).data
+            ret_storage = json.loads(merchant_query_res.get_storage())
+            dump_data['storage'] = ret_storage
             return dump_data
         api.abort(404, "Merchant by merchant_id {} doesn't exist".format(id))
 
