@@ -69,9 +69,11 @@ class Post(db.Model):
 
 
 class FuzzySearchRaw(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    keyword = db.Column(db.String(140))
-    storage = db.Column(db.String(10000))
+    id           = db.Column(db.Integer, primary_key=True)
+    keyword      = db.Column(db.String(140))
+    pageIndex    = db.Column(db.Integer)
+    totalPage    = db.Column(db.Integer)
+    storage      = db.Column(db.String(10000))
 
     def __init__(self, keyword):
         self.keyword = keyword

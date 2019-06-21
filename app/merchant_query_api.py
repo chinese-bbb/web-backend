@@ -5,7 +5,7 @@ from flask_restplus import Resource
 
 from app import db, api
 from app.models import FuzzySearchRaw, MerchantQueryRaw
-from app.qichacha.qichacha_api import fuzzy_search, basic_detail
+from app.qichacha.qichacha_api import fuzzy_search, basic_detail, fuzzy_search_pageIndex
 from app.db_models.merchant_model import merchant_resp
 from marshmallow_jsonschema import JSONSchema
 
@@ -28,7 +28,7 @@ class FuzzyQuery(Resource):
     @login_required
     @api.doc(parser=qichacha_parser)
     def get(self):
-        '''fuzzy_query'''
+        '''fuzzy_query with paging support'''
 
         args = qichacha_parser.parse_args()
         keyword = args['keyword']
@@ -48,6 +48,45 @@ class FuzzyQuery(Resource):
             storage = fuzzy_search_res.get_storage()
             obj = json.loads(storage)
             return {"return": obj}
+
+qichacha_page_parser = api.parser()
+qichacha_page_parser.add_argument('keyword',   type=str, required=True, help='keyword', location='args')
+qichacha_page_parser.add_argument('pageIndex', type=int, required=True, help='pageIndex', location='args')
+
+@ns.route('/merchant_search')
+@api.doc(responses={
+    200: 'Success',
+    400: 'Validation Error'
+})
+class MerchantSearch(Resource):
+
+    @login_required
+    @api.doc(parser=qichacha_page_parser)
+    def get(self):
+        '''fuzzy_query'''
+
+        args = qichacha_page_parser.parse_args()
+        keyword = args['keyword']
+        pageIndex = args['pageIndex']
+
+        fuzzy_search_res = FuzzySearchRaw.query.filter_by(keyword = keyword,
+                                                          pageIndex = pageIndex).first()
+        if fuzzy_search_res is None:
+            fuzzy_result_json_dict, total_records = fuzzy_search_pageIndex(keyword, pageIndex)
+            fuzzy_result_json_str = json.dumps(fuzzy_result_json_dict)
+
+            search_content = FuzzySearchRaw(keyword=keyword)
+            search_content.set_storage(fuzzy_result_json_str)
+            search_content.pageIndex = pageIndex
+            search_content.totalPage = int(total_records/10) + 1
+            db.session.add(search_content)
+            db.session.commit()
+
+            return {"return": json.loads(fuzzy_result_json_str), "totalPage": search_content.totalPage}
+        else:
+            storage = fuzzy_search_res.get_storage()
+            obj = json.loads(storage)
+            return {"return": obj, "totalPage:": fuzzy_search_res.totalPage}
 
 
 def getMerchantIdFromDB(keyword):
