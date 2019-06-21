@@ -130,6 +130,12 @@ class Complaint(Resource):
         data['user_id'] = user_id
         data['if_negotiated_by_merchant'] = parseBoolean(data['if_negotiated_by_merchant'])
         data['allow_public'] = parseBoolean(data['allow_public'])
+
+        # TODO: if allow_contact_by_merchant key doesn't exist, what we do.
+
+        if 'invoice_files' not in data:
+            data['allow_contact_by_merchant'] = True
+
         data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
         data['allow_press'] = parseBoolean(data['allow_press'])
         data['complaint_status'] = 'initialized'
