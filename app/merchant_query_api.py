@@ -6,7 +6,7 @@ from flask_restplus import Resource
 from app import db, api
 from app.models import FuzzySearchRaw, MerchantQueryRaw
 from app.qichacha.qichacha_api import fuzzy_search, basic_detail, fuzzy_search_pageIndex
-from app.db_models.merchant_model import merchant_resp
+from app.db_models.merchant_model import merchant_resp, merchant_search_resp
 from marshmallow_jsonschema import JSONSchema
 
 ns = api.namespace('api', description='All API descriptions')
@@ -14,6 +14,9 @@ ns = api.namespace('api', description='All API descriptions')
 json_schema = JSONSchema()
 merchant_marshall_model = api.schema_model('MerchantResponse',
                                           json_schema.dump(merchant_resp).data['definitions']['MerchantResponse'])
+
+merchant_search_marshall_model = api.schema_model('MerchantSearchResponse',
+                                          json_schema.dump(merchant_search_resp).data['definitions']['MerchantSearchResponse'])
 
 qichacha_parser = api.parser()
 qichacha_parser.add_argument('keyword', type=str, required=True, help='keyword', location='args')
@@ -62,8 +65,9 @@ class MerchantSearch(Resource):
 
     @login_required
     @api.doc(parser=qichacha_page_parser)
+    @ns.response(200, 'Success', merchant_search_marshall_model)
     def get(self):
-        '''fuzzy_query'''
+        '''Merchant search by merchant keyword and page Index'''
 
         args = qichacha_page_parser.parse_args()
         keyword = args['keyword']
@@ -82,11 +86,13 @@ class MerchantSearch(Resource):
             db.session.add(search_content)
             db.session.commit()
 
-            return {"return": json.loads(fuzzy_result_json_str), "totalPage": search_content.totalPage}
+            return {"result": json.loads(fuzzy_result_json_str),
+                    "totalPage": search_content.totalPage}
         else:
             storage = fuzzy_search_res.get_storage()
             obj = json.loads(storage)
-            return {"return": obj, "totalPage:": fuzzy_search_res.totalPage}
+            return {"result": obj,
+                    "totalPage:": fuzzy_search_res.totalPage}
 
 
 def getMerchantIdFromDB(keyword):
@@ -106,7 +112,7 @@ class MerchantQuery(Resource):
 
     @login_required
     @api.doc(parser=qichacha_parser)
-    @ns.response(200, 'Success', merchant_marshall_model)
+    @ns.response(200, 'Success', merchant_search_marshall_model)
     def get(self):
         '''Detailed Merchant_query'''
 

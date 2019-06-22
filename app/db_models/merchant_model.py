@@ -7,7 +7,7 @@ from dateutil import parser
 import json
 from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
-from app.models import UserSchema, MerchantQueryRaw
+from app.models import UserSchema, MerchantQueryRaw,FuzzySearchRaw
 
 
 class MerchantResponse(TableSchema):
@@ -20,3 +20,12 @@ class MerchantResponse(TableSchema):
 
 merchant_resp = MerchantResponse()
 
+class MerchantSearchResponse(TableSchema):
+    class Meta:
+        table = FuzzySearchRaw.__table__
+        exclude = ("id","keyword","storage","pageIndex")
+
+    result = fields.String()
+
+
+merchant_search_resp = MerchantSearchResponse()
