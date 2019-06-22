@@ -92,7 +92,7 @@ class MerchantSearch(Resource):
             storage = fuzzy_search_res.get_storage()
             obj = json.loads(storage)
             return {"result": obj,
-                    "totalPage:": fuzzy_search_res.totalPage}
+                    "totalPage": fuzzy_search_res.totalPage}
 
 
 def getMerchantIdFromDB(keyword):
