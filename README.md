@@ -68,7 +68,17 @@ Done! The database should have evolved schema.
 3. Whenevery you need to ssh into the EC2 machine. Do 
 	eb ssh <EB environment name>
 
+4. App path on EC2:
+    /opt/python/current/app
 
+### Steps to download a file from Elastic beanstalk (an EC2 instance) 
+
+1. Find public DNS address first from ec2 dashboard on aws.com
+https://us-east-2.console.aws.amazon.com/ec2/v2/home?region=us-east-2#Instances:sort=dnsName
+
+2. Do scp using -i XXXXX.pem
+scp -i XXXX.pem ec2-user@ec2XXXXXXXXX.us-east-2.compute.amazonaws.com:/opt/python/current/app/XXXXXX . 
+    
 ### Steps to add Environment Variables:
 
 1. Log in Aws Console and access Application page
