@@ -58,7 +58,7 @@ class TencentOcr(object):
 
             clientProfile = ClientProfile()
             clientProfile.httpProfile = httpProfile
-            client = ocr_client.OcrClient(self.credential, "ap-guangzhou", clientProfile)
+            client = ocr_client.OcrClient(self.credential, "na-toronto", clientProfile)
 
             req = models.IDCardOCRRequest()
             req.Config = json.dumps({"CopyWarn": True, "ReshootWarn": True})
