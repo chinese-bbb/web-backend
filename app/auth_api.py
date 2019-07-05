@@ -259,6 +259,15 @@ class IdentifyIDCard(Resource):
         id_path = args['id_path']
         if not id_path:
             return flask.jsonify({"error": "Invalid image url"})
+
+        # TODO: remove this hack in near future.
+        user = User.query.filter_by(id=user_id).first()
+        user.if_verified = True
+        db.session.commit()
+        flash('Congratulations, successfully verified your ID card!')
+        return flask.jsonify("OK")
+
+        # TODO: one hack to unblock production.
         real_name, sex = tencent_ocr.identify(id_path)
         if real_name and sex:
             user = User.query.filter_by(id=user_id).first()
