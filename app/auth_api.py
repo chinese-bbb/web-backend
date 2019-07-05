@@ -10,6 +10,7 @@ from app.models import User, UserSchema
 from app.tencent.id_ocr import tencent_ocr
 from app.tencent.send_sms import send_message
 from marshmallow_jsonschema import JSONSchema
+import random
 
 ns = api.namespace('api', description='All API descriptions')
 
@@ -18,6 +19,9 @@ json_schema = JSONSchema()
 
 complaint_marshall_model = api.schema_model('UserSchema',
                                           json_schema.dump(user_schema).data['definitions']['UserSchema'])
+
+# Dictionary to store sms verification code
+messageDict = {}
 
 @ns.route('/user_me')
 class UserMe(Resource):
@@ -52,6 +56,7 @@ class PhoneExist(Resource):
 
 sms_parser = api.parser()
 sms_parser.add_argument('v_code', type=str, required=True, help='verification code', location='json')
+sms_parser.add_argument('sid', type=str, required=True, help='sms ID number', location='json')
 
 @ns.route('/sms/<string:phone_num>')
 @api.doc(params={'phone_num': 'A phone number'})
@@ -64,16 +69,20 @@ class SMS(Resource):
 
     def get(self, phone_num):
         '''Get verification code for a phone number'''
-        log = send_message(phone_num)
-        return {"send_log":log},200
+        rand_num = random.randint(1000, 9999)
+        log = send_message(phone_num, rand_num)
+        sid = log['sid']
+        messageDict[sid] = str(rand_num)
+        return {'sid': str(sid)},200
 
     @api.doc(parser=sms_parser)
     def post(self, phone_num):
         '''Verify the verification number'''
-        args = sms_parser.parse_args()
+        args   = sms_parser.parse_args()
         v_code = args['v_code']
+        sid    = args['sid']
 
-        if v_code != '9273':
+        if messageDict[sid] != v_code:
             return {"error" : "verification code is not correct"}, 401
         return {"state": "Success"},200
 
