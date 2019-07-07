@@ -136,7 +136,8 @@ class Complaint(Resource):
         if 'invoice_files' not in data:
             data['allow_contact_by_merchant'] = True
 
-        data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
+        # data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
+        data['allow_contact_by_merchant'] = True
         data['allow_press'] = parseBoolean(data['allow_press'])
         data['complaint_status'] = 'initialized'
 

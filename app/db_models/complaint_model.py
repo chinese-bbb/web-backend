@@ -86,10 +86,11 @@ class ComplaintDAO(object):
 
     def create(self, data):
 
-        if 'negotiate_timestamp' in data:
+        if 'negotiate_timestamp' in data and data['negotiate_timestamp'] != "":
             data['negotiate_timestamp'] = parser.parse(data['negotiate_timestamp'])
         else:
-            data['negotiate_timestamp'] = "unknown"
+            # if the input entry doesn't come with negotiate time, so do a very old time.
+            data['negotiate_timestamp'] = parser.parse("2001-01-01 17:21:00 CST")
 
         data['purchase_timestamp'] = parser.parse(data['purchase_timestamp'])
 
