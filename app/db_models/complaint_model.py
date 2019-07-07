@@ -90,7 +90,7 @@ class ComplaintDAO(object):
             data['negotiate_timestamp'] = parser.parse(data['negotiate_timestamp'])
         else:
             # if the input entry doesn't come with negotiate time, so do a very old time.
-            data['negotiate_timestamp'] = parser.parse("2001-01-01 17:21:00 CST")
+            data['negotiate_timestamp'] = None
 
         data['purchase_timestamp'] = parser.parse(data['purchase_timestamp'])
 

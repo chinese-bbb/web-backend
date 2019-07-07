@@ -1,7 +1,7 @@
 import datetime
 
 import flask
-from flask import flash, session
+from flask import flash, session, request, after_this_request
 from flask_login import login_user, logout_user, login_required
 from flask_restplus import Resource, fields
 
@@ -56,7 +56,6 @@ class PhoneExist(Resource):
 
 sms_parser = api.parser()
 sms_parser.add_argument('v_code', type=str, required=True, help='verification code', location='json')
-sms_parser.add_argument('sid', type=str, required=True, help='sms ID number', location='json')
 
 @ns.route('/sms/<string:phone_num>')
 @api.doc(params={'phone_num': 'A phone number'})
@@ -73,14 +72,27 @@ class SMS(Resource):
         log = send_message(phone_num, rand_num)
         sid = log['sid']
         messageDict[sid] = str(rand_num)
-        return {'sid': str(sid)},200
+        print(rand_num)
+        return {"state": "Success"}, 200, {'Set-Cookie': 'sid='+sid}
+
+    def _check_cookie_sid(self):
+        if request.cookies.get('sid') == None:
+            api.abort(403, "The cookie doesn't come with sid entry")
+
+        @after_this_request
+        def set_register_cookie(response):
+            response.set_cookie('phone_auth', 'yes', max_age=64800)
+            return response
+
+        return request.cookies.get('sid')
 
     @api.doc(parser=sms_parser)
     def post(self, phone_num):
         '''Verify the verification number'''
         args   = sms_parser.parse_args()
         v_code = args['v_code']
-        sid    = args['sid']
+
+        sid = self._check_cookie_sid()
 
         if messageDict[sid] != v_code:
             return {"error" : "verification code is not correct"}, 401
@@ -157,10 +169,15 @@ register_fields = api.model('RegisterModel', {
 })
 class Register(Resource):
 
+    def _check_cookie_phone_allow(self):
+        if request.cookies.get('phone_auth') == None:
+            api.abort(403, "The cookie doesn't come with phone_allow entry")
+
     @api.expect(register_fields)
     def post(self):
         '''Register a user'''
 
+        self._check_cookie_phone_allow()
         data = api.payload
         username = data['phone_num']
         sex      = data['sex']
