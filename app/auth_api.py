@@ -139,7 +139,7 @@ class Login(Resource):
 @api.doc(responses={
     200: 'Success'
 })
-class Login(Resource):
+class Logout(Resource):
 
     @login_required
     def post(self):
