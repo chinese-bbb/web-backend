@@ -7,23 +7,23 @@ Currently we support python3 only.
 0. Create Environment variables like `QICHACHA_APPKEY` or `TENCENT_APPKEY`(or define them in `.env` file)
 
 ```sh
-pip install --user virtualenv
-pip install -r requirements.txt
-virtualenv env
-source env/bin/activate
+pip install --user pipenv
+export PIPENV_VENV_IN_PROJECT = 1
+pipenv install
+pipenv shell
 pre-commit install -f --install-hooks
 
 python application.py #(use -p to specify binding port)
 ```
 
 ```powershell
-pip install --user virtualenv
-pip install -r requirements.txt
-virtualenv env
-./env/Scripts/activate
+pip install --user pipenv
+$env:PIPENV_VENV_IN_PROJECT = 1
+pipenv install
+pipenv shell
 pre-commit install -f --install-hooks
 
-python application.py #(use -p to specify binding port)
+python application.py
 ```
 
 ### Steps to Verify API

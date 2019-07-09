@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+
+[packages]
+awsebcli = "*"
+boto3 = "*"
+flasgger = "*"
+flask = "*"
+flask-cors = "*"
+flask-login = "*"
+flask-marshmallow = "*"
+flask-migrate = "*"
+flask-restplus = "*"
+flask-sqlalchemy = "*"
+marshmallow-jsonschema = "*"
+marshmallow-sqlalchemy = "*"
+pre-commit = "*"
+pylint = "*"
+pymysql = "*"
+python-dotenv = "*"
+qcloudsms-py = "*"
+sqlalchemy = "*"
+sqlalchemy-utils = "*"
+tencentcloud-sdk-python = "*"
+
+[requires]
+python_version = "3.7"
