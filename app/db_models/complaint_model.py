@@ -61,6 +61,10 @@ def complaint_to_json(complaint):
     user = complaint.User
     dump_user_data = user_schema.dump(user).data
     dump_data = complaint_resp_schema.dump(complaint).data
+
+    # convert string to json array format.
+    dump_data['evidence_files'] = json.loads(dump_data['evidence_files'])
+    dump_data['invoice_files'] = json.loads(dump_data['invoice_files'])
     dump_data['user'] = dump_user_data
     return dump_data
 
