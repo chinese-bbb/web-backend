@@ -1,10 +1,14 @@
 from datetime import datetime
-from app import application, db, login
+
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_marshmallow import Marshmallow
-from marshmallow import Schema, fields
-from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
+from marshmallow_sqlalchemy import TableSchema
+from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
+
+from app import application
+from app import db
+from app import login
 
 ma = Marshmallow(application)
 
@@ -25,10 +29,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     complaints = db.relationship('Complaint', backref='User', lazy=True)
-    comments   = db.relationship('Comment', backref='User', lazy=True)
-
-    def __init__(self, username):
-        self.username = username
+    comments = db.relationship('Comment', backref='User', lazy=True)
 
     def __init__(self, username, sex, registered_date):
         self.username = username
@@ -49,8 +50,8 @@ class UserSchema(TableSchema):
     class Meta:
         table = User.__table__
         include_fk = True
-        exclude = ("id", "posts", "password_hash", "real_name")
-        many= True
+        exclude = ('id', 'posts', 'password_hash', 'real_name')
+        many = True
 
 
 @login.user_loader
@@ -69,11 +70,11 @@ class Post(db.Model):
 
 
 class FuzzySearchRaw(db.Model):
-    id           = db.Column(db.Integer, primary_key=True)
-    keyword      = db.Column(db.String(140))
-    pageIndex    = db.Column(db.Integer)
-    totalPage    = db.Column(db.Integer)
-    storage      = db.Column(db.String(10000))
+    id = db.Column(db.Integer, primary_key=True)
+    keyword = db.Column(db.String(140))
+    pageIndex = db.Column(db.Integer)
+    totalPage = db.Column(db.Integer)
+    storage = db.Column(db.String(10000))
 
     def __init__(self, keyword):
         self.keyword = keyword

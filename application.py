@@ -1,5 +1,6 @@
 import argparse
 import os
+
 from app import application
 
 # Only enable Flask debugging if an env var is set to true
@@ -14,7 +15,9 @@ enable_cool_new_feature = os.environ.get('ENABLE_COOL_NEW_FEATURE') in ['true', 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='arguments options:')
-    parser.add_argument('-p', '--port', type=int, default=5000, help="Specify listening port.")
+    parser.add_argument(
+        '-p', '--port', type=int, default=5000, help='Specify listening port.'
+    )
     args = parser.parse_args()
     port = args.port
 
