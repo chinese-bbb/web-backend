@@ -7,8 +7,8 @@ from flask_restplus import Resource, fields
 
 from app import db, api
 from app.models import User, UserSchema
-from app.tencent.id_ocr import tencent_ocr
-from app.tencent.send_sms import send_message
+from app.services.tencent import tencent_ocr
+from app.services.tencent.send_sms import send_message
 from marshmallow_jsonschema import JSONSchema
 import random
 

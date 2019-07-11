@@ -5,7 +5,7 @@ from flask_restplus import Resource
 
 from app import db, api
 from app.models import FuzzySearchRaw, MerchantQueryRaw
-from app.qichacha.qichacha_api import fuzzy_search, basic_detail, fuzzy_search_pageIndex
+from app.services.qichacha.qichacha_api import fuzzy_search, basic_detail, fuzzy_search_pageIndex
 from app.db_models.merchant_model import merchant_resp, merchant_search_resp
 from marshmallow_jsonschema import JSONSchema
 

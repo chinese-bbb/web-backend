@@ -2,13 +2,13 @@ import time
 import os
 
 from flask import session
-from flask_login import login_user, logout_user, current_user, login_required
-from app import application, db, api
+from flask_login import login_required
+from app import application, api
 from flask_restplus import Resource, fields
 import werkzeug
 from app.db_models.complaint_model import ComplaintDAO, complaint_resp_schema, complaints_resp_schema
 from app.utils import parseBoolean
-from app.aws.s3 import amazon_s3
+from app.services.aws.s3 import amazon_s3
 from marshmallow_jsonschema import JSONSchema
 
 json_schema = JSONSchema()
