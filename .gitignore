@@ -123,8 +123,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-# custom ignores
+# IDE
+.idea
+.vscode
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
@@ -133,7 +134,7 @@ dmypy.json
 templates/
 .idea/
 
-#aws settings
+# aws settings
 .ebextensions/
 
 # Local Test files
@@ -143,3 +144,5 @@ frequently_used_api.txt
 test_pic.jpg
 header.txt
 sql_frequent.txt
+
+.history
