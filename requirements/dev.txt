@@ -1,0 +1,5 @@
+autopep8
+awsebcli
+pre-commit
+pylint
+pytest
