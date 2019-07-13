@@ -1,13 +1,13 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
-from config import Config
 from flasgger import Swagger
-from flask_restplus import Resource, Api
+from flask import Flask
 from flask_cors import CORS
-
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_restplus import Api
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+
+from config import Config
 
 application = Flask(__name__)
 CORS(application, supports_credentials=True)
@@ -17,11 +17,11 @@ swagger = Swagger(application)
 application.config.from_object(Config)
 
 naming_convention = {
-    "ix": 'ix_%(column_0_label)s',
-    "uq": "uq_%(table_name)s_%(column_0_name)s",
-    "ck": "ck_%(table_name)s_%(column_0_name)s",
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s"
+    'ix': 'ix_%(column_0_label)s',
+    'uq': 'uq_%(table_name)s_%(column_0_name)s',
+    'ck': 'ck_%(table_name)s_%(column_0_name)s',
+    'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
+    'pk': 'pk_%(table_name)s',
 }
 
 # db = SQLAlchemy(app=application)
@@ -36,12 +36,16 @@ with application.app_context():
 
 login = LoginManager(application)
 
-api = Api(application, version='1.0', title='HuXin API',
-    description='Huxin API v1', doc='/doc/'
+api = Api(
+    application,
+    version='1.0',
+    title='HuXin API',
+    description='Huxin API v1',
+    doc='/doc/',
 )
 
-from app import models
-from app import auth_api
-from app import complaint_api
-from app import merchant_query_api
-from app import comment_api
+from app import models  # noqa
+from app import auth_api  # noqa
+from app import complaint_api  # noqa
+from app import merchant_query_api  # noqa
+from app import comment_api  # noqa

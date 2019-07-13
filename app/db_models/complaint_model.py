@@ -1,29 +1,32 @@
-from datetime import datetime
-from app import application, db, api
-from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
-from app.models import User, MerchantQueryRaw
-from app import db, api
-from dateutil import parser
 import json
-from marshmallow import Schema, fields
-from marshmallow_sqlalchemy import ModelSchema, fields_for_model, TableSchema
+from datetime import datetime
+
+from dateutil import parser
+from marshmallow import fields
+from marshmallow_sqlalchemy import TableSchema
+
+from app import api
+from app import db
+from app.models import MerchantQueryRaw
+from app.models import User
 from app.models import UserSchema
+
 
 class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     merchant_id = db.Column(db.Integer, index=True)
     complaint_body = db.Column(db.String(20000))
     expected_solution_body = db.Column(db.String(20000))
-    complain_type   = db.Column(db.String(140))
+    complain_type = db.Column(db.String(140))
     complaint_status = db.Column(db.String(140))
     complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
-    if_negotiated_by_merchant =  db.Column(db.Boolean(), default=False)
+    if_negotiated_by_merchant = db.Column(db.Boolean(), default=False)
     negotiate_timestamp = db.Column(db.DateTime, index=True)
-    allow_public =  db.Column(db.Boolean(), default=False)
-    allow_contact_by_merchant =  db.Column(db.Boolean(), default=False)
-    allow_press =  db.Column(db.Boolean(), default=False)
-    item_price =  db.Column(db.String(200))
+    allow_public = db.Column(db.Boolean(), default=False)
+    allow_contact_by_merchant = db.Column(db.Boolean(), default=False)
+    allow_press = db.Column(db.Boolean(), default=False)
+    item_price = db.Column(db.String(200))
     item_model = db.Column(db.String(200))
     trade_info = db.Column(db.String(20000))
     relatedProducts = db.Column(db.String(5000))
@@ -32,22 +35,31 @@ class Complaint(db.Model):
     invoice_files = db.Column(db.String(2000))
     evidence_files = db.Column(db.String(2000))
 
+
 class ComplaintState(fields.String):
     def _jsonschema_type_mapping(self):
         return {
             'type': 'string',
-            'enum': ['initialized', 'Merchant_write_back', 'in_communication', 'unresolved', 'resolved']
+            'enum': [
+                'initialized',
+                'Merchant_write_back',
+                'in_communication',
+                'unresolved',
+                'resolved',
+            ],
         }
+
 
 class ComplaintResponse(TableSchema):
     class Meta:
         table = Complaint.__table__
-        exclude = ("id", "complaint_status")
-        many= True
+        exclude = ('id', 'complaint_status')
+        many = True
 
-    complaint_id = fields.String(attribute="id")
+    complaint_id = fields.String(attribute='id')
     user = fields.Nested('UserSchema', many=False)
-    complaint_state = ComplaintState(attribute="complaint_status")
+    complaint_state = ComplaintState(attribute='complaint_status')
+
 
 class ComplaintsResponse(TableSchema):
     ComplaintsResponse = fields.List(fields.Nested(ComplaintResponse), required=True)
@@ -56,6 +68,7 @@ class ComplaintsResponse(TableSchema):
 complaint_resp_schema = ComplaintResponse()
 complaints_resp_schema = ComplaintsResponse(many=True)
 user_schema = UserSchema()
+
 
 def complaint_to_json(complaint):
     user = complaint.User
@@ -68,9 +81,10 @@ def complaint_to_json(complaint):
     dump_data['user'] = dump_user_data
     return dump_data
 
+
 class ComplaintDAO(object):
     def __init__(self):
-        self.OK = "OK"
+        self.OK = 'OK'
 
     def get(self, complaint_id):
         complaint = Complaint.query.filter_by(id=complaint_id).first()
@@ -84,13 +98,13 @@ class ComplaintDAO(object):
         if complaint:
             db.session.delete(complaint)
             db.session.commit()
-            return "deleted"
+            return 'deleted'
         else:
             api.abort(404, "Complaint by id {} doesn't exist".format(complaint))
 
     def create(self, data):
 
-        if 'negotiate_timestamp' in data and data['negotiate_timestamp'] != "":
+        if 'negotiate_timestamp' in data and data['negotiate_timestamp'] != '':
             data['negotiate_timestamp'] = parser.parse(data['negotiate_timestamp'])
         else:
             # if the input entry doesn't come with negotiate time, so do a very old time.
@@ -101,27 +115,25 @@ class ComplaintDAO(object):
         if 'invoice_files' in data:
             data['invoice_files'] = json.dumps(data['invoice_files'])
         else:
-            data['invoice_files'] = "[]"
+            data['invoice_files'] = '[]'
 
         if 'evidence_files' in data:
             data['evidence_files'] = json.dumps(data['evidence_files'])
         else:
-            data['evidence_files'] = "[]"
+            data['evidence_files'] = '[]'
 
         complaint = Complaint(**data)
         db.session.add(complaint)
         db.session.commit()
-        return "OK"
+        return 'OK'
 
     def fetchByUserId(self, phone_num):
 
         user = User.query.filter_by(username=phone_num).first()
         if user is None:
-            return {
-                       "error": "User cannot be found"
-                   }, 404
+            return {'error': 'User cannot be found'}, 404
 
-        complaints = Complaint.query.filter(Complaint.user_id==user.id).all()
+        complaints = Complaint.query.filter(Complaint.user_id == user.id).all()
         if complaints:
             ret = []
             for complaint in complaints:
@@ -135,9 +147,7 @@ class ComplaintDAO(object):
 
         merchant = MerchantQueryRaw.query.filter_by(id=merchant_id).first()
         if merchant is None:
-            return {
-                       "error": "Merchant cannot be found in Merchant Tbale"
-                   }, 404
+            return {'error': 'Merchant cannot be found in Merchant Tbale'}, 404
 
         complaints = Complaint.query.filter_by(merchant_id=merchant_id).all()
         if complaints:
@@ -148,7 +158,6 @@ class ComplaintDAO(object):
             return ret
         else:
             return {}
-
 
     def fetchByComplaintType(self, complain_type):
 

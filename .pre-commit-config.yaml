@@ -21,7 +21,7 @@ repos:
       #- id: detect-aws-credentials
       - id: mixed-line-ending
         args:
-          - --fix=no
+          - --fix=auto
       #- id: pretty-format-json
       #- id: sort-simple-yaml
   - repo: https://gitlab.com/pycqa/flake8
@@ -31,11 +31,14 @@ repos:
         args:
           - --max-line-length=120
   - repo: git@github.com:pre-commit/mirrors-autopep8
-    rev: v1.4.3
+    rev: v1.4.4
     hooks:
       - id: autopep8
         args:
           - --max-line-length=120
+          - --in-place
+          - --aggressive
+          - --aggressive
   - repo: git@github.com:humitos/mirrors-autoflake.git
     rev: v1.2
     hooks:
