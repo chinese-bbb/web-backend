@@ -1,0 +1,48 @@
+version: 1
+
+formatters:
+  file:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  console:
+    format: '%(name)s - %(levelname)s - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: console
+    stream: ext://sys.stdout
+
+  full:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: DEBUG
+    when: 'midnight'
+    formatter: file
+    filename: 'logs/full.log'
+    backupCount: 5
+
+  info:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    when: 'midnight'
+    formatter: file
+    filename: 'logs/info.log'
+    backupCount: 5
+
+  error:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: ERROR
+    when: 'midnight'
+    formatter: file
+    filename: 'logs/error.log'
+    backupCount: 5
+
+loggers:
+  sampleLogger:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+
+root:
+  level: DEBUG
+  handlers: [console, full, info, error]

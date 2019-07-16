@@ -1,21 +1,25 @@
 import enum
+import logging
 import os
 import time
 
 import werkzeug
+from flask import current_app as app
 from flask import session
 from flask_login import login_required
 from flask_restplus import fields
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
-from app import api
-from app import application
-from app.db_models.complaint_model import complaint_resp_schema
-from app.db_models.complaint_model import ComplaintDAO
-from app.db_models.complaint_model import complaints_resp_schema
+from .models import complaint_resp_schema
+from .models import ComplaintDAO
+from .models import complaints_resp_schema
+from app.extensions import api
 from app.services.aws.s3 import amazon_s3
 from app.utils import parseBoolean
+
+
+log = logging.getLogger(__name__)
 
 json_schema = JSONSchema()
 
@@ -62,12 +66,12 @@ class FileUpload(Resource):
     @api.doc(parser=file_upload)
     @api.expect(file_upload)
     def post(self):
-        print(session)
+        log.debug(session)
         user_id = session['user_id']
         args = file_upload.parse_args()
         if args['upload_type'] not in ['invoice', 'id', 'evidence']:
             return {'state': 'incorrect upload type'}, 401
-        print(args['pic_file'].mimetype)
+        log.debug(args['pic_file'].mimetype)
         if args['pic_file'].mimetype and len(args['pic_file'].mimetype.split('/')) == 2:
             file_type, file_format = args['pic_file'].mimetype.split('/')
             if file_type.lower() != 'image' or file_format.lower() not in [
@@ -76,14 +80,14 @@ class FileUpload(Resource):
                 'png',
             ]:
                 return {'state': 'incorrect file type/format'}, 401
-            folder = application.config.get(f"{args['upload_type'].upper()}_FOLDER")
+            folder = app.config.get(f"{args['upload_type'].upper()}_FOLDER")
             destination = os.path.join(
-                application.config.get('WORKING_FOLDER'), user_id, folder + '/'
+                app.config.get('WORKING_FOLDER'), user_id, folder + '/'
             )
             if not os.path.exists(destination):
                 os.makedirs(destination)
             pic_file = '%s%s' % (destination, str(int(time.time())) + '.' + file_format)
-            print(pic_file)
+            log.debug(pic_file)
             args['pic_file'].save(pic_file)
             pic_path = amazon_s3.upload_file(pic_file, folder)
             return {'state': 'Success', 'path': pic_path}, 200
@@ -179,7 +183,7 @@ class Complaint(Resource):
 @ns.route('/complaint/<int:id>')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Complaint Identifier')
-class Comment(Resource):
+class ComplaintById(Resource):
     @login_required
     @ns.response(200, 'Success', complaint_marshall_model)
     def get(self, id):

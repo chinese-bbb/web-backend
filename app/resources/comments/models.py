@@ -3,9 +3,9 @@ from datetime import datetime
 from marshmallow import fields
 from marshmallow_sqlalchemy import TableSchema
 
-from app import api
-from app import db
-from app.models import UserSchema
+from app.extensions import api
+from app.extensions import db
+from app.resources.users.schemas import UserSchema
 
 
 class Comment(db.Model):
@@ -23,7 +23,7 @@ class CommentResponse(TableSchema):
         many = True
 
     complaint_id = fields.String(attribute='complaint_id')
-    user = fields.Nested('UserSchema', many=False)
+    user = fields.Nested(UserSchema, many=False)
 
 
 class CommentsResponse(TableSchema):

@@ -1,12 +1,16 @@
+import logging
+
 from flask import session
 from flask_login import login_required
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
-from app import api
-from app.db_models.comment_model import comment_schema
-from app.db_models.comment_model import CommentDAO
-from app.db_models.comment_model import comments_schema
+from .models import comment_schema
+from .models import CommentDAO
+from .models import comments_schema
+from app.extensions import api
+
+log = logging.getLogger(__name__)
 
 json_schema = JSONSchema()
 

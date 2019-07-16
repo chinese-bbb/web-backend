@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*-coding:utf-8-*-
+import logging
 import os
+
+log = logging.getLogger(__name__)
 
 
 def send_message(phone, random_num):
@@ -33,9 +36,9 @@ def send_message(phone, random_num):
             86, phone_numbers[0], template_id, params, sign=sms_sign, extend='', ext=''
         )  # 签名参数未提供或者为空时，会使用默认签名发送短信
     except HTTPError as e:
-        print(e)
+        log.debug(e)
     except Exception as e:
-        print(e)
+        log.debug(e)
 
-    print(result)
+    log.debug(result)
     return result
