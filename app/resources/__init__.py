@@ -10,7 +10,7 @@ variable.
 """
 import logging
 
-log = logging.getLogger('resources')
+log = logging.getLogger(__name__)
 
 
 def init_app(app, **kwargs):
