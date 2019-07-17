@@ -10,9 +10,9 @@ def create_app(**kwargs):
     """
     # This is a workaround for Alpine Linux (musl libc) quirk:
     # https://github.com/docker-library/python/issues/211
-    import threading
+    # import threading
 
-    threading.stack_size(2 * 1024 * 1024)
+    # threading.stack_size(2 * 1024 * 1024)
 
     app = Flask(__name__, **kwargs)
 
