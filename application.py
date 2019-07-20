@@ -2,6 +2,8 @@
 Application Entry
 ====================
 """
+from dotenv import find_dotenv
+from dotenv import load_dotenv
 
 if __name__ == '__main__':
     import argparse
@@ -13,12 +15,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
+    load_dotenv(find_dotenv())
+
     import logging.config
     import yaml
-    import os
-
-    if not os.path.exists('./logs'):
-        os.makedirs('./logs')
 
     with open('logging-conf.yaml', 'r') as f:
         config = yaml.safe_load(f.read())
@@ -28,4 +28,4 @@ if __name__ == '__main__':
 
     app = create_app()
 
-    app.run(host='127.0.0.1', port=port)
+    app.run(host=app.config.get('HOST_IP'), port=port)

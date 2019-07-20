@@ -1,11 +1,6 @@
 import logging
 import os
 
-from dotenv import find_dotenv
-from dotenv import load_dotenv
-
-load_dotenv(find_dotenv())
-
 log = logging.getLogger(__name__)
 
 
@@ -15,6 +10,7 @@ class Config(object):
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    HOST_IP = os.environ.get('HOST_IP')
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL'
@@ -24,7 +20,7 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    WORKING_FOLDER = os.getcwd() + '/temp'
+    WORKING_FOLDER = os.environ.get('WORKING_FOLDER')
 
     if os.environ.get('REMEMBER_COOKIE_DOMAIN'):
         REMEMBER_COOKIE_DOMAIN = os.environ.get('REMEMBER_COOKIE_DOMAIN')

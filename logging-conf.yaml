@@ -14,27 +14,27 @@ handlers:
     stream: ext://sys.stdout
 
   full:
-    class: logging.handlers.TimedRotatingFileHandler
+    class: tools.custom_logging_handlers.CustomTimedRotatingFileHandler
     level: DEBUG
     when: 'midnight'
     formatter: file
-    filename: 'logs/full.log'
+    filename: 'full.log'
     backupCount: 5
 
   info:
-    class: logging.handlers.TimedRotatingFileHandler
+    class: tools.custom_logging_handlers.CustomTimedRotatingFileHandler
     level: INFO
     when: 'midnight'
     formatter: file
-    filename: 'logs/info.log'
+    filename: 'info.log'
     backupCount: 5
 
   error:
-    class: logging.handlers.TimedRotatingFileHandler
+    class: tools.custom_logging_handlers.CustomTimedRotatingFileHandler
     level: ERROR
     when: 'midnight'
     formatter: file
-    filename: 'logs/error.log'
+    filename: 'error.log'
     backupCount: 5
 
 loggers:
