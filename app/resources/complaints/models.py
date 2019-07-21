@@ -5,11 +5,11 @@ from dateutil import parser
 from marshmallow import fields
 from marshmallow_sqlalchemy import TableSchema
 
-from app import api
-from app import db
-from app.models import MerchantQueryRaw
-from app.models import User
-from app.models import UserSchema
+from app.extensions import api
+from app.extensions import db
+from app.resources.merchants.models import MerchantQueryRaw
+from app.resources.users.schemas import UserSchema
+from app.resources.users.user import User
 
 
 class Complaint(db.Model):
@@ -57,7 +57,7 @@ class ComplaintResponse(TableSchema):
         many = True
 
     complaint_id = fields.String(attribute='id')
-    user = fields.Nested('UserSchema', many=False)
+    user = fields.Nested(UserSchema, many=False)
     complaint_state = ComplaintState(attribute='complaint_status')
 
 

@@ -6,6 +6,7 @@ email: lanlvdefan@gmail.com
 date: 2019-06-11
 """
 import json
+import logging
 
 from tencentcloud.common import credential
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import (
@@ -17,6 +18,8 @@ from tencentcloud.ocr.v20181119 import models
 from tencentcloud.ocr.v20181119 import ocr_client
 
 from config import Config
+
+log = logging.getLogger(__name__)
 
 
 class TencentOcr(object):
@@ -43,18 +46,18 @@ class TencentOcr(object):
                 warn_infos = advanced_info['WarnInfos']
                 if warn_infos:
                     if -9103 in warn_infos or -9102 in warn_infos:
-                        print('ID card might have been copied from other sources')
+                        log.debug('ID card might have been copied from other sources')
                     elif -9105 in warn_infos:
-                        print('ID card not clear enough')
+                        log.debug('ID card not clear enough')
                     else:
-                        print(f'unknown warning code:{warn_infos}')
+                        log.debug(f'unknown warning code:{warn_infos}')
                 else:
                     real_name = identify_result.get('Name')
                     sex = identify_result.get('Sex')
             except KeyError as field:
-                print(f'response field missing: {field}')
+                log.debug(f'response field missing: {field}')
             except Exception as e:
-                print(e)
+                log.debug(e)
         return real_name, sex
 
     def ocr_request(self, id_path):
@@ -71,11 +74,11 @@ class TencentOcr(object):
             req.ImageUrl = id_path
             req.CardSide = 'FRONT'
             resp = client.IDCardOCR(req)
-            print(json.loads(resp.to_json_string()))
+            log.debug(json.loads(resp.to_json_string()))
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            print(err)
+            log.debug(err)
 
 
 tencent_ocr = TencentOcr()

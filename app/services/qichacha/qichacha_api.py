@@ -2,12 +2,15 @@
 # -*-coding:utf-8-*-
 import hashlib
 import json
+import logging
 import os
 import time
 
 import requests
 
-from app import api
+from app.extensions import api
+
+log = logging.getLogger(__name__)
 
 appkey = os.environ['QICHACHA_APPKEY']
 seckey = os.environ['QICHACHA_SECRET']
@@ -22,7 +25,7 @@ def fuzzy_search(keyword):
     hl = hashlib.md5()
     hl.update(token.encode(encoding=encode))
     token = hl.hexdigest().upper()
-    print('MD5加密后为 ：' + token)
+    log.debug('MD5加密后为 ：' + token)
 
     # 设置请求Url-请自行设置Url
     reqInterNme = 'http://api.qichacha.com/ECIV4/Search'
@@ -32,12 +35,12 @@ def fuzzy_search(keyword):
     response = requests.get(url, headers=headers)
 
     # 结果返回处理
-    print(response.status_code)
+    log.debug(response.status_code)
     raw_str = response.content.decode()
-    print(raw_str)
+    log.debug(raw_str)
 
     result = json.loads(raw_str)
-    print(result['Result'])
+    log.debug(result['Result'])
     return result['Result']
 
 
@@ -49,7 +52,7 @@ def fuzzy_search_pageIndex(keyword, pageIndex):
     hl = hashlib.md5()
     hl.update(token.encode(encoding=encode))
     token = hl.hexdigest().upper()
-    print('MD5加密后为 ：' + token)
+    log.debug('MD5加密后为 ：' + token)
 
     # 设置请求Url-请自行设置Url
     reqInterNme = 'http://api.qichacha.com/ECIV4/Search'
@@ -59,9 +62,9 @@ def fuzzy_search_pageIndex(keyword, pageIndex):
     response = requests.get(url, headers=headers)
 
     # 结果返回处理
-    print(response.status_code)
+    log.debug(response.status_code)
     raw_str = response.content.decode()
-    print(raw_str)
+    log.debug(raw_str)
 
     result = json.loads(raw_str)
 
@@ -72,7 +75,7 @@ def fuzzy_search_pageIndex(keyword, pageIndex):
                 result['Status']
             ),
         )
-    print(result['Result'])
+    log.debug(result['Result'])
     return result['Result'], result['Paging']['TotalRecords']
 
 
@@ -84,7 +87,7 @@ def basic_detail(keyword):
     hl = hashlib.md5()
     hl.update(token.encode(encoding=encode))
     token = hl.hexdigest().upper()
-    print('MD5加密后为 ：' + token)
+    log.debug('MD5加密后为 ：' + token)
 
     # 设置请求Url-请自行设置Url
     reqInterNme = 'http://api.qichacha.com/ECIV4/GetBasicDetailsByName'
@@ -94,10 +97,10 @@ def basic_detail(keyword):
     response = requests.get(url, headers=headers)
 
     # 结果返回处理
-    print(response.status_code)
+    log.debug(response.status_code)
     raw_str = response.content.decode()
-    print(raw_str)
+    log.debug(raw_str)
 
     result = json.loads(raw_str)
-    print(result['Result'])
+    log.debug(result['Result'])
     return result['Result']

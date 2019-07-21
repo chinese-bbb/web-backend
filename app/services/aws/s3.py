@@ -5,12 +5,15 @@ author: pistoolster
 email: lanlvdefan@gmail.com
 date: 2019-06-07
 """
+import logging
 import uuid
 
 import boto3
 from botocore.exceptions import ClientError
 
 from config import Config
+
+log = logging.getLogger(__name__)
 
 
 class AmazonS3(object):
@@ -23,12 +26,12 @@ class AmazonS3(object):
 
     def get_or_create_bucket(self, bucket_name):
         buckets = self.client.list_buckets()
-        print(buckets)
+        log.debug(buckets)
         if bucket_name not in [bucket['Name'] for bucket in buckets['Buckets']]:
             try:
                 self.client.create_bucket(Bucket=bucket_name)
             except ClientError as e:
-                print(e)
+                log.debug(e)
 
     def upload_file(self, file_name, sub_folder, object_name=None):
         """
@@ -47,9 +50,10 @@ class AmazonS3(object):
             response = self.client.upload_file(
                 file_name, Config.AWS_S3_BUCKET, sub_folder + '/' + object_name
             )
-            print(response)
+            # todo: clean uploaded file in working folder
+            log.debug(response)
         except ClientError as e:
-            print(e)
+            log.debug(e)
         else:
             return '/'.join(
                 [

@@ -1,5 +1,6 @@
 import datetime
 import enum
+import logging
 import random
 
 import flask
@@ -14,12 +15,14 @@ from flask_restplus import fields
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
-from app import api
-from app import db
-from app.models import User
-from app.models import UserSchema
+from app.extensions import api
+from app.extensions import db
+from app.resources.users.schemas import UserSchema
+from app.resources.users.user import User
 from app.services.tencent.id_ocr import tencent_ocr
 from app.services.tencent.send_sms import send_message
+
+log = logging.getLogger(__name__)
 
 ns = api.namespace('api', description='All API descriptions')
 
@@ -55,7 +58,7 @@ class PhoneExist(Resource):
     @api.doc(responses={200: 'Success', 400: 'Validation Error'})
     def get(self, phone_num):
         user = User.query.filter_by(username=phone_num).first()
-        print(user)
+        log.debug(user)
         if user is None:
             return {phone_num: 'Not Registerred phone num'}, 400
         return {'state': 'Success'}, 200
@@ -79,7 +82,7 @@ class SMS(Resource):
         log = send_message(phone_num, rand_num)
         sid = log['sid']
         messageDict[sid] = str(rand_num)
-        print(rand_num)
+        log.debug(rand_num)
         return {'state': 'Success'}, 200, {'Set-Cookie': 'sid=' + sid}
 
     def _check_cookie_sid(self):
@@ -133,12 +136,12 @@ class Login(Resource):
         password = args['password']
 
         user = User.query.filter_by(username=username).first()
-        print(user)
+        log.debug(user)
         if user is None:
             return {'error': 'User cannot be found'}, 404
 
         if not user.check_password(password):
-            print('Invalid username or password')
+            log.debug('Invalid username or password')
             return {'error': 'Invalid phone num or password'}, 401
 
         login_user(user, remember=True)
@@ -232,9 +235,9 @@ class ChangePassword(Resource):
         new_password = args['new_password']
 
         user = User.query.filter_by(username=username).first()
-        print(user)
+        log.debug(user)
         if user is None or not user.check_password(old_password):
-            print('Invalid username or password')
+            log.debug('Invalid username or password')
             return flask.jsonify({'error': 'Invalid phone num or password'})
 
         user.set_password(new_password)
@@ -265,10 +268,10 @@ class ResetPassword(Resource):
 
         user = User.query.filter_by(username=username).first()
         if user is None:
-            print('Invalid username')
+            log.debug('Invalid username')
             return flask.jsonify({'error': 'Invalid phone num'})
 
-        print(user)
+        log.debug(user)
         user.set_password(new_password)
         db.session.commit()
         flash('Congratulations, successfully updated user password!')

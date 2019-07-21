@@ -1,18 +1,21 @@
 import json
+import logging
 
 from flask_login import login_required
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
-from app import api
-from app import db
-from app.db_models.merchant_model import merchant_resp
-from app.db_models.merchant_model import merchant_search_resp
-from app.models import FuzzySearchRaw
-from app.models import MerchantQueryRaw
+from .models import FuzzySearchRaw
+from .models import merchant_resp
+from .models import merchant_search_resp
+from .models import MerchantQueryRaw
+from app.extensions import api
+from app.extensions import db
 from app.services.qichacha.qichacha_api import basic_detail
 from app.services.qichacha.qichacha_api import fuzzy_search
 from app.services.qichacha.qichacha_api import fuzzy_search_pageIndex
+
+log = logging.getLogger(__name__)
 
 ns = api.namespace('api', description='All API descriptions')
 
@@ -150,7 +153,7 @@ class MerchantQuery(Resource):
             dump_data['storage'] = ret_storage
             return dump_data
         else:
-            print('has merchant query storage')
+            log.debug('has merchant query storage')
             dump_data = merchant_resp.dump(merchant_query_res).data
             ret_storage = json.loads(merchant_query_res.get_storage())
             dump_data['storage'] = ret_storage
