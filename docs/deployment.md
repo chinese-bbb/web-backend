@@ -1,14 +1,26 @@
 # Deployment Notes
 
-### Steps to launch the flask app on AWS at the first time
+### setup eb cli at local machine
 
 1. `pip install awsebcli #(Inside the python virtual environment)`
 
-2. `eb init. Select us-east-2`
+2. `eb init`
 
-3. `eb create`
+    * Select us-east-2
+    * use code-commit
 
-### Steps to add Environment Variables
+3. `eb use <env-name>`
+
+### Using code-commit
+
+If you use IAM user from command line, you need to generate credential for git access.
+
+see:
+- https://docs.aws.amazon.com/zh_cn/codecommit/latest/userguide/setting-up-gc.html
+- https://docs.aws.amazon.com/zh_cn/elasticbeanstalk/latest/dg/eb-cli-codecommit.html
+- https://docs.aws.amazon.com/zh_cn/codecommit/latest/userguide/getting-started.html
+
+### Adding Environment Variables to elastic beanstalk env
 
 1. Log in Aws Console and access elastic beanstalk Application page
 

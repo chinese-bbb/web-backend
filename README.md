@@ -38,6 +38,7 @@ python application.py #(use -p to specify binding port)
 - [ ] Encrypt the app.db. Today the DB is plain and doesn't require credentials.
 - [x] After MVP stage, move the file storage to S3.
 - [ ] Use the standard `Marshmallow` lib instead of `flask-marshmallow`.
+- [ ] dynamic secret_ley on deploy
 
 ## Development
 
