@@ -5,7 +5,14 @@ log = logging.getLogger(__name__)
 
 
 class Config(object):
-    ENABLED_RESOURCES = ('auth', 'complaints', 'comments', 'merchants')
+    ENABLED_RESOURCES = (
+        'auth',
+        'complaints',
+        'comments',
+        'merchants',
+        'users',
+        'tools',
+    )
 
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 

@@ -1,13 +1,10 @@
 import enum
 import logging
-import os
-import time
 
-import werkzeug
-from flask import current_app as app
 from flask import session
 from flask_login import login_required
 from flask_restplus import fields
+from flask_restplus import Namespace
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
@@ -15,18 +12,12 @@ from .models import complaint_resp_schema
 from .models import ComplaintDAO
 from .models import complaints_resp_schema
 from app.extensions import api
-from app.services.aws.s3 import amazon_s3
 from app.utils import parseBoolean
 
 
 log = logging.getLogger(__name__)
 
 json_schema = JSONSchema()
-
-complaint_marshall_model = api.schema_model(
-    'ComplaintResponse',
-    json_schema.dump(complaint_resp_schema).data['definitions']['ComplaintResponse'],
-)
 
 complaints_marshall_model = api.schema_model(
     'ComplaintsResponse',
@@ -36,63 +27,9 @@ complaints_marshall_model = api.schema_model(
 )
 
 
-ns = api.namespace('api', description='All API descriptions')
+ns = Namespace('complaints', path='/complaints', description='Complaint Resources API')
 
 complaintDAO = ComplaintDAO()
-
-
-file_upload = ns.parser()
-file_upload.add_argument(
-    'upload_type',
-    type=str,
-    required=True,
-    help='upload type(invoice/id/evidence)',
-    location='form',
-)
-file_upload.add_argument(
-    'pic_file',
-    type=werkzeug.datastructures.FileStorage,
-    location='files',
-    required=True,
-    help='file',
-)
-
-
-@ns.route('/upload_file')
-class FileUpload(Resource):
-    """Upload File."""
-
-    @login_required
-    @api.doc(parser=file_upload)
-    @api.expect(file_upload)
-    def post(self):
-        log.debug(session)
-        user_id = session['user_id']
-        args = file_upload.parse_args()
-        if args['upload_type'] not in ['invoice', 'id', 'evidence']:
-            return {'state': 'incorrect upload type'}, 401
-        log.debug(args['pic_file'].mimetype)
-        if args['pic_file'].mimetype and len(args['pic_file'].mimetype.split('/')) == 2:
-            file_type, file_format = args['pic_file'].mimetype.split('/')
-            if file_type.lower() != 'image' or file_format.lower() not in [
-                'jpeg',
-                'jpg',
-                'png',
-            ]:
-                return {'state': 'incorrect file type/format'}, 401
-            folder = app.config.get(f"{args['upload_type'].upper()}_FOLDER")
-            destination = os.path.join(
-                app.config.get('WORKING_FOLDER'), user_id, folder + '/'
-            )
-            if not os.path.exists(destination):
-                os.makedirs(destination)
-            pic_file = '%s%s' % (destination, str(int(time.time())) + '.' + file_format)
-            log.debug(pic_file)
-            args['pic_file'].save(pic_file)
-            pic_path = amazon_s3.upload_file(pic_file, folder)
-            return {'state': 'Success', 'path': pic_path}, 200
-        else:
-            return {'state': 'failed uploading'}, 401
 
 
 class EnumComplaintType(enum.Enum):
@@ -146,7 +83,7 @@ complaint_parser.add_argument(
 )
 
 
-@ns.route('/complaint')
+@ns.route('/')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class Complaint(Resource):
     @login_required
@@ -180,35 +117,13 @@ class Complaint(Resource):
             return {'state': 'failed creating complaint'}, 401
 
 
-@ns.route('/complaint/<int:id>')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
-@ns.param('id', 'The Complaint Identifier')
-class ComplaintById(Resource):
-    @login_required
-    @ns.response(200, 'Success', complaint_marshall_model)
-    def get(self, id):
-        """get a Comment by comment_id."""
-        res = complaintDAO.get(id)
-        return res
-
-    @ns.doc('delete a comment')
-    @ns.response(204, 'Comment deleted')
-    def delete(self, id):
-        """Delete a comment by comment id."""
-        res = complaintDAO.delete(id)
-        if res == 'deleted':
-            return '', 204
-        else:
-            return {'state': 'delete unsuccessful'}, 200
-
-
 complaintByUser_parser = api.parser()
 complaintByUser_parser.add_argument(
     'phone_num', type=str, required=True, help='complaint id', location='args'
 )
 
 
-@ns.route('/complaintByUser')
+@ns.route('/byUser')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class ComplaintByUser(Resource):
     @ns.doc('get Complaint by username (phone_num)')
@@ -231,7 +146,7 @@ complaintByMerchant_parser.add_argument(
 )
 
 
-@ns.route('/complaintByMerchant')
+@ns.route('/byMerchant')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class ComplaintByMerchant(Resource):
     @ns.doc('get Complaint by merchant_id')
@@ -254,7 +169,7 @@ complaintByType_parser.add_argument(
 )
 
 
-@ns.route('/complaintByType')
+@ns.route('/byType')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class ComplaintByType(Resource):
     @ns.doc('get Complaints by complain_type')
@@ -269,3 +184,31 @@ class ComplaintByType(Resource):
         complain_type = args['complain_type']
         res = complaintDAO.fetchByComplaintType(complain_type)
         return res, 200
+
+
+complaint_marshall_model = api.schema_model(
+    'ComplaintResponse',
+    json_schema.dump(complaint_resp_schema).data['definitions']['ComplaintResponse'],
+)
+
+
+@ns.route('/<int:id>')
+@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.param('id', 'The Complaint Identifier')
+class ComplaintById(Resource):
+    @login_required
+    @ns.response(200, 'Success', complaint_marshall_model)
+    def get(self, id):
+        """get a Comment by comment_id."""
+        res = complaintDAO.get(id)
+        return res
+
+    @ns.doc('delete a comment')
+    @ns.response(204, 'Comment deleted')
+    def delete(self, id):
+        """Delete a comment by comment id."""
+        res = complaintDAO.delete(id)
+        if res == 'deleted':
+            return '', 204
+        else:
+            return {'state': 'delete unsuccessful'}, 200

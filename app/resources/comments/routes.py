@@ -2,6 +2,7 @@ import logging
 
 from flask import session
 from flask_login import login_required
+from flask_restplus import Namespace
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
@@ -14,7 +15,7 @@ log = logging.getLogger(__name__)
 
 json_schema = JSONSchema()
 
-ns = api.namespace('api', description='All API descriptions')
+ns = Namespace('comments', path='/comments', description='Comment Resources API')
 commentDAO = CommentDAO()
 
 comment_marshall_model = api.schema_model(
@@ -37,7 +38,7 @@ upload_comment_parser.add_argument(
 )
 
 
-@ns.route('/comment')
+@ns.route('/')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class Comment(Resource):
     @login_required
@@ -61,7 +62,19 @@ update_comment_parser.add_argument(
 )
 
 
-@ns.route('/comment/<int:id>')
+@ns.route('/byComplaint/<int:id>')
+@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.param('id', 'The complaint identifier')
+class CommentsByComplaint(Resource):
+    @login_required
+    @ns.response(200, 'Success', comments_marshall_model)
+    def get(self, id):
+        """get all Comments given one complaint."""
+        res = commentDAO.fetch_all_by_complaintID(id)
+        return res, 200
+
+
+@ns.route('/<int:id>')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Comment identifier')
 class Comment2(Resource):
@@ -92,15 +105,3 @@ class Comment2(Resource):
         text = args['text']
 
         return commentDAO.update(id, text)
-
-
-@ns.route('/commentsByComplaint/<int:id>')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
-@ns.param('id', 'The complaint identifier')
-class CommentsByComplaint(Resource):
-    @login_required
-    @ns.response(200, 'Success', comments_marshall_model)
-    def get(self, id):
-        """get all Comments given one complaint."""
-        res = commentDAO.fetch_all_by_complaintID(id)
-        return res, 200

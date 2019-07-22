@@ -12,42 +12,21 @@ from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
 from flask_restplus import fields
+from flask_restplus import Namespace
 from flask_restplus import Resource
-from marshmallow_jsonschema import JSONSchema
 
 from app.extensions import api
 from app.extensions import db
-from app.resources.users.schemas import UserSchema
-from app.resources.users.user import User
+from app.resources.users.models import User
 from app.services.tencent.id_ocr import tencent_ocr
 from app.services.tencent.send_sms import send_message
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('api', description='All API descriptions')
-
-user_schema = UserSchema()
-json_schema = JSONSchema()
-
-complaint_marshall_model = api.schema_model(
-    'UserSchema', json_schema.dump(user_schema).data['definitions']['UserSchema']
-)
+ns = Namespace('auth', path='/auth', description='Authentication Related API')
 
 # Dictionary to store sms verification code
 messageDict = {}
-
-
-@ns.route('/user_me')
-class UserMe(Resource):
-    """Only Logged in user can see this page."""
-
-    @login_required
-    @ns.response(200, 'Success', complaint_marshall_model)
-    def get(self):
-        user_id = session['user_id']
-        user = User.query.filter_by(id=user_id).first()
-        dump_data = user_schema.dump(user).data
-        return dump_data
 
 
 @ns.route('/phone_exist/<string:phone_num>')

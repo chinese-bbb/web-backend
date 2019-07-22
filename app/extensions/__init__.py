@@ -8,6 +8,7 @@ Extensions provide access to common resources of the application.
 
 Please, put new extension instantiations and initializations here.
 """
+from flask import Blueprint
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
@@ -33,6 +34,7 @@ login_manager = LoginManager()
 marshmallow = Marshmallow()
 
 
+blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(  # pylint: disable=invalid-name
     version='1.0', title='HuXin API', description='Huxin API v1', doc='/doc/'
 )
@@ -52,3 +54,5 @@ def init_app(app):
         api,
     ):
         extension.init_app(app)
+
+    app.register_blueprint(blueprint)

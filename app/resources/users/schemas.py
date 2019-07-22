@@ -1,6 +1,6 @@
 from marshmallow_sqlalchemy import TableSchema
 
-from app.resources.users.user import User
+from app.resources.users.models import User
 
 
 class UserSchema(TableSchema):

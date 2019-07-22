@@ -2,6 +2,7 @@ import json
 import logging
 
 from flask_login import login_required
+from flask_restplus import Namespace
 from flask_restplus import Resource
 from marshmallow_jsonschema import JSONSchema
 
@@ -17,7 +18,7 @@ from app.services.qichacha.qichacha_api import fuzzy_search_pageIndex
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('api', description='All API descriptions')
+ns = Namespace('merchants', path='/merchants', description='Merchant Resources API')
 
 json_schema = JSONSchema()
 merchant_marshall_model = api.schema_model(
@@ -160,7 +161,7 @@ class MerchantQuery(Resource):
             return dump_data
 
 
-@ns.route('/merchant/<int:id>')
+@ns.route('/<int:id>')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Complaint Identifier')
 class Merchant(Resource):

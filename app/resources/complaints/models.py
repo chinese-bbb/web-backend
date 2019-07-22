@@ -8,8 +8,8 @@ from marshmallow_sqlalchemy import TableSchema
 from app.extensions import api
 from app.extensions import db
 from app.resources.merchants.models import MerchantQueryRaw
+from app.resources.users.models import User
 from app.resources.users.schemas import UserSchema
-from app.resources.users.user import User
 
 
 class Complaint(db.Model):
