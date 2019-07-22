@@ -1,7 +1,5 @@
 from flask import Flask
 
-from config import Config
-
 
 def create_app(**kwargs):
     """
@@ -13,6 +11,8 @@ def create_app(**kwargs):
     # import threading
 
     # threading.stack_size(2 * 1024 * 1024)
+
+    from config import Config
 
     app = Flask(__name__, **kwargs)
 
