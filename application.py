@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 from app import create_app
 from app.extensions import blueprint
+from app.home import bp as home_blueprint
 
 load_dotenv(find_dotenv())
 
@@ -21,6 +22,7 @@ with open('logging-conf.yaml', 'r') as f:
 
 application = create_app()
 application.register_blueprint(blueprint, url_prefix='/api')
+application.register_blueprint(home_blueprint, url_prefix='/')
 
 
 # NOTE: do not place app creation code inside main clause,
