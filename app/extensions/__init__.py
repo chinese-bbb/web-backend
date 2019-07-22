@@ -34,9 +34,11 @@ login_manager = LoginManager()
 marshmallow = Marshmallow()
 
 
-blueprint = Blueprint('api', __name__, url_prefix='/api')
-api = Api(  # pylint: disable=invalid-name
-    version='1.0', title='HuXin API', description='Huxin API v1', doc='/doc/'
+blueprint = Blueprint('api', __name__)
+# No need to call `api.init_app(app)` with blueprint
+# see https://flask-restplus.readthedocs.io/en/stable/scaling.html#use-with-blueprints
+api = Api(
+    blueprint, version='1.0', title='HuXin API', description='Huxin API v1', doc='/doc/'
 )
 
 
@@ -51,8 +53,5 @@ def init_app(app):
         db,
         login_manager,
         marshmallow,
-        api,
     ):
         extension.init_app(app)
-
-    app.register_blueprint(blueprint)
