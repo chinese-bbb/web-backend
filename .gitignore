@@ -136,7 +136,6 @@ templates/
 .idea/
 
 # aws settings
-.ebextensions/
 
 # Local Test files
 Complaint_Files/
