@@ -1,1 +1,12 @@
 env
+logs
+.elasticbeanstalk
+.env
+docs
+test
+.git
+.idea
+.vscode
+.history
+__pycache__
+environment.config
