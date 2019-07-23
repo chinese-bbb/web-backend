@@ -182,7 +182,7 @@ class Register(Resource):
         user.if_verified = False
         user.set_password(password)
         db.session.add(user)
-        db.session.commit()
+
         flash('Congratulations, you are now a registered user!')
 
         login_user(user, remember=True)
@@ -220,7 +220,7 @@ class ChangePassword(Resource):
             return flask.jsonify({'error': 'Invalid phone num or password'})
 
         user.set_password(new_password)
-        db.session.commit()
+
         flash('Congratulations, successfully updated user password!')
         return flask.jsonify('OK')
 
@@ -252,7 +252,7 @@ class ResetPassword(Resource):
 
         log.debug(user)
         user.set_password(new_password)
-        db.session.commit()
+
         flash('Congratulations, successfully updated user password!')
         return flask.jsonify('OK')
 
@@ -279,7 +279,7 @@ class IdentifyIDCard(Resource):
         # TODO: remove this hack in near future.
         user = User.query.filter_by(id=user_id).first()
         user.if_verified = True
-        db.session.commit()
+
         flash('Congratulations, successfully verified your ID card!')
         return flask.jsonify('OK')
 
@@ -296,7 +296,7 @@ class IdentifyIDCard(Resource):
                 user.real_name = real_name
                 user.sex = sex
                 user.if_verified = True
-                db.session.commit()
+
                 flash('Congratulations, successfully verified your ID card!')
                 return flask.jsonify('OK')
             else:

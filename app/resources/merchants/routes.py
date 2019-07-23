@@ -58,7 +58,6 @@ class FuzzyQuery(Resource):
             search_content = FuzzySearchRaw(keyword=keyword)
             search_content.set_storage(fuzzy_result_json_str)
             db.session.add(search_content)
-            db.session.commit()
 
             return {'return': json.loads(fuzzy_result_json_str)}
         else:
@@ -103,7 +102,6 @@ class MerchantSearch(Resource):
             search_content.pageIndex = pageIndex
             search_content.totalPage = int(total_records / 10) + 1
             db.session.add(search_content)
-            db.session.commit()
 
             return {
                 'result': json.loads(fuzzy_result_json_str),
@@ -144,7 +142,6 @@ class MerchantQuery(Resource):
             search_content = MerchantQueryRaw(keyword=keyword)
             search_content.set_storage(merchant_json_str)
             db.session.add(search_content)
-            db.session.commit()
 
             merchant_query_return = MerchantQueryRaw.query.filter_by(
                 keyword=keyword

@@ -61,7 +61,7 @@ class CommentDAO(object):
         comment = Comment.query.filter_by(id=comment_id).first()
         if comment:
             db.session.delete(comment)
-            db.session.commit()
+
             return 'deleted'
         else:
             api.abort(404, "Comment by id {} doesn't exist".format(comment_id))
@@ -69,14 +69,13 @@ class CommentDAO(object):
     def create(self, data):
         comment = Comment(**data)
         db.session.add(comment)
-        db.session.commit()
+
         return 'OK'
 
     def update(self, comment_id, text):
         comment = Comment.query.filter_by(id=comment_id).first()
         if comment:
             Comment.query.filter_by(id=comment_id).update({'text': text})
-            db.session.commit()
 
             comment = Comment.query.filter_by(id=comment_id).first()
             return comment_to_json(comment)

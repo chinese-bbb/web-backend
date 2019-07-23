@@ -97,7 +97,7 @@ class ComplaintDAO(object):
         complaint = Complaint.query.filter_by(id=complaint_id).first()
         if complaint:
             db.session.delete(complaint)
-            db.session.commit()
+
             return 'deleted'
         else:
             api.abort(404, "Complaint by id {} doesn't exist".format(complaint))
@@ -124,7 +124,7 @@ class ComplaintDAO(object):
 
         complaint = Complaint(**data)
         db.session.add(complaint)
-        db.session.commit()
+
         return 'OK'
 
     def fetchByUserId(self, phone_num):
