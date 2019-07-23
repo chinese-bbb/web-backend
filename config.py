@@ -28,6 +28,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     WORKING_FOLDER = os.environ.get('WORKING_FOLDER')
+    INVOICE_FOLDER = 'Invoices'
+    EVIDENCE_FOLDER = 'Evidences'
 
     if os.environ.get('REMEMBER_COOKIE_DOMAIN'):
         REMEMBER_COOKIE_DOMAIN = os.environ.get('REMEMBER_COOKIE_DOMAIN')
