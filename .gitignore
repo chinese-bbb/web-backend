@@ -134,7 +134,6 @@ dmypy.json
 !.elasticbeanstalk/*.global.yml
 
 # aws settings
-.ebextensions/environment.config
 
 # Local Test files
 Complaint_Files/

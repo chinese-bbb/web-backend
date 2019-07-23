@@ -36,7 +36,6 @@ FLASK_ENV: production
 SECRET_KEY
 
 DATABASE_URL
-HOST_IP: 0.0.0.0
 LOGS_FOLDER: /opt/python/log/
 
 AWS_ACCESS_KEY_ID
@@ -56,6 +55,8 @@ SESSION_COOKIE_DOMAIN
 ```
 
 **CAUTION**: Since we are using aws, if we don't configure some reverse proxy to `127.0.0.1`, maintainer should create `HOST_IP` with `0.0.0.0` to our application to receive external request
+
+NOTE: Once you have apply those environment properties, remember to save configuration.
 
 ### Steps to update the flask app on AWS
 

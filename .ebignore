@@ -9,4 +9,3 @@ test
 .vscode
 .history
 __pycache__
-environment.config
