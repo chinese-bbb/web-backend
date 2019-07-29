@@ -33,7 +33,6 @@ login_manager = LoginManager()
 
 marshmallow = Marshmallow()
 
-
 blueprint = Blueprint('api', __name__)
 # No need to call `api.init_app(app)` with blueprint
 # see https://flask-restplus.readthedocs.io/en/stable/scaling.html#use-with-blueprints
@@ -55,3 +54,6 @@ def init_app(app):
         marshmallow,
     ):
         extension.init_app(app)
+
+    from .migrate import init_app as migrate_init
+    migrate_init(app, db)

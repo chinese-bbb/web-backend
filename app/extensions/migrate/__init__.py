@@ -5,10 +5,7 @@ Migration adapter
 """
 from flask_migrate import Migrate
 
-from app.extensions import db
-
-
-def init_app(app, **kwargs):
+def init_app(app, db):
     migrate = Migrate(app, db)
     with app.app_context():
         if db.engine.url.drivername == 'sqlite':

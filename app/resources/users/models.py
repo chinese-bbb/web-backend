@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     registered_date = db.Column(db.String(120))
     if_verified = db.Column(db.Boolean())
+    is_founder  = db.Column(db.Boolean())
     real_name = db.Column(db.String(120))
     sex = db.Column(db.String(120))
     minority = db.Column(db.String(120))
