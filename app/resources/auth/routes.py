@@ -153,6 +153,7 @@ register_fields = api.model(
         'password': fields.String(description='password', required=True),
         'first_name': fields.String(description='first_name', required=True),
         'last_name': fields.String(description='last_name', required=True),
+        'email': fields.String(description='email', required=False)
     },
 )
 
@@ -173,6 +174,10 @@ class Register(Resource):
         username = data['phone_num']
         sex = data['sex']
         password = data['password']
+        if 'email' in data:
+            email = data['email']
+        else:
+            email = ""
 
         today = datetime.date.today()
         user = User(username=username, sex=sex, registered_date=today)
@@ -181,7 +186,9 @@ class Register(Resource):
         user.account_active = True
         user.if_verified = False
         user.set_password(password)
-        db.session.add(user)
+        user.email = email
+        with db.session.begin():
+            db.session.add(user)
 
         flash('Congratulations, you are now a registered user!')
 
