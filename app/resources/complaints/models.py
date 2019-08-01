@@ -170,3 +170,28 @@ class ComplaintDAO(object):
             return ret
         else:
             return {}
+
+    def getAllComplaint(self):
+        complaints = Complaint.query.all()
+        if complaints:
+            ret = []
+            for complaint in complaints:
+                dump_data = complaint_to_json(complaint)
+                ret.append(dump_data)
+            return ret
+        else:
+            return {}
+
+    def getLatestNComplaint(self, num):
+
+        complaints = Complaint.query.order_by(
+            Complaint.complain_timestamp.desc()
+        ).limit(num)
+        if complaints:
+            ret = []
+            for complaint in complaints:
+                dump_data = complaint_to_json(complaint)
+                ret.append(dump_data)
+            return ret
+        else:
+            return {}

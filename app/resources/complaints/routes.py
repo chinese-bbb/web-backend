@@ -192,6 +192,37 @@ complaint_marshall_model = api.schema_model(
     json_schema.dump(complaint_resp_schema).data['definitions']['ComplaintResponse'],
 )
 
+complaintLastN_parser = api.parser()
+complaintLastN_parser.add_argument(
+    'N', type=int, required=True, help='latest complaints', location='args'
+)
+
+@ns.route('/last')
+@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+class ComplaintLatest5(Resource):
+    @ns.doc('get latest N complaints')
+    @api.doc(parser=complaintLastN_parser)
+    @api.expect(complaintLastN_parser)
+    @ns.response(200, 'Success', complaints_marshall_model)
+    def get(self):
+        """get latest N complaints order by complaint_time"""
+
+        args = complaintLastN_parser.parse_args()
+        N = args['N']
+        res = complaintDAO.getLatestNComplaint(N)
+        return res, 200
+
+@ns.route('/all')
+@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+class ComplaintLatest5(Resource):
+    @ns.doc('get all complaints')
+    @ns.response(200, 'Success', complaints_marshall_model)
+    def get(self):
+        """get latest 5 complaints order by complaint_time"""
+
+        res = complaintDAO.getAllComplaint()
+        return res, 200
+
 
 @ns.route('/<int:id>')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
