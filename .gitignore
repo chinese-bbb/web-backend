@@ -144,6 +144,7 @@ test_pic.jpg
 header.txt
 sql_frequent.txt
 logs
+.temp
 
 # Flask migrate files
 migrations/versions/__pycache__/

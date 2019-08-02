@@ -4,7 +4,7 @@ import os
 log = logging.getLogger(__name__)
 
 
-class Config(object):
+class Config:
     ENABLED_RESOURCES = (
         'auth',
         'complaints',
@@ -17,7 +17,6 @@ class Config(object):
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    HOST_IP = os.environ.get('HOST_IP')
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL'
