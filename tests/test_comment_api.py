@@ -1,7 +1,8 @@
 import json
 import unittest
-from test.test_base import BaseTestClass
-from test.test_base import TEST_BASE_URL
+
+from tests.test_base import BaseTestClass
+from tests.test_base import TEST_BASE_URL
 
 CREATE_COMMENT_URL = '{}/api/comment'.format(TEST_BASE_URL)
 MVC_COMMENT_URL = '{}/api/comment/'.format(TEST_BASE_URL)

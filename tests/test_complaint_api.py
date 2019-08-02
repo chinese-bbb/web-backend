@@ -1,7 +1,8 @@
 import json
 import unittest
-from test.test_base import BaseTestClass
-from test.test_base import TEST_BASE_URL
+
+from tests.test_base import BaseTestClass
+from tests.test_base import TEST_BASE_URL
 
 CREATE_COMPLAINT_URL = '{}/api/complaint'.format(TEST_BASE_URL)
 MVC_COMPLAINT_URL = '{}/api/complaint/'.format(TEST_BASE_URL)

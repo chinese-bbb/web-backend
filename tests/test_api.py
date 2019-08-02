@@ -1,5 +1,6 @@
 import json
-from test.test_base import BaseTestClass
+
+from tests.test_base import BaseTestClass
 
 TEST_BASE_URL = 'http://0.0.0.0:5000/'
 DOC_URL = '{}/doc/'.format(TEST_BASE_URL)
