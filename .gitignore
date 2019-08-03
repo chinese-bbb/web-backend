@@ -145,5 +145,4 @@ header.txt
 sql_frequent.txt
 logs
 .temp
-.ebignore
 app.db
