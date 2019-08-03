@@ -58,8 +58,8 @@ class SMS(Resource):
     def get(self, phone_num):
         """Get verification code for a phone number."""
         rand_num = random.randint(1000, 9999)
-        log = send_message(phone_num, rand_num)
-        sid = log['sid']
+        msg = send_message(phone_num, rand_num)
+        sid = msg['sid']
         messageDict[sid] = str(rand_num)
         log.debug(rand_num)
         return {'state': 'Success'}, 200, {'Set-Cookie': 'sid=' + sid}
