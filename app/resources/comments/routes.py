@@ -39,6 +39,7 @@ upload_comment_parser.add_argument(
 
 
 @ns.route('/')
+@ns.route('')
 @api.doc(responses={200: 'Success', 400: 'Validation Error'})
 class Comment(Resource):
     @login_required
