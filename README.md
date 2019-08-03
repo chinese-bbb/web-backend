@@ -39,6 +39,7 @@ python application.py #(use -p to specify binding port)
 - [x] After MVP stage, move the file storage to S3.
 - [ ] Use the standard `Marshmallow` lib instead of `flask-marshmallow`.
 - [ ] dynamic secret_ley on deploy
+- [ ] use https://github.com/dtan4/terraforming or https://github.com/GoogleCloudPlatform/terraformer to convert existing resources config to terraform style.
 
 ## Development
 

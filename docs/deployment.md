@@ -1,5 +1,7 @@
 # Deployment Notes
 
+## Fresh Setup
+
 ### setup eb cli at local machine
 
 1. `pip install awsebcli #(Inside the python virtual environment)`
@@ -58,7 +60,7 @@ SESSION_COOKIE_DOMAIN
 
 NOTE: Once you have apply those environment properties, remember to save configuration.
 
-### Steps to update the flask app on AWS
+### Steps to update the flask app on AWS **(not recommended for prod)**
 
 1. Change code.
 
@@ -75,3 +77,11 @@ eb ssh <EB environment name>
 ```sh
 /opt/python/current/app
 ```
+
+## CI/CD
+
+we use codecommit, codepipeline, codebuild for a working continuous delivery approach.
+
+we have a `buildspec.yml` for codebuild.
+
+see https://us-east-2.console.aws.amazon.com/codesuite/codepipeline/pipelines?region=us-east-2
