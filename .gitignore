@@ -145,6 +145,4 @@ header.txt
 sql_frequent.txt
 logs
 .temp
-
-# Flask migrate files
-migrations/versions/__pycache__/
+.ebignore

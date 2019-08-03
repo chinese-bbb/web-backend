@@ -26,3 +26,10 @@
 # Exclude the `.htaccess` file from GitHub's language statistics
 # https://github.com/github/linguist#using-gitattributes
 dist/.htaccess linguist-vendored
+
+# FOLLOWING is settings for archiving source bundle, especially for
+# eb deploy
+
+docs/*  export-ignore
+
+version.txt export-subst
