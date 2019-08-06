@@ -9,27 +9,26 @@ from marshmallow_jsonschema import JSONSchema
 from .models import comment_schema
 from .models import CommentDAO
 from .models import comments_schema
-from app.extensions import api
 
 log = logging.getLogger(__name__)
 
 json_schema = JSONSchema()
 
-ns = Namespace('comments', path='/comments', description='Comment Resources API')
+ns = Namespace('comments', path='/comments', description='Comment Resources ns')
 commentDAO = CommentDAO()
 
-comment_marshall_model = api.schema_model(
+comment_marshall_model = ns.schema_model(
     'CommentResponse',
     json_schema.dump(comment_schema).data['definitions']['CommentResponse'],
 )
-comments_marshall_model = api.schema_model(
+comments_marshall_model = ns.schema_model(
     'CommentsResponse',
     json_schema.dump(comments_schema).data['definitions']['CommentsResponse'][
         'properties'
     ]['CommentsResponse'],
 )
 
-upload_comment_parser = api.parser()
+upload_comment_parser = ns.parser()
 upload_comment_parser.add_argument(
     'text', type=str, required=True, help='comment text body', location='json'
 )
@@ -40,13 +39,13 @@ upload_comment_parser.add_argument(
 
 @ns.route('/')
 @ns.route('')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 class Comment(Resource):
     @login_required
     @ns.expect(upload_comment_parser)
     def post(self):
         """Create a Comment."""
-        data = api.payload
+        data = ns.payload
 
         user_id = session['user_id']
         data['user_id'] = user_id
@@ -57,14 +56,14 @@ class Comment(Resource):
             return {'state': 'failed creating comment'}, 401
 
 
-update_comment_parser = api.parser()
+update_comment_parser = ns.parser()
 update_comment_parser.add_argument(
     'text', type=str, required=True, help='comment', location='json'
 )
 
 
 @ns.route('/byComplaint/<int:id>')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The complaint identifier')
 class CommentsByComplaint(Resource):
     @login_required
@@ -76,7 +75,7 @@ class CommentsByComplaint(Resource):
 
 
 @ns.route('/<int:id>')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Comment identifier')
 class Comment2(Resource):
     @login_required

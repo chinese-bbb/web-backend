@@ -1,4 +1,3 @@
-# encoding: utf-8
 """
 Resources
 =========
@@ -17,5 +16,8 @@ def init_app(app, **kwargs):
     from importlib import import_module
 
     for module_name in app.config['ENABLED_RESOURCES']:
-        log.info('loading resource module: %s', module_name)
-        import_module('.%s' % module_name, package=__name__).init_app(app, **kwargs)
+        try:
+            log.info('loading resource module: %s', module_name)
+            import_module('.%s' % module_name, package=__name__).init_app(app, **kwargs)
+        except BaseException as err:
+            log.exception(err)

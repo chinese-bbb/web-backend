@@ -10,7 +10,6 @@ from .models import FuzzySearchRaw
 from .models import merchant_resp
 from .models import merchant_search_resp
 from .models import MerchantQueryRaw
-from app.extensions import api
 from app.extensions import db
 from app.services.qichacha.qichacha_api import basic_detail
 from app.services.qichacha.qichacha_api import fuzzy_search
@@ -21,29 +20,29 @@ log = logging.getLogger(__name__)
 ns = Namespace('merchants', path='/merchants', description='Merchant Resources API')
 
 json_schema = JSONSchema()
-merchant_marshall_model = api.schema_model(
+merchant_marshall_model = ns.schema_model(
     'MerchantResponse',
     json_schema.dump(merchant_resp).data['definitions']['MerchantResponse'],
 )
 
-merchant_search_marshall_model = api.schema_model(
+merchant_search_marshall_model = ns.schema_model(
     'MerchantSearchResponse',
     json_schema.dump(merchant_search_resp).data['definitions'][
         'MerchantSearchResponse'
     ],
 )
 
-qichacha_parser = api.parser()
+qichacha_parser = ns.parser()
 qichacha_parser.add_argument(
     'keyword', type=str, required=True, help='keyword', location='args'
 )
 
 
 @ns.route('/fuzzy_query')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 class FuzzyQuery(Resource):
     @login_required
-    @api.doc(parser=qichacha_parser)
+    @ns.doc(parser=qichacha_parser)
     def get(self):
         """fuzzy_query with paging support."""
 
@@ -67,7 +66,7 @@ class FuzzyQuery(Resource):
             return {'return': obj}
 
 
-qichacha_page_parser = api.parser()
+qichacha_page_parser = ns.parser()
 qichacha_page_parser.add_argument(
     'keyword', type=str, required=True, help='keyword', location='args'
 )
@@ -77,10 +76,10 @@ qichacha_page_parser.add_argument(
 
 
 @ns.route('/merchant_search')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 class MerchantSearch(Resource):
     @login_required
-    @api.doc(parser=qichacha_page_parser)
+    @ns.doc(parser=qichacha_page_parser)
     @ns.response(200, 'Success', merchant_search_marshall_model)
     def get(self):
         """Merchant search by merchant keyword and page Index."""
@@ -121,14 +120,14 @@ def getMerchantIdFromDB(keyword):
     if merchant_query_res:
         return merchant_query_res.get_id()
 
-    api.abort(404, "Merchant by keyword {} doesn't exist".format(keyword))
+    ns.abort(404, "Merchant by keyword {} doesn't exist".format(keyword))
 
 
 @ns.route('/merchant_query')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 class MerchantQuery(Resource):
     @login_required
-    @api.doc(parser=qichacha_parser)
+    @ns.doc(parser=qichacha_parser)
     @ns.response(200, 'Success', merchant_search_marshall_model)
     def get(self):
         """Detailed Merchant_query."""
@@ -162,7 +161,7 @@ class MerchantQuery(Resource):
 
 
 @ns.route('/<int:id>')
-@api.doc(responses={200: 'Success', 400: 'Validation Error'})
+@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Complaint Identifier')
 class Merchant(Resource):
     @login_required
@@ -176,7 +175,7 @@ class Merchant(Resource):
             ret_storage = json.loads(merchant_query_res.get_storage())
             dump_data['storage'] = ret_storage
             return dump_data
-        api.abort(404, "Merchant by merchant_id {} doesn't exist".format(id))
+        ns.abort(404, "Merchant by merchant_id {} doesn't exist".format(id))
 
     @ns.doc('delete a merchant')
     @ns.response(204, 'merchant deleted')

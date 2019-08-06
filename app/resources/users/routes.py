@@ -8,7 +8,6 @@ from marshmallow_jsonschema import JSONSchema
 
 from .models import User
 from .schemas import UserSchema
-from app.extensions import api
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ ns = Namespace('users', path='/users', description='User Resources API')
 user_schema = UserSchema()
 json_schema = JSONSchema()
 
-complaint_marshall_model = api.schema_model(
+complaint_marshall_model = ns.schema_model(
     'UserSchema', json_schema.dump(user_schema).data['definitions']['UserSchema']
 )
 

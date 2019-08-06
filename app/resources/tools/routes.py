@@ -9,7 +9,6 @@ from flask_login import login_required
 from flask_restplus import Namespace
 from flask_restplus import Resource
 
-from app.extensions import api
 from app.services.aws.s3 import amazon_s3
 
 log = logging.getLogger(__name__)
@@ -39,8 +38,8 @@ class FileUpload(Resource):
     """Upload File."""
 
     @login_required
-    @api.doc(parser=file_upload)
-    @api.expect(file_upload)
+    @ns.doc(parser=file_upload)
+    @ns.expect(file_upload)
     def post(self):
         log.debug(session)
         user_id = session['user_id']
