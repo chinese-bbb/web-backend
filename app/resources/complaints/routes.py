@@ -217,6 +217,7 @@ class ComplaintLatest5(Resource):
 @ns.route('/all')
 @ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 class ComplaintAll(Resource):
+    @login_required
     @ns.doc('get all complaints')
     @ns.response(200, 'Success', complaints_marshall_model)
     def get(self):
