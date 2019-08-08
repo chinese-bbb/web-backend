@@ -238,6 +238,7 @@ class ComplaintById(Resource):
         res = complaintDAO.get(id)
         return res
 
+    @login_required
     @ns.doc('delete a comment')
     @ns.response(204, 'Comment deleted')
     def delete(self, id):

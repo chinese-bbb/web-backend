@@ -164,7 +164,6 @@ class MerchantQuery(Resource):
 @ns.doc(responses={200: 'Success', 400: 'Validation Error'})
 @ns.param('id', 'The Complaint Identifier')
 class Merchant(Resource):
-    @login_required
     @ns.response(200, 'Success', merchant_marshall_model)
     def get(self, id):
         """get a merchant by merchant_id."""
@@ -177,6 +176,7 @@ class Merchant(Resource):
             return dump_data
         ns.abort(404, "Merchant by merchant_id {} doesn't exist".format(id))
 
+    @login_required
     @ns.doc('delete a merchant')
     @ns.response(204, 'merchant deleted')
     def delete(self, id):
