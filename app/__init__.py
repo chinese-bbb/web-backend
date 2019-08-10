@@ -14,7 +14,7 @@ def create_app(**kwargs):
 
     from config import Config
 
-    app = Flask(__name__, **kwargs)
+    app = Flask('HuXin API', **kwargs)
 
     app.config.from_object(Config)
 
@@ -26,10 +26,10 @@ def create_app(**kwargs):
 
     resources.init_app(app)
 
-    from app.extensions import blueprint
+    # from app.extensions import blueprint
     from app.home import bp as home_blueprint
 
-    app.register_blueprint(blueprint, url_prefix='/api')
+    # app.register_blueprint(blueprint, url_prefix='/api')
     app.register_blueprint(home_blueprint, url_prefix='/')
 
     return app

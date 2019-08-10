@@ -33,11 +33,11 @@ class AmazonS3(object):
             except ClientError as e:
                 log.debug(e)
 
-    def upload_file(self, file_name, sub_folder, object_name=None):
+    def upload_file(self, file_url, sub_folder, object_name=None):
         """
         Upload a file to an S3 bucket.
 
-        :param file_name: File to upload
+        :param file_url: File to upload
         :param sub_folder:
         :param object_name: S3 object name. If not specified then file_name is used
         :return: True if file was uploaded, else False
@@ -45,10 +45,10 @@ class AmazonS3(object):
         # self.get_or_create_bucket(bucket)
 
         if object_name is None:
-            object_name = str(uuid.uuid1()) + '.' + file_name.split('.')[-1]
+            object_name = str(uuid.uuid1()) + '.' + file_url.split('.')[-1]
         try:
             response = self.client.upload_file(
-                file_name, Config.AWS_S3_BUCKET, sub_folder + '/' + object_name
+                file_url, Config.AWS_S3_BUCKET, sub_folder + '/' + object_name
             )
             # todo: clean uploaded file in working folder
             log.debug(response)

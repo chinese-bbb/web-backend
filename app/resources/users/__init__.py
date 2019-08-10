@@ -11,4 +11,4 @@ def init_app(app, **kwargs):
     # Touch underlying modules
     from . import models, routes  # noqa
 
-    api.add_namespace(routes.ns)
+    api.register_blueprint(routes.bp)

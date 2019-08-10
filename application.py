@@ -17,8 +17,12 @@ with open('logging-conf.yaml', 'r') as f:
     config = yaml.safe_load(f.read())
     logging.config.dictConfig(config)
 
+log = logging.getLogger(__name__)
 
-application = create_app()
+try:
+    application = create_app()
+except Exception as e:
+    log.exception(e)
 
 
 # NOTE: do not place app creation code inside main clause,

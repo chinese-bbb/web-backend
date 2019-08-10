@@ -14,7 +14,8 @@ pip install -r requirements/base.txt
 source env/bin/activate
 pre-commit install -f --install-hooks
 
-python application.py #(use -p to specify binding port)
+# you could set the var in `.env` to skip `FLASK_APP` declaration
+FLASK_APP="application.py" python -m flask run #(use -p to specify binding port)
 ```
 Or,
 ```powershell
@@ -24,7 +25,8 @@ pip install -r requirements.txt
 ./env/Scripts/activate
 pre-commit install -f --install-hooks
 
-python application.py #(use -p to specify binding port)
+$env:FLASK_APP="application.py" # or set the var in `.env`
+python -m flask run #(use -p to specify binding port)
 ```
 
 
@@ -39,7 +41,13 @@ python application.py #(use -p to specify binding port)
 - [x] After MVP stage, move the file storage to S3.
 - [ ] Use the standard `Marshmallow` lib instead of `flask-marshmallow`.
 - [ ] dynamic secret_ley on deploy
+- [ ] use `argon2` for password hashing
+- [ ] normalize response envelop format
+- [ ] normalize response status code and business status
+- [ ] normalize models validation
+- [ ] improve logging for each resources
 - [ ] use https://github.com/dtan4/terraforming or https://github.com/GoogleCloudPlatform/terraformer to convert existing resources config to terraform style.
+- [ ] more secure register flow and reset password flow
 
 ## Development
 

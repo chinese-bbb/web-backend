@@ -1,96 +1,48 @@
 import json
 import logging
 
+from flask import abort
+from flask.views import MethodView
 from flask_login import login_required
-from flask_restplus import Namespace
-from flask_restplus import Resource
-from marshmallow_jsonschema import JSONSchema
+from flask_rest_api import Blueprint
 
 from .models import FuzzySearchRaw
-from .models import merchant_resp
-from .models import merchant_search_resp
 from .models import MerchantQueryRaw
+from .schemas import FuzzyQueryParameters
+from .schemas import MerchantResponseSchema
+from .schemas import MerchantSearchParameters
+from .schemas import MerchantSearchResponseSchema
 from app.extensions import db
 from app.services.qichacha.qichacha_api import basic_detail
-from app.services.qichacha.qichacha_api import fuzzy_search
 from app.services.qichacha.qichacha_api import fuzzy_search_pageIndex
 
 log = logging.getLogger(__name__)
 
-ns = Namespace('merchants', path='/merchants', description='Merchant Resources API')
-
-json_schema = JSONSchema()
-merchant_marshall_model = ns.schema_model(
-    'MerchantResponse',
-    json_schema.dump(merchant_resp).data['definitions']['MerchantResponse'],
-)
-
-merchant_search_marshall_model = ns.schema_model(
-    'MerchantSearchResponse',
-    json_schema.dump(merchant_search_resp).data['definitions'][
-        'MerchantSearchResponse'
-    ],
-)
-
-qichacha_parser = ns.parser()
-qichacha_parser.add_argument(
-    'keyword', type=str, required=True, help='keyword', location='args'
+bp = Blueprint(
+    'merchants',
+    'merchants',
+    url_prefix='/merchants',
+    description='Merchant Resources API',
 )
 
 
-@ns.route('/fuzzy_query')
-@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
-class FuzzyQuery(Resource):
+@bp.route('/merchant_search')
+class MerchantSearch(MethodView):
     @login_required
-    @ns.doc(parser=qichacha_parser)
-    def get(self):
-        """fuzzy_query with paging support."""
+    @bp.arguments(MerchantSearchParameters, location='query')
+    @bp.response(MerchantSearchResponseSchema)
+    def get(self, args):
+        """
+        Merchant search by merchant keyword and page Index.
+        """
 
-        args = qichacha_parser.parse_args()
-        keyword = args['keyword']
-
-        fuzzy_search_res = FuzzySearchRaw.query.filter_by(keyword=keyword).first()
-        if fuzzy_search_res is None:
-            fuzzy_result_json_dict = fuzzy_search(keyword)
-            fuzzy_result_json_str = json.dumps(fuzzy_result_json_dict)
-
-            search_content = FuzzySearchRaw(keyword=keyword)
-            search_content.set_storage(fuzzy_result_json_str)
-            db.session.add(search_content)
-            db.session.commit()
-
-            return {'return': json.loads(fuzzy_result_json_str)}
-        else:
-            storage = fuzzy_search_res.get_storage()
-            obj = json.loads(storage)
-            return {'return': obj}
-
-
-qichacha_page_parser = ns.parser()
-qichacha_page_parser.add_argument(
-    'keyword', type=str, required=True, help='keyword', location='args'
-)
-qichacha_page_parser.add_argument(
-    'pageIndex', type=int, required=True, help='pageIndex', location='args'
-)
-
-
-@ns.route('/merchant_search')
-@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
-class MerchantSearch(Resource):
-    @login_required
-    @ns.doc(parser=qichacha_page_parser)
-    @ns.response(200, 'Success', merchant_search_marshall_model)
-    def get(self):
-        """Merchant search by merchant keyword and page Index."""
-
-        args = qichacha_page_parser.parse_args()
         keyword = args['keyword']
         pageIndex = args['pageIndex']
 
         fuzzy_search_res = FuzzySearchRaw.query.filter_by(
             keyword=keyword, pageIndex=pageIndex
         ).first()
+
         if fuzzy_search_res is None:
             fuzzy_result_json_dict, total_records = fuzzy_search_pageIndex(
                 keyword, pageIndex
@@ -120,19 +72,19 @@ def getMerchantIdFromDB(keyword):
     if merchant_query_res:
         return merchant_query_res.get_id()
 
-    ns.abort(404, "Merchant by keyword {} doesn't exist".format(keyword))
+    abort(404, "Merchant by keyword {} doesn't exist".format(keyword))
 
 
-@ns.route('/merchant_query')
-@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
-class MerchantQuery(Resource):
+@bp.route('/merchant_query')
+class MerchantQuery(MethodView):
     @login_required
-    @ns.doc(parser=qichacha_parser)
-    @ns.response(200, 'Success', merchant_search_marshall_model)
-    def get(self):
-        """Detailed Merchant_query."""
+    @bp.arguments(FuzzyQueryParameters, location='query')
+    @bp.response(MerchantResponseSchema)
+    def get(self, args):
+        """
+        Detailed Merchant_query.
+        """
 
-        args = qichacha_parser.parse_args()
         keyword = args['keyword']
 
         merchant_query_res = MerchantQueryRaw.query.filter_by(keyword=keyword).first()
@@ -148,38 +100,35 @@ class MerchantQuery(Resource):
             merchant_query_return = MerchantQueryRaw.query.filter_by(
                 keyword=keyword
             ).first()
-            dump_data = merchant_resp.dump(merchant_query_return).data
-            ret_storage = json.loads(merchant_query_return.get_storage())
-            dump_data['storage'] = ret_storage
-            return dump_data
+            obj = json.loads(merchant_query_return.get_storage())
+            return {'merchant_id': merchant_query_return.id, 'storage': obj}
         else:
             log.debug('has merchant query storage')
-            dump_data = merchant_resp.dump(merchant_query_res).data
-            ret_storage = json.loads(merchant_query_res.get_storage())
-            dump_data['storage'] = ret_storage
-            return dump_data
+            obj = json.loads(merchant_query_res.get_storage())
+            return {'merchant_id': merchant_query_res.id, 'storage': obj}
 
 
-@ns.route('/<int:id>')
-@ns.doc(responses={200: 'Success', 400: 'Validation Error'})
-@ns.param('id', 'The Complaint Identifier')
-class Merchant(Resource):
-    @ns.response(200, 'Success', merchant_marshall_model)
+@bp.route('/<int:id>')
+class Merchant(MethodView):
+    @bp.response(MerchantResponseSchema)
     def get(self, id):
-        """get a merchant by merchant_id."""
+        """
+        get a merchant by merchant_id.
+        """
+
         merchant_query_res = MerchantQueryRaw.query.filter_by(id=id).first()
 
         if merchant_query_res:
-            dump_data = merchant_resp.dump(merchant_query_res).data
-            ret_storage = json.loads(merchant_query_res.get_storage())
-            dump_data['storage'] = ret_storage
-            return dump_data
-        ns.abort(404, "Merchant by merchant_id {} doesn't exist".format(id))
+            obj = json.loads(merchant_query_res.get_storage())
+            return {'merchant_id': merchant_query_res.id, 'storage': obj}
+
+        return "Merchant by merchant_id {} doesn't exist".format(id), 404
 
     @login_required
-    @ns.doc('delete a merchant')
-    @ns.response(204, 'merchant deleted')
+    @bp.doc(description='delete a merchant')
     def delete(self, id):
-        """Delete a merchant by merchant id."""
+        """
+        Delete a merchant by merchant id.
+        """
 
-        ns.abort(404, 'This API is not supported yet.')
+        return 'This API is not supported yet.', 404

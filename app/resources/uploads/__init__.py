@@ -1,5 +1,5 @@
 """
-Comments module
+Tools module
 ============
 """
 from app.extensions import api

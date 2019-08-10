@@ -7,8 +7,8 @@ import os
 import time
 
 import requests
+from flask import abort
 
-from app.extensions import api
 
 log = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ def fuzzy_search_pageIndex(keyword, pageIndex):
     result = json.loads(raw_str)
 
     if result['Status'] != '200':
-        api.abort(
+        abort(
             500,
             "Qichacha doesn't return results correctly. The error code is {}".format(
                 result['Status']
