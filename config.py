@@ -29,13 +29,10 @@ class Config:
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5MB
 
     # sqlalchemy env
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL'
-    ) or 'sqlite:///' + os.path.join(PROJECT_ROOT, 'app.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
-    log.info(SQLALCHEMY_DATABASE_URI)
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    if SQLALCHEMY_DATABASE_URI:
+        log.info('Database url:' + SQLALCHEMY_DATABASE_URI)
 
     WORKING_FOLDER = os.environ.get('WORKING_FOLDER')
     INVOICE_FOLDER = 'Invoices'
@@ -55,3 +52,27 @@ class Config:
 
     TENCENTCLOUD_SECRET_ID = os.environ.get('TENCENTCLOUD_SECRET_ID')
     TENCENTCLOUD_SECRET_KEY = os.environ.get('TENCENTCLOUD_SECRET_KEY')
+
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    TESTING = False
+    SQLALCHEMY_DATABASE_URI = (
+        Config.SQLALCHEMY_DATABASE_URI
+        or 'sqlite:///' + os.path.join(Config.PROJECT_ROOT, 'app.db')
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class TestingConfig(Config):
+    DEBUG = True
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = Config.SQLALCHEMY_DATABASE_URI or 'sqlite:///:memory:'
+
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class ProductionConfig(Config):
+    DEBUG = False
+    TESTING = False

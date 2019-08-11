@@ -1,7 +1,7 @@
 from flask import Flask
 
 
-def create_app(**kwargs):
+def create_app(app_name, config_or_path=None, **kwargs):
     """
     Entry point to the Flask RESTful Server application
     ===================================================
@@ -12,11 +12,12 @@ def create_app(**kwargs):
 
     # threading.stack_size(2 * 1024 * 1024)
 
-    from config import Config
+    app = Flask(app_name, **kwargs)
 
-    app = Flask('HuXin API', **kwargs)
-
-    app.config.from_object(Config)
+    try:
+        app.config.from_object(config_or_path)
+    except ImportError:
+        raise
 
     from . import extensions
 
