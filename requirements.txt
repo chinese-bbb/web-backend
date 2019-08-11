@@ -13,6 +13,7 @@ cfgv==2.0.1
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
+coverage==4.5.4
 docutils==0.14
 Flask==1.1.1
 Flask-Cors==3.0.8

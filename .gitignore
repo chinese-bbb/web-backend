@@ -145,4 +145,4 @@ header.txt
 sql_frequent.txt
 logs
 .temp
-app.db
+*.db
