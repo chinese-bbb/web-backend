@@ -30,6 +30,7 @@ repos:
       - id: flake8
         args:
           - --max-line-length=120
+          - --ignore=E203,W503
   - repo: git@github.com:pre-commit/mirrors-autopep8
     rev: v1.4.4
     hooks:
@@ -39,6 +40,7 @@ repos:
           - --in-place
           - --aggressive
           - --aggressive
+          - --ignore=E203,E721
   - repo: git@github.com:humitos/mirrors-autoflake.git
     rev: v1.2
     hooks:
