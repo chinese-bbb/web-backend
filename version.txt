@@ -1,1 +1,1 @@
-$Format:%H%n%an - %ae%n%s$
+local
