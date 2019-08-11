@@ -4,12 +4,12 @@ from flask import current_app as app
 from flask import session
 from flask.views import MethodView
 from flask_login import login_required
-from flask_rest_api import Blueprint
 
 from .schemas import FileUploadFilesParameters
 from .schemas import FileUploadFormParameters
 from .services import save_temp_file
 from app.services.aws.s3 import amazon_s3
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 

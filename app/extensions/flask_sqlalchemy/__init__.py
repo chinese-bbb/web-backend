@@ -27,8 +27,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 
 
 class SQLAlchemy(BaseSQLAlchemy):
-    """Customized Flask-SQLAlchemy adapter with enabled autocommit, constraints
-    auto-naming conventions and ForeignKey constraints for SQLite."""
+    """
+    Customized Flask-SQLAlchemy adapter with enabled autocommit, constraints
+    auto-naming conventions and ForeignKey constraints for SQLite.
+    """
 
     def __init__(self, *args, **kwargs):
         if 'session_options' not in kwargs:

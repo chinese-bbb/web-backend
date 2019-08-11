@@ -5,11 +5,11 @@ from flask import abort
 from flask import after_this_request
 from flask import request
 from flask.views import MethodView
-from flask_rest_api import Blueprint
 
 from .schemas import SmsRequestParameters
 from .schemas import ValidateSmsCodeParameters
-from app.services.tencent import send_message
+from app.services.tencent.send_sms import send_message
+from flask_rest_api import Blueprint
 
 
 log = logging.getLogger(__name__)

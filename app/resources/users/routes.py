@@ -3,12 +3,12 @@ import logging
 from flask.views import MethodView
 from flask_login import current_user
 from flask_login import login_required
-from flask_rest_api import Blueprint
 
 from .models import User
 from .schemas import ChangePasswordParameters
 from .schemas import UserSchema
 from app.extensions import db
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 

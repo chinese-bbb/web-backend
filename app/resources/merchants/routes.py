@@ -4,7 +4,6 @@ import logging
 from flask import abort
 from flask.views import MethodView
 from flask_login import login_required
-from flask_rest_api import Blueprint
 
 from .models import FuzzySearchRaw
 from .models import MerchantQueryRaw
@@ -15,6 +14,7 @@ from .schemas import MerchantSearchResponseSchema
 from app.extensions import db
 from app.services.qichacha.qichacha_api import basic_detail
 from app.services.qichacha.qichacha_api import fuzzy_search_pageIndex
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 

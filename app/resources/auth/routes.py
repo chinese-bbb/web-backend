@@ -9,7 +9,6 @@ from flask.views import MethodView
 from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
-from flask_rest_api import Blueprint
 from phonenumbers import NumberParseException
 
 from .schemas import CheckUserIdentificationParameters
@@ -19,6 +18,7 @@ from .schemas import ResetPasswordParameters
 from app.extensions import db
 from app.resources.users.models import User
 from app.services.tencent.id_ocr import tencent_ocr
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 

@@ -3,7 +3,6 @@ import logging
 from flask import session
 from flask.views import MethodView
 from flask_login import login_required
-from flask_rest_api import Blueprint
 
 from .schemas import ComplaintByMerchantParameters
 from .schemas import ComplaintByTypeParameters
@@ -13,6 +12,7 @@ from .schemas import ComplaintSchema
 from .schemas import LastNComplaintsParameters
 from .services import ComplaintDAO
 from app.utils import parseBoolean
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 

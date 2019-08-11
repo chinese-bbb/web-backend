@@ -11,12 +11,12 @@ Please, put new extension instantiations and initializations here.
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
-from flask_rest_api import Api
 from sqlalchemy_utils import force_auto_coercion
 from sqlalchemy_utils import force_instant_defaults
 
 from .flask_sqlalchemy import SQLAlchemy
 from .logging import Logging
+from flask_rest_api import Api
 
 
 logging = Logging()

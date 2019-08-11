@@ -3,12 +3,12 @@ import logging
 from flask import session
 from flask.views import MethodView
 from flask_login import login_required
-from flask_rest_api import Blueprint
 from flask_restplus import Resource
 
 from .schemas import CommentResponseSchema
 from .schemas import CreateCommentParameters
 from .services import CommentDAO
+from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
 
