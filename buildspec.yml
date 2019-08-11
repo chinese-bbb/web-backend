@@ -3,9 +3,24 @@ phases:
   install:
     runtime-versions:
       python: 3.7
+    commands:
+      - echo "Installing requirements"
+      - pip install -r requirements.txt
   build:
     commands:
+      - coverage run -m pytest tests
+      - coverage report
       - echo $CODEBUILD_RESOLVED_SOURCE_VERSION > version.txt
 artifacts:
   files:
-    - "**/*"
+    - ".ebextensions/*"
+    - "app/**/*"
+    - "requirements/**"
+    - "migrations/**/*"
+    - "templates/**/*"
+    - "tools/**/*"
+    - "application.py"
+    - "config.py"
+    - "logging-conf.yaml"
+    - "requirements.txt"
+    - "version.txt"
