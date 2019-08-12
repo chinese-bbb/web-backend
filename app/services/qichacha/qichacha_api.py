@@ -59,7 +59,7 @@ def fuzzy_search_pageIndex(keyword, pageIndex):
     paramStr = 'keyword=' + keyword + '&pageIndex=' + str(pageIndex)
     url = reqInterNme + '?key=' + appkey + '&' + paramStr
     headers = {'Token': token, 'Timespan': timespan}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=2)
 
     # 结果返回处理
     log.debug(response.status_code)
@@ -94,7 +94,7 @@ def basic_detail(keyword):
     paramStr = 'keyword=' + keyword
     url = reqInterNme + '?key=' + appkey + '&' + paramStr
     headers = {'Token': token, 'Timespan': timespan}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=2)
 
     # 结果返回处理
     log.debug(response.status_code)
