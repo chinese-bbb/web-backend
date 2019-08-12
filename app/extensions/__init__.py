@@ -33,8 +33,8 @@ login_manager = LoginManager()
 
 marshmallow = Marshmallow()
 
-api = Api()
 api_blueprint = Blueprint('api', __name__)
+api = Api(title='HuXin API')
 
 
 def init_app(app):

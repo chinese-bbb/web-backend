@@ -18,7 +18,7 @@ class Api(APISpecMixin, ErrorHandlerMixin):
     Provides helpers to build a REST API using Flask.
 
     :param Flask app: Flask application
-    :param dict spec_kwargs: kwargs to pass to internal APISpec instance
+    :param spec_kwargs: kwargs to pass to internal APISpec instance
 
     The ``spec_kwargs`` dictionary is passed as kwargs to the internal APISpec
     instance. **flask-rest-api** adds a few parameters to the original
@@ -40,21 +40,24 @@ class Api(APISpecMixin, ErrorHandlerMixin):
     parameter `API_SPEC_OPTIONS`.
     """
 
-    def __init__(self, app=None, *, spec_kwargs=None):
+    def __init__(self, app=None, title=None, spec_kwargs=None):
         self._app = app
         self.spec = None
+        self.title = title
         # Use lists to enforce order
         self._fields = []
         self._converters = []
+        self.spec_kwargs = spec_kwargs
         if app is not None:
             self.init_app(app, spec_kwargs=spec_kwargs)
 
-    def init_app(self, app, *, spec_kwargs=None):
+    def init_app(self, app, spec_kwargs=None):
         """
         Initialize Api with application.
         """
 
         self._app = app
+        self.title = self.title or app.name
 
         # Register flask-rest-api in app extensions
         app.extensions = getattr(app, 'extensions', {})
@@ -62,7 +65,7 @@ class Api(APISpecMixin, ErrorHandlerMixin):
         ext['ext_obj'] = self
 
         # Initialize spec
-        self._init_spec(**(spec_kwargs or {}))
+        self._init_spec(**(spec_kwargs or self.spec_kwargs or {}))
 
         # Initialize blueprint serving spec
         self._register_doc_blueprint()

@@ -166,7 +166,7 @@ class DocBlueprintMixin:
         """
         return flask.render_template(
             'swagger_ui.html',
-            title=self._app.name,
+            title=self.title,
             swagger_ui_url=self._swagger_ui_url,
             swagger_ui_supported_submit_methods=(
                 self._swagger_ui_supported_submit_methods
@@ -181,7 +181,6 @@ class APISpecMixin(DocBlueprintMixin):
 
     def _init_spec(
         self,
-        *,
         flask_plugin=None,
         marshmallow_plugin=None,
         extra_plugins=None,
@@ -212,7 +211,7 @@ class APISpecMixin(DocBlueprintMixin):
 
         # Instantiate spec
         self.spec = apispec.APISpec(
-            self._app.name,
+            self.title,
             self._app.config.get('API_VERSION', '1'),
             openapi_version=openapi_version,
             plugins=plugins,
