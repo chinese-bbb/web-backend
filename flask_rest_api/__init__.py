@@ -82,10 +82,13 @@ class Api(APISpecMixin, ErrorHandlerMixin):
         Must be called after app is initialized.
         """
 
+        blp._api = self
+
         self._app.register_blueprint(blp, **options)
 
         # Register views in API documentation for this resource
         blp.register_views_in_doc(self._app, self.spec)
 
         # Add tag relative to this resource to the global tag list
-        self.spec.tag({'name': blp.name, 'description': blp.description})
+        if len(blp._endpoints) > 0:
+            self.spec.tag({'name': blp.name, 'description': blp.description})

@@ -273,3 +273,29 @@ class Blueprint(
             return wrapper
 
         return decorator
+
+    def register_blueprint(self, blueprint, **options):
+        """
+        Hacking in support for nesting blueprints, until hopefully
+        https://github.com/mitsuhiko/flask/issues/593 will be resolved.
+        """
+
+        def deferred(state):
+            url_prefix = (state.url_prefix or '') + (
+                options.get('url_prefix', blueprint.url_prefix) or ''
+            )
+            if 'url_prefix' in options:
+                del options['url_prefix']
+
+            state.app.register_blueprint(blueprint, url_prefix=url_prefix, **options)
+
+            # Register views in API documentation for this resource
+            blueprint.register_views_in_doc(self._api._app, self._api.spec)
+
+            # Add tag relative to this resource to the global tag list
+            if len(blueprint._endpoints) > 0:
+                self._api.spec.tag(
+                    {'name': blueprint.name, 'description': blueprint.description}
+                )
+
+        self.record(deferred)
