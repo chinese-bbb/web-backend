@@ -29,6 +29,7 @@ $env:FLASK_APP="application.py" # or set the var in `.env`
 python -m flask run #(use -p to specify binding port)
 ```
 
+NOTE: the swagger docs is at http://localhost:5000/docs/swagger
 
 ## Todo List
 

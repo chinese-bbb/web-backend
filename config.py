@@ -1,6 +1,8 @@
 import logging
 import os
 
+from tools.openapi_default import SPEC_OPTIONS
+
 log = logging.getLogger(__name__)
 
 
@@ -21,6 +23,7 @@ class Config:
     OPENAPI_URL_PREFIX = '/docs'
     OPENAPI_SWAGGER_UI_PATH = '/swagger'
     OPENAPI_SWAGGER_UI_VERSION = '3.23.4'
+    API_SPEC_OPTIONS = SPEC_OPTIONS
 
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
