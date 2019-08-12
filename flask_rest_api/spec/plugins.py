@@ -79,12 +79,12 @@ class FlaskPlugin(BasePlugin):
             params.append(param)
         return params
 
-    def path_helper(self, rule, operations, parameters, **kwargs):
+    def path_helper(self, path, operations, parameters, **kwargs):
         """
         Get path from flask Rule and set path parameters in operations.
         """
 
-        for path_p in self.rule_to_params(rule):
+        for path_p in self.rule_to_params(path):
             # If a parameter with same name and location is already
             # documented, update. Otherwise, append as new parameter.
             p_doc = next(
@@ -106,4 +106,4 @@ class FlaskPlugin(BasePlugin):
             else:
                 parameters.append(path_p)
 
-        return self.flaskpath2openapi(rule.rule)
+        return self.flaskpath2openapi(path.rule)

@@ -68,7 +68,7 @@ class ArgumentsMixin:
 
             # Call use_args (from webargs) to inject params in function
             return self.ARGUMENTS_PARSER.use_args(
-                schema, locations=[location], **kwargs
+                schema, locations=(location,), **kwargs
             )(wrapper)
 
         return decorator

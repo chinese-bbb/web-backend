@@ -50,6 +50,12 @@ from .response import ResponseMixin
 from .utils import deepupdate
 from .utils import load_info_from_docstring
 
+CONTENT_TYPE_MAPPING = {
+    'json': 'application/json',
+    'files': 'multipart/form-data',
+    'form': 'multipart/form-data',
+}
+
 
 class Blueprint(
     FlaskBlueprint, ArgumentsMixin, ResponseMixin, PaginationMixin, EtagMixin
@@ -64,6 +70,7 @@ class Blueprint(
     def __init__(self, *args, **kwargs):
 
         self.description = kwargs.pop('description', '')
+        self._api = None
 
         super().__init__(*args, **kwargs)
 
@@ -192,7 +199,7 @@ class Blueprint(
             # Thanks to self.route, there can only be one rule per endpoint
             full_endpoint = '.'.join((self.name, endpoint))
             rule = next(app.url_map.iter_rules(full_endpoint))
-            spec.path(rule=rule, operations=doc, parameters=parameters)
+            spec.path(path=rule, operations=doc, parameters=parameters)
 
     @staticmethod
     def _prepare_doc(operation, openapi_version):
@@ -222,8 +229,8 @@ class Blueprint(
                                 )[field]
                             ) = resp.pop(field)
             if 'parameters' in operation:
-                for param in operation['parameters']:
-                    if param['in'] == 'json':
+                for param in operation['parameters'][:]:
+                    if param['in'] in ('json', 'files', 'form'):
                         request_body = {
                             x: param[x]
                             for x in ('description', 'required')
@@ -233,15 +240,16 @@ class Blueprint(
                             if field in param:
                                 (
                                     request_body.setdefault('content', {}).setdefault(
-                                        'application/json', {}
+                                        CONTENT_TYPE_MAPPING[param['in']], {}
                                     )[field]
                                 ) = param.pop(field)
                         operation['requestBody'] = request_body
                         # There can be only one requestBody
                         operation['parameters'].remove(param)
-                        if not operation['parameters']:
-                            del operation['parameters']
                         break
+
+                if not operation['parameters']:
+                    del operation['parameters']
 
     @staticmethod
     def doc(**kwargs):

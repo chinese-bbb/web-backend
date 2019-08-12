@@ -65,7 +65,7 @@ class TestBlueprint:
         api.register_blueprint(blp)
         spec = api.spec.to_dict()
         get = spec['paths']['/test/']['get']
-        if openapi_location != 'body' or openapi_version == '2.0':
+        if openapi_location not in ('body', 'formData') or openapi_version == '2.0':
             loc = get['parameters'][0]['in']
             assert loc == openapi_location
             assert 'requestBody' not in get
@@ -139,14 +139,15 @@ class TestBlueprint:
                 # Check required defaults to True
                 assert get['requestBody']['required'] == (required is not False)
         else:
-            parameters = get['parameters']
-            # One parameter: the 'field' field in DocSchema
-            assert len(parameters) == 1
-            assert parameters[0]['name'] == 'field'
-            assert 'requestBody' not in get
-            # Check the required parameter has no impact.
-            # Only the required attribute of the field matters
-            assert parameters[0]['required'] is False
+            if location not in ('form', 'files'):
+                parameters = get['parameters']
+                # One parameter: the 'field' field in DocSchema
+                assert len(parameters) == 1
+                assert parameters[0]['name'] == 'field'
+                assert 'requestBody' not in get
+                # Check the required parameter has no impact.
+                # Only the required attribute of the field matters
+                assert parameters[0]['required'] is False
 
     @pytest.mark.parametrize('openapi_version', ('2.0', '3.0.2'))
     def test_blueprint_arguments_multiple(self, app, schemas, openapi_version):
