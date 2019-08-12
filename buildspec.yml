@@ -8,6 +8,7 @@ phases:
       - pip install -r requirements.txt
   build:
     commands:
+      - mv .env_template .env
       - pytest flask_rest_api/tests
       - sed -i '$ d' setup.cfg # exclude flask_rest_api from coverage report
       - coverage run -m pytest tests
@@ -17,7 +18,7 @@ artifacts:
   files:
     - ".ebextensions/*"
     - "app/**/*"
-    - "flask_rest_api/spec/*"
+    - "flask_rest_api/spec/**/*"
     - "flask_rest_api/*"
     - "requirements/**"
     - "migrations/**/*"
