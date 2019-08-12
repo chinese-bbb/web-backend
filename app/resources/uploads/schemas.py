@@ -1,9 +1,9 @@
 from flask_marshmallow import Schema
 from marshmallow import ValidationError
-from marshmallow_enum import EnumField
 
 from .models import EnumUploadFileType
 from .models import FileField
+from app.models.enum_field import EnumField
 
 
 def file_validate(file):
@@ -12,8 +12,6 @@ def file_validate(file):
 
 
 class FileUploadFormParameters(Schema):
-    class Meta:
-        strict = True
 
     upload_type = EnumField(
         EnumUploadFileType,

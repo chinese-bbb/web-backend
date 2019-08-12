@@ -1,8 +1,8 @@
 from flask_marshmallow import Schema
 from marshmallow import fields
-from marshmallow_enum import EnumField
 
 from .models import EnumGender
+from app.models.enum_field import EnumField
 
 
 class CreateAuthClientParameters(Schema):

@@ -1,11 +1,11 @@
 from flask_marshmallow.sqla import TableSchema
 from marshmallow import fields
 from marshmallow import Schema
-from marshmallow_enum import EnumField
 
 from .models import Complaint
 from .models import EnumComplaintState
 from .models import EnumComplaintType
+from app.models.enum_field import EnumField
 from app.resources.users.schemas import UserSchema
 
 
@@ -31,11 +31,9 @@ class ComplaintSchema(Schema):
     trade_info = fields.String(description='tradeInfo')
     relatedProducts = fields.String(description='relatedProducts')
     purchase_timestamp = fields.DateTime(description='purchase_timestamp')
-    invoice_files = fields.List(
-        fields.String(), description='uploaded invoice file list'
-    )
+    invoice_files = fields.List(fields.URL(), description='uploaded invoice file list')
     evidence_files = fields.List(
-        fields.String(), description='uploaded evidence file list'
+        fields.URL(), description='uploaded evidence file list'
     )
 
 
