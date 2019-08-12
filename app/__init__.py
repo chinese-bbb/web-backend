@@ -1,5 +1,7 @@
 from flask import Flask
 
+from app.extensions import api
+
 
 def create_app(app_name, config_or_path=None, **kwargs):
     """
@@ -23,14 +25,15 @@ def create_app(app_name, config_or_path=None, **kwargs):
 
     extensions.init_app(app)
 
+    from app.extensions import api_blueprint
+
     from . import resources
 
-    resources.init_app(app)
+    resources.init_app(app, api_blueprint)
 
-    # from app.extensions import blueprint
     from app.home import bp as home_blueprint
 
-    # app.register_blueprint(blueprint, url_prefix='/api')
+    api.register_blueprint(api_blueprint, url_prefix='/api')
     app.register_blueprint(home_blueprint, url_prefix='/')
 
     return app

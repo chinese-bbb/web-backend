@@ -17,6 +17,7 @@ from sqlalchemy_utils import force_instant_defaults
 from .flask_sqlalchemy import SQLAlchemy
 from .logging import Logging
 from flask_rest_api import Api
+from flask_rest_api import Blueprint
 
 
 logging = Logging()
@@ -33,6 +34,7 @@ login_manager = LoginManager()
 marshmallow = Marshmallow()
 
 api = Api()
+api_blueprint = Blueprint('api', __name__)
 
 
 def init_app(app):

@@ -35,7 +35,7 @@ else:
 
 # initialize flask app
 try:
-    application = create_app('HuXin API', CONFIG_NAME_MAPPER[config_name])
+    application = create_app('HuXin App', CONFIG_NAME_MAPPER[config_name])
 except Exception as e:
     log.exception(e)
 
