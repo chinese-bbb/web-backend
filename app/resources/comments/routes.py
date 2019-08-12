@@ -3,7 +3,6 @@ import logging
 from flask import session
 from flask.views import MethodView
 from flask_login import login_required
-from flask_restplus import Resource
 
 from .schemas import CommentResponseSchema
 from .schemas import CreateCommentParameters
@@ -38,7 +37,7 @@ class Comment(MethodView):
 
 
 @bp.route('/byComplaint/<int:id>')
-class CommentsByComplaint(Resource):
+class CommentsByComplaint(MethodView):
     @login_required
     @bp.response(CommentResponseSchema(many=True))
     def get(self, id):
@@ -51,7 +50,7 @@ class CommentsByComplaint(Resource):
 
 
 @bp.route('/<int:id>')
-class Comment2(Resource):
+class Comment2(MethodView):
     @login_required
     @bp.response(CommentResponseSchema)
     def get(self, id):

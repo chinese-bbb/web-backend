@@ -20,7 +20,6 @@ Flask-Cors==3.0.8
 Flask-Login==0.4.1
 flask-marshmallow==0.10.1
 Flask-Migrate==2.5.2
-flask-restplus==0.12.1
 Flask-SQLAlchemy==2.4.0
 identify==1.4.5
 idna==2.8
