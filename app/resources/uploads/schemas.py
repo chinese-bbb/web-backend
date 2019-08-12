@@ -6,6 +6,11 @@ from .models import EnumUploadFileType
 from .models import FileField
 
 
+def file_validate(file):
+    if file.mimetype not in ['image/jpeg', 'image/png']:
+        raise ValidationError('File format not allowed')
+
+
 class FileUploadFormParameters(Schema):
     class Meta:
         strict = True
@@ -15,18 +20,11 @@ class FileUploadFormParameters(Schema):
         by_value=True,
         required=True,
         description='upload type(invoice/id/evidence)',
+        location='form',
     )
-
-
-def file_validate(file):
-    if file.mimetype not in ['image/jpeg', 'image/png']:
-        raise ValidationError('File format not allowed')
-
-
-class FileUploadFilesParameters(Schema):
-    class Meta:
-        strict = True
-
     pic_file = FileField(
-        required=True, validate=file_validate, description='image file'
+        required=True,
+        validate=file_validate,
+        description='image file',
+        location='files',
     )

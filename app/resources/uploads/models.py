@@ -4,10 +4,10 @@ from marshmallow import fields
 
 from app.extensions import api
 
-file_plugin = api.ma_plugin
+ma_plugin = api.ma_plugin
 
 
-@file_plugin.map_to_openapi_type('string', 'binary')
+@ma_plugin.map_to_openapi_type('string', 'binary')
 class FileField(fields.Raw):
     pass
 
