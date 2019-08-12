@@ -5,7 +5,7 @@ from app.resources.complaints.models import Complaint
 
 def test_fetch_all_complaint(client, auth):
     auth.login()
-    response = client.get('/complaints/byUser?phone_num=13312341234')
+    response = client.get('/api/complaints/byUser?phone_num=13312341234')
     data = json.loads(response.data)
     assert response.status_code == 200
     assert len(data) == 1
@@ -14,7 +14,7 @@ def test_fetch_all_complaint(client, auth):
 def test_add_complaint(client, auth):
     auth.login()
     response = client.post(
-        '/complaints',
+        '/api/complaints',
         json={
             'merchant_id': 1,
             'complaint_body': 'eeeeeeees complain1',

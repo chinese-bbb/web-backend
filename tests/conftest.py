@@ -115,11 +115,11 @@ class AuthActions(object):
 
     def login(self, username='13312341234', password='Abcd3333'):
         return self._client.post(
-            '/auth/login', json={'phone_num': username, 'password': password}
+            '/api/auth/login', json={'phone_num': username, 'password': password}
         )
 
     def logout(self):
-        return self._client.post('/auth/logout')
+        return self._client.post('/api/auth/logout')
 
 
 @fixture(scope='function', autouse=True)
