@@ -73,9 +73,11 @@ class ComplaintDAO(object):
 
     def getLatestNComplaint(self, num):
 
-        complaints = Complaint.query.order_by(
-            Complaint.complain_timestamp.desc()
-        ).limit(num)
+        complaints = (
+            Complaint.query.order_by(Complaint.complain_timestamp.desc())
+            .limit(num)
+            .all()
+        )
         if complaints:
             return complaints
         else:

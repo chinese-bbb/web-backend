@@ -56,7 +56,7 @@ class ValidateSmsCode(MethodView):
 
         @after_this_request
         def set_register_cookie(response):
-            response.set_cookie('phone_auth', 'yes', max_age=64800)
+            response.set_cookie('phone_auth', 'yes', max_age=1800)
             return response
 
         return request.cookies.get('sid')

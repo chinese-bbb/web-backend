@@ -13,17 +13,17 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    username = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     registered_date = db.Column(db.String(120))
     if_verified = db.Column(db.Boolean())
     is_founder = db.Column(db.Boolean())
     real_name = db.Column(db.String(120))
-    sex = db.Column(db.Enum(EnumGender))
+    sex = db.Column(db.Enum(EnumGender), nullable=False)
     minority = db.Column(db.String(120))
     account_active = db.Column(db.Boolean())
     first_name = db.Column(db.String(120))
-    last_name = db.Column(db.String(120))
+    last_name = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
 
     complaints = db.relationship(Complaint, backref='User')

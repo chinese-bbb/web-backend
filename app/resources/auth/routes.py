@@ -111,18 +111,21 @@ class Register(MethodView):
         data = args
         username = data['phone_num']
 
-        try:
-            result = phonenumbers.parse(username, 'CN')
-            if '+' + str(result.country_code) + str(result.national_number) != username:
-                return {'error': 'Invalid phone num or password'}, 422
-            user = User.query.filter_by(username=username).first()
-        except NumberParseException:
-            return {'error': 'Invalid phone num or password'}, 422
-
         user = User.query.filter_by(username=username).first()
 
         if user:
             return {'error': 'user already exist'}, 422
+
+        try:
+            result = phonenumbers.parse(username, 'CN')
+            if '+' + str(result.country_code) + str(result.national_number) != username:
+                return {'error': 'Invalid phone num or password'}, 422
+            user = User.query.filter_by(username=result.national_number).first()
+
+            if user:
+                return {'error': 'user already exist'}, 422
+        except NumberParseException:
+            return {'error': 'Invalid phone num or password'}, 422
 
         sex = data['sex']
         password = data['password']

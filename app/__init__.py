@@ -50,7 +50,7 @@ def define_global_interception(app):
     log = logging.getLogger(__name__)
 
     @app.errorhandler(Exception)
-    def handle_global_exception():
+    def handle_global_exception(e):
         tb = traceback.format_exc()
         log.error(
             '%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s',
@@ -63,14 +63,14 @@ def define_global_interception(app):
 
         return 'oohs! something goes wrong', HTTPStatus.INTERNAL_SERVER_ERROR
 
-    @app.after_request
-    def after_request(response):
-        log.info(
-            '%s %s %s %s %s',
-            request.remote_addr,
-            request.method,
-            request.scheme,
-            request.full_path,
-            response.status,
-        )
-        return response
+    # @app.after_request
+    # def after_request(response):
+    #     log.info(
+    #         '%s %s %s %s %s',
+    #         request.remote_addr,
+    #         request.method,
+    #         request.scheme,
+    #         request.full_path,
+    #         response.status,
+    #     )
+    #     return response

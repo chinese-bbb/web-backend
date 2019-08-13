@@ -22,7 +22,7 @@ from flask_rest_api import Blueprint
 
 logging = Logging()
 
-cross_origin_resource_sharing = CORS(supports_credentials=True)
+cross_origin_resource_sharing = CORS(supports_credentials=True, resources=r'/api/*')
 
 db = SQLAlchemy()
 
