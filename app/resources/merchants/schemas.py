@@ -11,16 +11,16 @@ class BasicMerchantSchema(Schema):
     Name = fields.String(required=True)
     No = fields.String(required=True)
     OperName = fields.String()
-    StartDate = fields.DateTime()
+    StartDate = fields.String()
     Status = fields.String()
 
 
 class MerchantSchema(BasicMerchantSchema):
     Address = fields.String()
     BelongOrg = fields.String()
-    CheckDate = fields.DateTime()
+    CheckDate = fields.String()
     EconKind = fields.String()
-    EndDate = fields.DateTime()
+    EndDate = fields.String()
     ImageUrl = fields.URL()
     IsOnStock = fields.String()
     OrgNo = fields.String()
@@ -28,13 +28,13 @@ class MerchantSchema(BasicMerchantSchema):
     Province = fields.String()
     RegistCapi = fields.String()
     Scope = fields.String()
-    StartDate = fields.DateTime()
+    StartDate = fields.String()
     Status = fields.String()
     StockNumber = fields.String()
     StockType = fields.String()
     TeamEnd = fields.String()
     TermStart = fields.String()
-    UpdatedDate = fields.DateTime()
+    UpdatedDate = fields.String()
     merchant_id = fields.String()
 
 

@@ -48,7 +48,7 @@ class ValidateSmsCode(MethodView):
 
         if messageDict[sid] != v_code:
             return {'error': 'verification code is not correct'}, 401
-        return {'state': 'Success'}, 200
+        return {'state': 'Success'}
 
     def _check_cookie_sid(self):
         if request.cookies.get('sid') is None:

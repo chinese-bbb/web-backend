@@ -17,4 +17,4 @@ class CommentResponseSchema(TableSchema):
         exclude = ['id']
 
     complaint_id = fields.String(attribute='complaint_id')
-    user = fields.Nested(UserSchema)
+    user = fields.Nested(UserSchema, attribute='User')

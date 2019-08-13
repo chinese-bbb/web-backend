@@ -11,7 +11,6 @@ from .schemas import ComplaintResponseSchema
 from .schemas import ComplaintSchema
 from .schemas import LastNComplaintsParameters
 from .services import ComplaintDAO
-from app.utils import parseBoolean
 from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
@@ -37,19 +36,7 @@ class Complaint(MethodView):
         user_id = session['user_id']
 
         data['user_id'] = user_id
-        data['if_negotiated_by_merchant'] = parseBoolean(
-            data['if_negotiated_by_merchant']
-        )
-        data['allow_public'] = parseBoolean(data['allow_public'])
-
-        # TODO: if allow_contact_by_merchant key doesn't exist, what we do.
-
-        if 'invoice_files' not in data:
-            data['allow_contact_by_merchant'] = True
-
-        # data['allow_contact_by_merchant'] = parseBoolean(data['allow_contact_by_merchant'])
         data['allow_contact_by_merchant'] = True
-        data['allow_press'] = parseBoolean(data['allow_press'])
         data['complaint_status'] = 'initialized'
 
         # TODO: check whether merchant_id exists or not
@@ -89,7 +76,7 @@ class ComplaintByMerchant(MethodView):
 
         merchant_id = args['merchant_id']
         res = complaintDAO.fetchByMerchantId(merchant_id)
-        return res, 200
+        return res
 
 
 @bp.route('/byType')
@@ -158,4 +145,4 @@ class ComplaintById(MethodView):
         if res == 'deleted':
             return '', 204
         else:
-            return {'state': 'delete unsuccessful'}, 200
+            return {'state': 'delete unsuccessful'}

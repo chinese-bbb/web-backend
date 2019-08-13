@@ -52,7 +52,7 @@ class PhoneExist(MethodView):
             if user is None:
                 return {phone_num: 'Not Registered phone num'}, 404
 
-        return {'state': 'Success'}, 200
+        return {'state': 'Success'}
 
 
 @bp.route('/login')
