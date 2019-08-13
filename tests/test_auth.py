@@ -33,3 +33,43 @@ def test_logout(client, auth):
         resp = auth.logout()
         assert resp.status_code == 200
         assert 'user_id' not in session
+
+
+@pytest.mark.parametrize(
+    ('phone_num',),
+    (('13312341234',), ('+8613312341234',), ('13312345678',), ('+8613312345678',)),
+)
+def test_invalid_register(client, phone_num):
+    with client:
+        client.set_cookie('localhost', key='phone_auth', value='yse')
+        response = client.post(
+            '/api/auth/register',
+            json={
+                'phone_num': phone_num,
+                'sex': 'male',
+                'password': 'abcd1234',
+                'first_name': '',
+                'last_name': 'he',
+                'email': 'ghost@example.com',
+            },
+        )
+        assert response.status_code == 422
+        assert 'user_id' not in session
+
+
+def test_valid_register(client):
+    with client:
+        client.set_cookie('localhost', key='phone_auth', value='yse')
+        response = client.post(
+            '/api/auth/register',
+            json={
+                'phone_num': '+8613333333334',
+                'sex': 'male',
+                'password': 'abcd1234',
+                'first_name': '',
+                'last_name': 'he',
+                'email': 'ghost@example.com',
+            },
+        )
+        assert response.status_code == 200
+        assert 'user_id' in session

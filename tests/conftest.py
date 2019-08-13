@@ -122,6 +122,8 @@ class AuthActions(object):
         return self._client.post('/api/auth/logout')
 
 
-@fixture(scope='function', autouse=True)
+@yield_fixture(scope='function', autouse=True)
 def auth(client: FlaskClient):
-    return AuthActions(client)
+    actions = AuthActions(client)
+    yield actions
+    client.cookie_jar.clear()

@@ -1,11 +1,23 @@
 import json
 
+import pytest
+
 from app.resources.complaints.models import Complaint
 
 
-def test_fetch_all_complaint(client, auth):
+@pytest.mark.parametrize(
+    ('by_type', 'query'),
+    (
+        ('byUser', 'phone_num=13312341234'),
+        ('byMerchant', 'merchant_id=1'),
+        ('byType', 'complaint_type=warranty'),
+        ('last', 'n=5'),
+        ('all', ''),
+    ),
+)
+def test_fetch_complaints(client, auth, by_type, query):
     auth.login()
-    response = client.get('/api/complaints/byUser?phone_num=13312341234')
+    response = client.get('/api/complaints/{}?{}'.format(by_type, query))
     data = json.loads(response.data)
     assert response.status_code == 200
     assert len(data) == 1
