@@ -42,6 +42,8 @@ loggers:
     level: DEBUG
     handlers: [console]
     propagate: no
+  werkzeug:
+    level: DEBUG
 
 root:
   level: DEBUG
