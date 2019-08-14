@@ -5,7 +5,7 @@
 1. Login
 
 ```sh
-curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/login' -d '{"phone_num":"az", "password":"az"}'
+curl -b cookies.txt -c cookies.txt -H "Content-Type: application/json" -X POST 'http://localhost:5000/api/auth/login' -d '{"phone_num":"az", "password":"az"}'
 ```
 
 2. Whether a phone number exists

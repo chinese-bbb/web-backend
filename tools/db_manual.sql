@@ -15,4 +15,6 @@ DELETE FROM complaint WHERE id <= 17;
 # 3. add urole column to user table
 ALTER TABLE user ADD urole varchar(140) DEFAULT 'normal';
 update user set urole = 'admin' where username = '13333333333';
+update user set sex = 'male' where sex = 'Male'
+
 
