@@ -63,14 +63,14 @@ def define_global_interception(app):
 
         return 'oohs! something goes wrong', HTTPStatus.INTERNAL_SERVER_ERROR
 
-    # @app.after_request
-    # def after_request(response):
-    #     log.info(
-    #         '%s %s %s %s %s',
-    #         request.remote_addr,
-    #         request.method,
-    #         request.scheme,
-    #         request.full_path,
-    #         response.status,
-    #     )
-    #     return response
+    @app.after_request
+    def after_request(response):
+        log.info(
+            '%s %s %s %s %s',
+            request.remote_addr,
+            request.method,
+            request.scheme,
+            request.full_path,
+            response.status,
+        )
+        return response
