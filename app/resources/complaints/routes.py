@@ -2,7 +2,6 @@ import logging
 
 from flask import session
 from flask.views import MethodView
-from flask_login import login_required
 
 from .schemas import ComplaintByMerchantParameters
 from .schemas import ComplaintByTypeParameters
@@ -12,6 +11,8 @@ from .schemas import ComplaintSchema
 from .schemas import LastNComplaintsParameters
 from .services import ComplaintDAO
 from flask_rest_api import Blueprint
+
+from app.extensions.flask_login_role import login_required
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ complaintDAO = ComplaintDAO()
 
 @bp.route('')
 class Complaint(MethodView):
-    @login_required
+    @login_required(role="ANY")
     @bp.arguments(ComplaintSchema)
     def post(self, data):
         """
@@ -52,7 +53,7 @@ class ComplaintByUser(MethodView):
     @bp.doc(description='get Complaint by username (phone_num)')
     @bp.arguments(ComplaintByUserParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required
+    @login_required(role="ANY")
     def get(self, args):
         """
         get Complaint by username  (phone_num)
@@ -68,7 +69,7 @@ class ComplaintByMerchant(MethodView):
     @bp.doc(description='get Complaint by merchant_id')
     @bp.arguments(ComplaintByMerchantParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required
+    @login_required(role="ANY")
     def get(self, args):
         """
         get Complaint by merchant_id (merchant_id)
@@ -84,7 +85,7 @@ class ComplaintByType(MethodView):
     @bp.doc(description='get Complaints by complaint type')
     @bp.arguments(ComplaintByTypeParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required
+    @login_required(role="ANY")
     def get(self, args):
         """
         get Complaint by complain_type.
@@ -112,7 +113,7 @@ class ComplaintLatest5(MethodView):
 
 @bp.route('/all')
 class ComplaintAll(MethodView):
-    @login_required
+    @login_required(role="admin")
     @bp.doc(description='get all complaints')
     @bp.response(ComplaintResponseSchema(many=True))
     def get(self):
@@ -126,7 +127,7 @@ class ComplaintAll(MethodView):
 
 @bp.route('/<int:id>')
 class ComplaintById(MethodView):
-    @login_required
+    @login_required(role="ANY")
     @bp.response(ComplaintResponseSchema())
     def get(self, id):
         """
@@ -135,7 +136,8 @@ class ComplaintById(MethodView):
         res = complaintDAO.get(id)
         return res
 
-    @login_required
+
+    @login_required(role="ANY")
     @bp.doc(description='delete a comment')
     def delete(self, id):
         """

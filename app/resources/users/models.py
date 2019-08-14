@@ -23,7 +23,7 @@ class User(UserMixin, db.Model):
     minority = db.Column(db.String(120))
     account_active = db.Column(db.Boolean())
     first_name = db.Column(db.String(120))
-    urole = db.Column(db.String(140))
+    urole = db.Column(db.String(140), default="normal")
     last_name = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
 
@@ -43,6 +43,9 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_urole(self):
+        return self.urole
 
 
 @login.user_loader
