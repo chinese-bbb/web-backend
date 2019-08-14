@@ -24,6 +24,7 @@ class UserMe(MethodView):
     @login_required
     @bp.response(UserSchema)
     def get(self):
+        log.debug('fetching user <%s>\'s profile', current_user.username)
         return User.query.get_or_404(current_user.id)
 
 
@@ -39,8 +40,10 @@ class ChangePassword(MethodView):
         old_password = args['old_password']
         new_password = args['new_password']
 
+        log.debug('trying to change user <%s>\'s password', username)
+
         user = User.query.filter_by(username=username).first()
-        log.debug(user)
+
         if user is None or not user.check_password(old_password):
             log.debug('Invalid username or password')
             return {'error': 'Invalid phone num or password'}

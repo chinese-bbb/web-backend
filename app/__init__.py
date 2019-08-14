@@ -66,10 +66,10 @@ def define_global_interception(app):
     @app.after_request
     def after_request(response):
         log.info(
-            '%s %s %s %s %s',
+            '%s %s %s %s %s -',
             request.remote_addr,
-            request.method,
             request.scheme,
+            request.method,
             request.full_path,
             response.status,
         )

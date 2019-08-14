@@ -38,7 +38,7 @@ class PhoneExist(MethodView):
     def get(self, phone_num):
         user = User.query.filter_by(username=phone_num).first()
 
-        log.debug(user)
+        log.debug('checking if user <%s> exists', phone_num)
 
         if user is None:
             try:
@@ -62,8 +62,10 @@ class Login(MethodView):
         username = args['phone_num']
         password = args['password']
 
+        log.debug('logging in user: %s', username)
+
         user = User.query.filter_by(username=username).first()
-        log.debug(user)
+
         if user is None:
             try:
                 result = phonenumbers.parse(username, 'CN')
@@ -91,6 +93,7 @@ class Logout(MethodView):
         """
         Log out.
         """
+        log.debug('logging out user: %s', session['user_id'])
         logout_user()
         return {'state': 'Success'}
 
@@ -110,6 +113,8 @@ class Register(MethodView):
         self._check_cookie_phone_allow()
         data = args
         username = data['phone_num']
+
+        log.debug('trying to register user <%s>', username)
 
         user = User.query.filter_by(username=username).first()
 
@@ -158,6 +163,7 @@ class ResetPassword(MethodView):
         new_password = args['new_password']
 
         user = User.query.filter_by(username=username).first()
+        log.debug('trying to reset user <%s>\'s password', username)
 
         if user is None:
             try:

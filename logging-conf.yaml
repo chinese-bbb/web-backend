@@ -38,12 +38,12 @@ handlers:
     backupCount: 5
 
 loggers:
-  sampleLogger:
-    level: DEBUG
-    handlers: [console]
-    propagate: no
   werkzeug:
-    level: DEBUG
+    level: ERROR
+    handlers: [console]
+  botocore:
+    level: INFO
+    handlers: [console]
 
 root:
   level: DEBUG
