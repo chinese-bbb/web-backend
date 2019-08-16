@@ -156,7 +156,7 @@ class ComplaintAll(MethodView):
     @login_required(role="admin")
     @bp.response(ComplaintResponseSchema(many=True))
     def get(self):
-        """get latest 5 complaints order by complaint_time."""
+        """get all complaints being audited."""
 
         res = complaintDAO.getAllAuditingComplaint()
         return res
