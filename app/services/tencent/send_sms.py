@@ -24,7 +24,6 @@ def send_message(mobile_number, country_code, random_num):
     sms_sign = '腾讯云'  # NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是一个示例，真实的签名需要在短信控制台申请。
 
     from qcloudsms_py import SmsSingleSender
-    from qcloudsms_py.httpclient import HTTPError
 
     ssender = SmsSingleSender(appid, appkey)
     params = [
@@ -41,10 +40,8 @@ def send_message(mobile_number, country_code, random_num):
             extend='',
             ext='',
         )  # 签名参数未提供或者为空时，会使用默认签名发送短信
-    except HTTPError as e:
-        log.debug(e)
     except Exception as e:
-        log.debug(e)
+        raise e
 
-    log.debug(result)
+    log.debug('sms send result', result)
     return result
