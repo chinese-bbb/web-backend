@@ -82,3 +82,20 @@ class ComplaintDAO(object):
             return complaints
         else:
             return []
+
+    def getAllAuditingComplaint(self):
+        complaints = Complaint.query.filter_by(audit_status="auditing")
+        if complaints:
+            return complaints
+        else:
+            return []
+
+    def changeComplaintStatus(self, complaint_id, audit_status):
+
+        complaint = Complaint.query.filter_by(id=complaint_id).first()
+        if not complaint:
+            abort(404, "Complaint {} doesn't exist".format(complaint_id))
+
+        complaint.audit_status = audit_status
+        db.session.commit()
+        return complaint

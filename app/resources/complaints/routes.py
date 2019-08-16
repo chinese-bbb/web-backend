@@ -9,6 +9,7 @@ from .schemas import ComplaintByUserParameters
 from .schemas import ComplaintResponseSchema
 from .schemas import ComplaintSchema
 from .schemas import LastNComplaintsParameters
+from .schemas import changeAuditStatusParameters
 from .services import ComplaintDAO
 from flask_rest_api import Blueprint
 
@@ -39,6 +40,7 @@ class Complaint(MethodView):
         data['user_id'] = user_id
         data['allow_contact_by_merchant'] = True
         data['complaint_status'] = 'initialized'
+        data['audit_status'] = 'auditing'
 
         # TODO: check whether merchant_id exists or not
         res = complaintDAO.create(data)
@@ -148,3 +150,27 @@ class ComplaintById(MethodView):
             return '', 204
         else:
             return {'state': 'delete unsuccessful'}
+
+@bp.route('/allAuditing')
+class ComplaintAll(MethodView):
+    @login_required(role="admin")
+    @bp.response(ComplaintResponseSchema(many=True))
+    def get(self):
+        """get latest 5 complaints order by complaint_time."""
+
+        res = complaintDAO.getAllAuditingComplaint()
+        return res
+
+
+@bp.route('/changeAuditStatus')
+class ComplaintChangeStatus(MethodView):
+    @bp.arguments(changeAuditStatusParameters)
+    @bp.response(ComplaintResponseSchema)
+    @login_required(role="admin")
+    def put(self, args):
+        """change Complaint audit_type."""
+        audit_status = args['audit_status']
+        id = args['complaint_id']
+
+        res = complaintDAO.changeComplaintStatus(id, audit_status)
+        return res, 200

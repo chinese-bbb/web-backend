@@ -26,6 +26,12 @@ class EnumComplaintState(Enum):
     resolved = 'resolved'
 
 
+class EnumAuditState(Enum):
+    auditing = 'auditing'
+    approved = 'approved'
+    rejected = 'rejected'
+
+
 class Complaint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     merchant_id = db.Column(db.Integer, index=True)
@@ -33,6 +39,7 @@ class Complaint(db.Model):
     expected_solution_body = db.Column(db.String(20000))
     complain_type = db.Column(db.Enum(EnumComplaintType))
     complaint_status = db.Column(db.Enum(EnumComplaintState))
+    audit_status = db.Column(db.Enum(EnumAuditState))
     complain_timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     if_negotiated_by_merchant = db.Column(db.Boolean(), default=False)

@@ -17,4 +17,6 @@ ALTER TABLE user ADD urole varchar(140) DEFAULT 'normal';
 update user set urole = 'admin' where username = '13333333333';
 update user set sex = 'male' where sex = 'Male'
 
+# 4. add audit_status column to complaint table
+ALTER TABLE complaint ADD audit_status varchar(140) DEFAULT 'approved';
 
