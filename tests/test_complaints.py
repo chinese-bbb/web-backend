@@ -12,12 +12,19 @@ from app.resources.complaints.models import Complaint
         ('byMerchant', 'merchant_id=1'),
         ('byType', 'complaint_type=warranty'),
         ('last', 'n=5'),
-        ('all', ''),
     ),
 )
 def test_fetch_complaints(client, auth, by_type, query):
     auth.login()
     response = client.get('/api/complaints/{}?{}'.format(by_type, query))
+    data = json.loads(response.data)
+    assert response.status_code == 200
+    assert len(data) == 1
+
+
+def test_fetch_all_complaints(client, auth):
+    auth.login('13344445555', 'Abcd3333')
+    response = client.get('/api/complaints/all')
     data = json.loads(response.data)
     assert response.status_code == 200
     assert len(data) == 1
