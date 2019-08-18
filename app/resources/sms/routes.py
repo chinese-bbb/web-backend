@@ -54,7 +54,7 @@ class ValidateSmsCode(MethodView):
         sid = self._check_cookie_sid()
 
         if messageDict[sid] != v_code:
-            return {'error': 'verification code is not correct'}, 401
+            return {'error': 'verification code is not correct'}, 422
 
         resp = make_response({'state': 'Success'})
         resp.delete_cookie('sid')

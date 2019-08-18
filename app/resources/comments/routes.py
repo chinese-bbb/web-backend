@@ -33,7 +33,7 @@ class Comment(MethodView):
         if res == 'OK':
             return {'state': 'Success'}
         else:
-            return {'state': 'failed creating comment'}, 401
+            return {'state': 'failed creating comment'}, 422
 
 
 @bp.route('/byComplaint/<int:id>')
