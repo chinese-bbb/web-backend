@@ -37,16 +37,21 @@ class Config:
     if SQLALCHEMY_DATABASE_URI:
         log.info('Database url:' + SQLALCHEMY_DATABASE_URI)
 
+    # upload file folders
     WORKING_FOLDER = os.environ.get('WORKING_FOLDER')
     INVOICE_FOLDER = 'Invoices'
     EVIDENCE_FOLDER = 'Evidences'
     ID_FOLDER = 'Id'
 
+    # cookies related
     if os.environ.get('REMEMBER_COOKIE_DOMAIN'):
         REMEMBER_COOKIE_DOMAIN = os.environ.get('REMEMBER_COOKIE_DOMAIN')
 
     if os.environ.get('SESSION_COOKIE_DOMAIN'):
         SESSION_COOKIE_DOMAIN = os.environ.get('SESSION_COOKIE_DOMAIN')
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
 
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')

@@ -3,6 +3,7 @@ import random
 
 from flask import abort
 from flask import after_this_request
+from flask import make_response
 from flask import request
 from flask.views import MethodView
 
@@ -32,7 +33,13 @@ class RequestSmsCode(MethodView):
         sid = msg['sid']
         messageDict[sid] = str(rand_num)
         log.debug(rand_num)
-        return {'state': 'Success'}, 200, {'Set-Cookie': 'sid=' + sid}
+
+        resp = make_response({'state': 'Success'})
+        resp.set_cookie(
+            'sid', sid, secure=True, httponly=True, samesite='LAX', max_age=1800
+        )
+
+        return resp
 
 
 @bp.route('/validate')
@@ -48,7 +55,10 @@ class ValidateSmsCode(MethodView):
 
         if messageDict[sid] != v_code:
             return {'error': 'verification code is not correct'}, 401
-        return {'state': 'Success'}
+
+        resp = make_response({'state': 'Success'})
+        resp.delete_cookie('sid')
+        return resp
 
     def _check_cookie_sid(self):
         if request.cookies.get('sid') is None:

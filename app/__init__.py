@@ -82,4 +82,10 @@ def define_global_interception(app):
             request.full_path,
             response.status,
         )
+        if 'users/me' in request.url:
+            data = app.open_session(request)
+            app.logger.debug(
+                'session & cookies: %s',
+                json.dumps({**data, **request.cookies}, indent=4),
+            )
         return response

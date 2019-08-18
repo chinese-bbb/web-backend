@@ -95,6 +95,7 @@ class Logout(MethodView):
         """
         log.debug('logging out user: %s', session['user_id'])
         logout_user()
+        session.clear()
         return {'state': 'Success'}
 
 
