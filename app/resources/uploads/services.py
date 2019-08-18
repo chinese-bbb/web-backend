@@ -19,7 +19,7 @@ def save_temp_file(upload_type, user_id, file: FileStorage):
     file_format = file.mimetype.split('/')[1]
     file_path = '%s%s' % (destination, str(int(time.time())) + '.' + file_format)
 
-    log.debug(file_path)
+    log.debug('cached file path:', file_path)
     file.save(file_path)
 
     return file_path

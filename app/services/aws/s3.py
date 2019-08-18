@@ -51,7 +51,7 @@ class AmazonS3(object):
                 file_url, Config.AWS_S3_BUCKET, sub_folder + '/' + object_name
             )
             # todo: clean uploaded file in working folder
-            log.debug(response)
+            log.debug('s3 upload response: %s', response)
         except ClientError as e:
             log.debug(e)
         else:

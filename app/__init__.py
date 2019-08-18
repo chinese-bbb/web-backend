@@ -1,4 +1,4 @@
-import logging
+import json
 import traceback
 from http import HTTPStatus
 
@@ -47,12 +47,10 @@ def create_app(app_name, config_or_path=None, **kwargs):
 
 
 def define_global_interception(app):
-    log = logging.getLogger(__name__)
-
     @app.errorhandler(Exception)
     def handle_global_exception(e):
         tb = traceback.format_exc()
-        log.error(
+        app.logger.error(
             '%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s',
             request.remote_addr,
             request.method,
@@ -63,9 +61,20 @@ def define_global_interception(app):
 
         return 'oohs! something goes wrong', HTTPStatus.INTERNAL_SERVER_ERROR
 
+    @app.before_request
+    def before():
+        values = 'request values: '
+        if len(request.data) > 0:
+            data = json.loads(request.data)
+            for key in data.keys():
+                if 'password' in key:
+                    data[key] = '**********'
+            values += json.dumps(data)
+            app.logger.debug(values)
+
     @app.after_request
     def after_request(response):
-        log.info(
+        app.logger.info(
             '%s %s %s %s %s -',
             request.remote_addr,
             request.scheme,
