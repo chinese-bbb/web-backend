@@ -1,0 +1,20 @@
+1. do `eb ssh` into the ec2 machine;
+
+2.
+cd /home
+
+sudo mkdir wsgi
+
+3. scp app.db into ec2 (california eb environment)
+scp app.db ec2-user@54.183.115.83:~/
+
+4.
+cd /home
+
+sudo cp ec2-user/app.db wsgi/
+
+chown -R wsgi:wsgi wsgi
+
+5. (optionally) set up log folder
+
+mkdir -p /opt/python/log/flask_app/
