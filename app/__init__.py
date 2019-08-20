@@ -63,14 +63,12 @@ def define_global_interception(app):
 
     @app.before_request
     def before():
-        values = 'request values: '
         if len(request.data) > 0:
             data = json.loads(request.data)
             for key in data.keys():
                 if 'password' in key:
                     data[key] = '**********'
-            values += json.dumps(data)
-            app.logger.debug(values)
+            app.logger.debug('request values: %s', json.dumps(data, indent=4))
 
     @app.after_request
     def after_request(response):
@@ -82,6 +80,11 @@ def define_global_interception(app):
                 request.method,
                 request.full_path,
                 response.status,
+            )
+        if response.status_code == 422:
+            app.logger.debug(
+                'incorrect request reason: %s',
+                json.dumps(response.json or str(response.data), indent=4),
             )
         if 'users/me' in request.url:
             data = app.open_session(request)

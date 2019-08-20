@@ -15,7 +15,7 @@ class EnumComplaintType(Enum):
     contract = 'contract'
     shipping = 'shipping'
     infraction = 'infraction'
-    other = 'others'
+    other = 'other'
 
 
 class EnumComplaintState(Enum):
