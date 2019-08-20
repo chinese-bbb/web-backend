@@ -74,14 +74,15 @@ def define_global_interception(app):
 
     @app.after_request
     def after_request(response):
-        app.logger.info(
-            '%s %s %s %s %s -',
-            request.remote_addr,
-            request.scheme,
-            request.method,
-            request.full_path,
-            response.status,
-        )
+        if request.endpoint != 'home.home':
+            app.logger.info(
+                '%s %s %s %s %s -',
+                request.remote_addr,
+                request.scheme,
+                request.method,
+                request.full_path,
+                response.status,
+            )
         if 'users/me' in request.url:
             data = app.open_session(request)
             app.logger.debug(
