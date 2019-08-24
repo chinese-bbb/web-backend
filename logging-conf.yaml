@@ -39,8 +39,8 @@ handlers:
 
 loggers:
   werkzeug:
-    level: ERROR
-    handlers: [console]
+    level: INFO
+    handlers: [full, info]
   botocore:
     level: INFO
     handlers: [console]

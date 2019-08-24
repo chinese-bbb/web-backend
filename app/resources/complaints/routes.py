@@ -126,7 +126,10 @@ class ComplaintAll(MethodView):
         return res
 
 
-@bp.route('/<int:id>')
+@bp.route(
+    '/<int:id>',
+    parameters=[{'name': 'id', 'in': 'path', 'description': 'complaint id'}],
+)
 class ComplaintById(MethodView):
     @login_required(role='ANY')
     @bp.response(ComplaintResponseSchema())
