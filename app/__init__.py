@@ -43,7 +43,19 @@ def create_app(app_name, config_or_path=None, **kwargs):
 
     define_global_interception(app)
 
+    appWsgiProxyFix(app)
+
     return app
+
+
+def appWsgiProxyFix(app):
+    """
+    see https://flask.palletsprojects.com/en/1.0.x/deploying/wsgi-
+    standalone/#proxy-setups.
+    """
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 def define_global_interception(app):
