@@ -19,4 +19,3 @@ update user set sex = 'male' where sex = 'Male'
 
 # 4. add audit_status column to complaint table
 ALTER TABLE complaint ADD audit_status varchar(140) DEFAULT 'approved';
-

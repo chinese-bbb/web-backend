@@ -84,7 +84,7 @@ class ComplaintDAO(object):
             return []
 
     def getAllAuditingComplaint(self):
-        complaints = Complaint.query.filter_by(audit_status="auditing")
+        complaints = Complaint.query.filter_by(audit_status='auditing')
         if complaints:
             return complaints
         else:

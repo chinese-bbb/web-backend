@@ -4,9 +4,9 @@ from marshmallow import pre_load
 from marshmallow import Schema
 
 from .models import Complaint
+from .models import EnumAuditState
 from .models import EnumComplaintState
 from .models import EnumComplaintType
-from .models import EnumAuditState
 from app.models.enum_field import EnumField
 from app.resources.users.schemas import UserSchema
 
@@ -97,6 +97,9 @@ class ComplaintByTypeParameters(Schema):
 class LastNComplaintsParameters(Schema):
     n = fields.Int(required=True, description='latest `n` pieces of complaints')
 
+
 class changeAuditStatusParameters(Schema):
-    audit_status = fields.String(required=True, description='audit status to be replaced.')
+    audit_status = fields.String(
+        required=True, description='audit status to be replaced.'
+    )
     complaint_id = fields.Int(required=True, description='complaint_id')

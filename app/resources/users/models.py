@@ -23,7 +23,7 @@ class User(UserMixin, db.Model):
     minority = db.Column(db.String(120))
     account_active = db.Column(db.Boolean())
     first_name = db.Column(db.String(120))
-    urole = db.Column(db.String(140), default="normal")
+    urole = db.Column(db.String(140), default='normal')
     last_name = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
 

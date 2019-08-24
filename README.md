@@ -78,4 +78,3 @@ You can even [report a bug or request a feature](https://github.com/chinese-bbb/
 ## License
 
 This software is licensed under MIT license, a copy of which can be found in [LICENSE.md](./LICENSE.md)
-

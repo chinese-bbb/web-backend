@@ -4,4 +4,3 @@
 
 Open a new terminal interface, and simply run:
 `coverage run -m pytest tests`
-
