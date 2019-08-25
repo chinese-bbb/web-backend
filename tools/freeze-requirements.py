@@ -27,4 +27,5 @@ else:
 
 process.stdin.write('pip freeze > requirements.txt\n')
 process.stdin.write('git add requirements.txt\n')
+process.stdin.write('deactivate')
 process.stdin.close()
