@@ -47,8 +47,8 @@ NOTE: the swagger docs is at http://localhost:5000/docs/swagger
 - [ ] use `argon2` for password hashing
 - [ ] normalize response envelop format
 - [ ] normalize response status code and business status
-- [ ] normalize models validation
-- [ ] improve logging for each resources
+- [x] normalize models validation
+- [x] improve logging for each resources
 - [ ] use https://github.com/dtan4/terraforming or https://github.com/GoogleCloudPlatform/terraformer to convert existing resources config to terraform style.
 - [ ] more secure register flow and reset password flow
 
