@@ -80,6 +80,7 @@ repos:
     hooks:
       - id: freeze-requirements
         name: Freeze Requirements
+        files: 'none'
         entry: python ./tools/freeze-requirements.py
         language: system
         always_run: true
