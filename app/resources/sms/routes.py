@@ -58,7 +58,7 @@ class ValidateSmsCode(MethodView):
         sid = self._check_cookie_sid()
 
         value_from_redis = redis_client.get(sid).decode('utf-8')
-        print('redis: ' + value_from_redis)
+        log.debug('From cookie, sid: %s, redis value: %s', sid, value_from_redis)
         if value_from_redis != v_code:
             return {'error': 'verification code is not correct'}, 422
 
