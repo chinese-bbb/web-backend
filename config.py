@@ -61,6 +61,8 @@ class Config:
     TENCENTCLOUD_SECRET_ID = os.environ.get('TENCENTCLOUD_SECRET_ID')
     TENCENTCLOUD_SECRET_KEY = os.environ.get('TENCENTCLOUD_SECRET_KEY')
 
+    REDIS_ADDR = os.environ.get('REDIS_ADDR')
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

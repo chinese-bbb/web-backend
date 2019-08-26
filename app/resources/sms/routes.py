@@ -1,6 +1,7 @@
 import logging
 import random
 
+import redis
 from flask import abort
 from flask import after_this_request
 from flask import make_response
@@ -10,8 +11,8 @@ from flask.views import MethodView
 from .schemas import SmsRequestParameters
 from .schemas import ValidateSmsCodeParameters
 from app.services.tencent.send_sms import send_message
+from config import Config
 from flask_rest_api import Blueprint
-
 
 log = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ bp = Blueprint('SMS', 'SMS', url_prefix='/auth/sms', description='SMS Related AP
 
 # Dictionary to store sms verification code
 messageDict = {}
+redis_client = redis.Redis(host=Config.REDIS_ADDR, port=6379)
 
 
 @bp.route('/request')
@@ -31,8 +33,10 @@ class RequestSmsCode(MethodView):
         rand_num = random.randint(1000, 9999)
         msg = send_message(args['national_number'], args['country_code'], rand_num)
         sid = msg['sid']
-        messageDict[sid] = str(rand_num)
-        log.debug(rand_num)
+
+        # Expiring in 300 seconds
+        redis_client.set(sid, str(rand_num), ex=300)
+        log.debug('phone_num: %s, code: %d', args['national_number'], rand_num)
 
         resp = make_response({'state': 'Success'})
         resp.set_cookie(
@@ -53,7 +57,9 @@ class ValidateSmsCode(MethodView):
 
         sid = self._check_cookie_sid()
 
-        if messageDict[sid] != v_code:
+        value_from_redis = redis_client.get(sid).decode('utf-8')
+        print('redis: ' + value_from_redis)
+        if value_from_redis != v_code:
             return {'error': 'verification code is not correct'}, 422
 
         resp = make_response({'state': 'Success'})
