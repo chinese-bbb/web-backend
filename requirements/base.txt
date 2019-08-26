@@ -8,7 +8,6 @@ flask-marshmallow~=0.10.1
 flask-migrate~=2.5.0
 flask-sqlalchemy~=2.4.0
 flask~=1.1.0
-gunicorn~=19.9.0
 marshmallow==3.0.0rc9
 marshmallow-enum~=1.4.1
 marshmallow-jsonschema~=0.6.0
