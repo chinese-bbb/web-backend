@@ -7,9 +7,16 @@ Hello and welcome to the GitHub repo for Huxin! This houses all of the backend s
 
 Python3 is the only accepted python version for now.
 
-**Preparation Step:** Create Environment variables like `QICHACHA_APPKEY` or `TENCENT_APPKEY`(or define them in `.env` file)
+**Preparation Step:**
+* Create Environment variables like `QICHACHA_APPKEY` or `TENCENT_APPKEY`(or define them in `.env` file)
 
+**NOTE**: we use secure cookies, so we must generate self-signed certs for ca and server, and run with server cert and key.
+
+For Linux:
 ```sh
+cd ./certs
+# generate the certs, then add rootca.crt and server.crt to the system certificate manager
+./gen.sh
 pip install --user virtualenv pre-commit
 virtualenv env
 pip install -r requirements/base.txt
@@ -17,9 +24,15 @@ source env/bin/activate
 pre-commit install -f --install-hooks
 
 # you could set the var in `.env` to skip `FLASK_APP` declaration
-FLASK_APP="application.py" python -m flask run #(use -p to specify binding port)
+FLASK_APP="application.py" python -m flask run --cert certs/server.crt --key certs/server.key --host localhost #(use -p to specify binding port)
 ```
-Or,
+
+For Windows:
+```git bash
+cd ./certs
+# generate the certs, then add rootca.crt and server.crt to the system certificate manager
+./gen.sh
+```
 ```powershell
 pip install --user virtualenv
 virtualenv env
@@ -28,7 +41,7 @@ pip install -r requirements.txt
 pre-commit install -f --install-hooks
 
 $env:FLASK_APP="application.py" # or set the var in `.env`
-python -m flask run #(use -p to specify binding port)
+python -m flask run --cert certs/server.crt --key certs/server.key --host localhost #(use -p to specify binding port)
 ```
 
 NOTE: the swagger docs is at http://localhost:5000/docs/swagger

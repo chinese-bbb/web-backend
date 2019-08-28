@@ -104,7 +104,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-certs
 
 # Spyder project settings
 .spyderproject
@@ -136,13 +135,11 @@ dmypy.json
 
 # aws settings
 
-# Local Test files
-Complaint_Files/
-cookies.txt
-frequently_used_api.txt
-test_pic.jpg
-header.txt
-sql_frequent.txt
+# Custom files
 logs
 .temp
 *.db
+certs/server.crt
+certs/server.key
+certs/server.csr
+certs/rootca*
