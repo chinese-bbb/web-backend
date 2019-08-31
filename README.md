@@ -14,14 +14,7 @@ Python3 is the only accepted python version for now.
 
 For Linux:
 ```sh
-cd ./certs
-# generate the certs, then add rootca.crt and server.crt to the system certificate manager
-./gen.sh
-pip install --user virtualenv
-virtualenv env
-source env/bin/activate
-pip install -r requirements/base.txt
-pre-commit install -f --install-hooks
+./tools/setup.sh
 
 # you could set the var in `.env` to skip `FLASK_APP` declaration
 FLASK_APP="application.py" python -m flask run --cert certs/server.crt --key certs/server.key --host localhost #(use -p to specify binding port)
