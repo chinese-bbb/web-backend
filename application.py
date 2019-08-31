@@ -39,6 +39,11 @@ try:
 except Exception as e:
     log.exception(e)
 
+if os.getenv('FLASK_ENV') == 'development':
+    from .commands import register_commands
+
+    register_commands(application)
+
 
 # NOTE: do not place app creation code inside main clause,
 # elastic beanstalk will not run the file as main

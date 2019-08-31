@@ -32,7 +32,7 @@ Done! The database should have evolved schema.
 1. Find public DNS address first from ec2 dashboard on aws.com
    https://us-east-2.console.aws.amazon.com/ec2/v2/home?region=us-east-2#Instances:sort=dnsName
 
-2. Do scp using -i XXXXX.pem
+2. Do scp using `-i XXXXX.pem`
 
 ```sh
 scp -i XXXX.pem ec2-user@ec2XXXXXXXXX.us-east-2.compute.amazonaws.com:/opt/python/current/app/XXXXXX
