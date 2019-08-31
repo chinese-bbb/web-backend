@@ -3,7 +3,7 @@
 Hello and welcome to the GitHub repo for Huxin! This houses all of the backend source code at [huxingongxin.com](https://huxingongxin.com). Huxin's mission is to rebuild the impartial commercial rating system and allow customers safeguard rights by a technical approach. All the latest tech details will be published. The backend infrastructure is hosted in AWS. This github site welcomes contributions from the community in a variety of ways! Feel free to suggest changes!
 
 
-## Install
+## Get Started
 
 Python3 is the only accepted python version for now.
 
@@ -17,10 +17,10 @@ For Linux:
 cd ./certs
 # generate the certs, then add rootca.crt and server.crt to the system certificate manager
 ./gen.sh
-pip install --user virtualenv pre-commit
+pip install --user virtualenv
 virtualenv env
-pip install -r requirements/base.txt
 source env/bin/activate
+pip install -r requirements/base.txt
 pre-commit install -f --install-hooks
 
 # you could set the var in `.env` to skip `FLASK_APP` declaration
@@ -36,8 +36,8 @@ cd ./certs
 ```powershell
 pip install --user virtualenv
 virtualenv env
-pip install -r requirements.txt
 ./env/Scripts/activate
+pip install -r requirements.txt
 pre-commit install -f --install-hooks
 
 $env:FLASK_APP="application.py" # or set the var in `.env`
