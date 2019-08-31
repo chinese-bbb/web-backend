@@ -7,7 +7,7 @@ repos:
         args:
         - --skip-string-normalization
   - repo: git@github.com:pre-commit/pre-commit-hooks
-    rev: v2.2.3
+    rev: v2.3.0
     hooks:
       - id: check-docstring-first
       - id: trailing-whitespace
@@ -28,7 +28,7 @@ repos:
       #- id: pretty-format-json
       #- id: sort-simple-yaml
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.7.7
+    rev: 3.7.8
     hooks:
       - id: flake8
         args:
@@ -45,7 +45,7 @@ repos:
           - --aggressive
           - --ignore=E203,E721
   - repo: git@github.com:humitos/mirrors-autoflake.git
-    rev: v1.2
+    rev: v1.3
     hooks:
       - id: autoflake
         args:
@@ -55,13 +55,13 @@ repos:
             "--remove-unused-variable",
           ]
   - repo: git@github.com:asottile/reorder_python_imports
-    rev: v1.3.5
+    rev: v1.6.1
     hooks:
       - id: reorder-python-imports
         args:
           - --py37-plus
   - repo: git@github.com:myint/docformatter.git
-    rev: v1.1
+    rev: v1.3
     hooks:
       - id: docformatter
         args:
