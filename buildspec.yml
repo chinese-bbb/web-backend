@@ -11,8 +11,7 @@ phases:
       - mv .env_template .env
       - pytest flask_rest_api/tests
       - sed -i '$ d' setup.cfg # exclude flask_rest_api from coverage report
-      - coverage run -m pytest tests
-      - coverage report
+      - pytest --cov-report term:skip-covered --cov=./app
       - echo $CODEBUILD_RESOLVED_SOURCE_VERSION > version.txt
 artifacts:
   files:

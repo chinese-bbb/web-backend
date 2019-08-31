@@ -1,5 +1,5 @@
 autopep8
-coverage
 pre-commit
 pylint
 pytest
+pytest-cov
