@@ -40,7 +40,7 @@ except Exception as e:
     log.exception(e)
 
 if os.getenv('FLASK_ENV') == 'development':
-    from .commands import register_commands
+    from commands import register_commands
 
     register_commands(application)
 
