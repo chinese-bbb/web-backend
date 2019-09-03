@@ -25,14 +25,14 @@ CREATE TABLE IF NOT EXISTS `merchant_query_raw`
 (
   `id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `keyword` VARCHAR(140),
-  `storage` TEXT COMMENT '企查查查询结果json序列化'
+  `storage` JSON COMMENT '企查查查询结果json序列化'
 );
 
 CREATE TABLE IF NOT EXISTS `fuzzy_search_raw`
 (
   `id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `keyword` VARCHAR(140),
-  `storage` TEXT COMMENT '企查查查询结果json序列化',
+  `storage` JSON COMMENT '企查查查询结果json序列化',
   `pageIndex` INTEGER,
   `totalPage` INTEGER
 );
