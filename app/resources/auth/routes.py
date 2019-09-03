@@ -33,8 +33,6 @@ class PhoneExist(MethodView):
     Check if phone number is registered.
     """
 
-    @bp.response(code=200)
-    @bp.response(code=404, description='Validation Error')
     def get(self, phone_num):
         user = User.query.filter_by(username=phone_num).first()
 
