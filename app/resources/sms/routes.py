@@ -4,6 +4,7 @@ import random
 import redis
 from flask import abort
 from flask import after_this_request
+from flask import current_app
 from flask import make_response
 from flask import request
 from flask.views import MethodView
@@ -31,7 +32,12 @@ class RequestSmsCode(MethodView):
         Get verification code for a phone number.
         """
         rand_num = random.randint(1000, 9999)
-        msg = send_message(args['national_number'], args['country_code'], rand_num)
+        msg = send_message(
+            args['national_number'],
+            args['country_code'],
+            rand_num,
+            current_app.config['DEBUG'],
+        )
         sid = msg['sid']
 
         # Expiring in 300 seconds
