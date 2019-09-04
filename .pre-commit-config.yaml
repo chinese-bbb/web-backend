@@ -72,16 +72,16 @@ repos:
             "--pre-summary-newline",
             "--make-summary-multi-line",
           ]
-#  - repo: meta
-#    hooks:
-#      - id: check-hooks-apply
-#      - id: check-useless-excludes
-#  - repo: local
-#    hooks:
-#      - id: freeze-requirements
-#        name: Freeze Requirements
-#        files: 'none'
-#        entry: python ./tools/freeze-requirements.py
-#        language: system
-#        always_run: true
-#        verbose: true
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+  - repo: local
+    hooks:
+      - id: freeze-requirements
+        name: Freeze Requirements
+        files: 'none'
+        entry: python ./tools/freeze-requirements.py
+        language: system
+        always_run: true
+        verbose: true
