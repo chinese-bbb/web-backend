@@ -28,4 +28,6 @@ process.stdin.write('pip freeze > requirements.txt\n')
 process.stdin.write('git add requirements.txt\n')
 process.stdin.write('deactivate')
 process.stdin.close()
-process.stdout.read()
+
+if os.name != 'nt':
+    process.stdout.read()

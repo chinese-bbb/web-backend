@@ -13,5 +13,5 @@ fi
 sqlite3 $db_path .schema > schema.sql
 sqlite3 $db_path .dump > dump.sql
 grep -vx -f schema.sql dump.sql > data.sql
-python `dirname $0`/sqlite3-to-mysql.py data.sql > corrected-data.sql
+python3 `dirname $0`/sqlite3-to-mysql.py data.sql > corrected-data.sql
 #rm schema.sql dump.sql data.sql
