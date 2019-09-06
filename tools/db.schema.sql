@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `complaint`
   `evidence_files` VARCHAR(2000),
   `merchant_id` INTEGER,
   `complaint_status` VARCHAR(140),
-  `audit_status` VARCHAR(140),
+  `audit_status` VARCHAR(140)
 );
 
 CREATE TABLE IF NOT EXISTS `comment`
