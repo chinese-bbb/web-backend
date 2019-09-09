@@ -5,7 +5,7 @@ phases:
       python: 3.7
     commands:
       - echo "Installing requirements"
-      - pip install -r -q requirements.txt
+      - pip install -r requirements.txt -q
   build:
     commands:
       - mv .env_template .env
