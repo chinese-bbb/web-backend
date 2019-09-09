@@ -16,17 +16,6 @@ Normally, developer should use `pip install -r requirements/base.txt` on each fr
 > NOTE: each time someone submitting a commit, there will be a pre-commit hook to update `requirements.txt` by automation.
 > Contributors shouldn't update `requirements.txt` manually. **Be careful if you install/change dependencies but forget to update the base/dev requirements.**
 
-### Steps to evolve database schema
-
-1. Change Models which manages the source of truth schema. E.g, app/models.py
-
-2. `flask db migrate -m "posts table"`
-
-3. `flask db upgrade`
-
-Done! The database should have evolved schema.
-
-
 ### Steps to download a file from Elastic beanstalk (an EC2 instance)
 
 1. Find public DNS address first from ec2 dashboard on aws.com

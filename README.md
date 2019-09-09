@@ -67,6 +67,9 @@ see [development.md](./docs/development.md)
 
 see [deployment.md](./docs/deployment.md)
 
+## Mysql Management
+
+see [deployment.md](./docs/db.md)
 
 ## Testing
 

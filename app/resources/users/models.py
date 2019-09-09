@@ -1,3 +1,4 @@
+# from flask_user import UserMixin
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
@@ -30,6 +31,11 @@ class User(UserMixin, db.Model):
     complaints = db.relationship(Complaint, backref='User')
     comments = db.relationship(Comment, backref='User')
 
+    # Define the relationship to Role via UserRoles
+    # flask_user required schema change
+    roles = db.relationship('Role', secondary='user_roles')
+    password = db.Column(db.String(128))
+
     def __init__(self, username, sex, registered_date):
         self.username = username
         self.sex = sex
@@ -46,6 +52,21 @@ class User(UserMixin, db.Model):
 
     def get_urole(self):
         return self.urole
+
+
+# Define the Role data-model
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+
+# Define the UserRoles association table
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 @login.user_loader
