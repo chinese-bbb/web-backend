@@ -1,7 +1,7 @@
 import logging
 
 from flask.views import MethodView
-from flask_login import current_user
+from flask_user import current_user
 from flask_user import login_required
 
 from .models import User

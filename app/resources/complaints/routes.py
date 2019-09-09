@@ -1,7 +1,7 @@
 import logging
 
-from flask import session
 from flask.views import MethodView
+from flask_user import current_user
 from flask_user import login_required
 from flask_user import roles_required
 
@@ -35,9 +35,8 @@ class Complaint(MethodView):
         """
         Create a Complaint.
         """
-        user_id = session['user_id']
+        data['user_id'] = current_user.id
 
-        data['user_id'] = user_id
         data['allow_contact_by_merchant'] = True
         data['complaint_status'] = 'initialized'
         data['audit_status'] = 'auditing'

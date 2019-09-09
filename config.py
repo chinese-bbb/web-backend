@@ -68,6 +68,7 @@ class Config:
     USER_AUTO_LOGIN_AFTER_REGISTER = True
     USER_ENABLE_EMAIL = False  # Disable email authentication
     USER_REQUIRE_RETYPE_PASSWORD = False  # Simplify register form
+    USER_LOGIN_URL = '/auth/customer/signin'
 
 
 class DevelopmentConfig(Config):

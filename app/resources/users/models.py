@@ -43,10 +43,10 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    def check_password(self, password_from_user):
+        return check_password_hash(self.password, password_from_user)
 
     def get_urole(self):
         return self.urole

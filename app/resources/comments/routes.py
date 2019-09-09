@@ -1,7 +1,7 @@
 import logging
 
-from flask import session
 from flask.views import MethodView
+from flask_user import current_user
 from flask_user import login_required
 
 from .schemas import CommentResponseSchema
@@ -26,9 +26,7 @@ class Comment(MethodView):
         """
         Create a Comment.
         """
-
-        user_id = session['user_id']
-        data['user_id'] = user_id
+        data['user_id'] = current_user.id
         res = commentDAO.create(data)
         if res == 'OK':
             return {'state': 'Success'}

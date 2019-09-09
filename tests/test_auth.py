@@ -11,7 +11,9 @@ def test_login(client, auth):
         # check that the user is loaded from the session
 
         assert response.status_code == 200
-        assert session['user_id'] == '1'
+        # env/lib/python3.7/site-packages/flask_user/user_mixin.py:27
+        # flask_user combine user_id and password and generate a randomnumber of 'user_id'
+        assert 'user_id' in session
 
 
 @pytest.mark.parametrize(
