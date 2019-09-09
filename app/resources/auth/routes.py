@@ -96,7 +96,10 @@ class Logout(MethodView):
         logout_user()
         session.clear()
         resp = make_response({'state': 'Success'})
-        resp.set_cookie('remember_token', expires=0)
+        resp.set_cookie(
+            'remember_token', '', secure=True, httponly=True, samesite='LAX', max_age=1
+        )
+        resp.delete_cookie('remember_token')
         return resp
 
 
