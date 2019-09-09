@@ -3,6 +3,7 @@ import logging
 
 import phonenumbers
 from flask import abort
+from flask import make_response
 from flask import request
 from flask import session
 from flask.views import MethodView
@@ -94,7 +95,9 @@ class Logout(MethodView):
         log.debug('logging out user: %s', session['user_id'])
         logout_user()
         session.clear()
-        return {'state': 'Success'}
+        resp = make_response({'state': 'Success'})
+        resp.set_cookie('remember_token', expires=0)
+        return resp
 
 
 @bp.route('/register')
