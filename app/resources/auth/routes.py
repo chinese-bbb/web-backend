@@ -6,9 +6,9 @@ from flask import abort
 from flask import request
 from flask import session
 from flask.views import MethodView
-from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
+from flask_user import login_required
 from phonenumbers import NumberParseException
 
 from .schemas import CheckUserIdentificationParameters

@@ -2,6 +2,8 @@ import logging
 
 from flask import session
 from flask.views import MethodView
+from flask_user import login_required
+from flask_user import roles_required
 
 from .schemas import changeAuditStatusParameters
 from .schemas import ComplaintByMerchantParameters
@@ -11,7 +13,6 @@ from .schemas import ComplaintResponseSchema
 from .schemas import ComplaintSchema
 from .schemas import LastNComplaintsParameters
 from .services import ComplaintDAO
-from app.extensions.flask_login_role import login_required
 from flask_rest_api import Blueprint
 
 log = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ complaintDAO = ComplaintDAO()
 
 @bp.route('')
 class Complaint(MethodView):
-    @login_required(role='ANY')
+    @login_required
     @bp.arguments(ComplaintSchema)
     def post(self, data):
         """
@@ -54,7 +55,7 @@ class ComplaintByUser(MethodView):
     @bp.doc(description='get Complaint by username (phone_num)')
     @bp.arguments(ComplaintByUserParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required(role='ANY')
+    @login_required
     def get(self, args):
         """
         get Complaint by username  (phone_num)
@@ -70,7 +71,7 @@ class ComplaintByMerchant(MethodView):
     @bp.doc(description='get Complaint by merchant_id')
     @bp.arguments(ComplaintByMerchantParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required(role='ANY')
+    @login_required
     def get(self, args):
         """
         get Complaint by merchant_id (merchant_id)
@@ -86,7 +87,7 @@ class ComplaintByType(MethodView):
     @bp.doc(description='get Complaints by complaint type')
     @bp.arguments(ComplaintByTypeParameters, location='query')
     @bp.response(ComplaintResponseSchema(many=True))
-    @login_required(role='ANY')
+    @login_required
     def get(self, args):
         """
         get Complaint by complain_type.
@@ -114,7 +115,7 @@ class ComplaintLatest5(MethodView):
 
 @bp.route('/all')
 class ComplaintAll(MethodView):
-    @login_required(role='admin')
+    @roles_required('Admin')
     @bp.doc(description='get all complaints')
     @bp.response(ComplaintResponseSchema(many=True))
     def get(self):
@@ -131,7 +132,7 @@ class ComplaintAll(MethodView):
     parameters=[{'name': 'id', 'in': 'path', 'description': 'complaint id'}],
 )
 class ComplaintById(MethodView):
-    @login_required(role='ANY')
+    @login_required
     @bp.response(ComplaintResponseSchema())
     def get(self, id):
         """
@@ -140,7 +141,7 @@ class ComplaintById(MethodView):
         res = complaintDAO.get(id)
         return res
 
-    @login_required(role='ANY')
+    @login_required
     @bp.doc(description='delete a comment')
     def delete(self, id):
         """
@@ -155,7 +156,7 @@ class ComplaintById(MethodView):
 
 @bp.route('/allAuditing')
 class ComplaintAllAuditing(MethodView):
-    @login_required(role='admin')
+    @roles_required('Admin')
     @bp.response(ComplaintResponseSchema(many=True))
     def get(self):
         """
@@ -170,7 +171,7 @@ class ComplaintAllAuditing(MethodView):
 class ComplaintChangeStatus(MethodView):
     @bp.arguments(changeAuditStatusParameters)
     @bp.response(ComplaintResponseSchema)
-    @login_required(role='admin')
+    @roles_required('Admin')
     def put(self, args):
         """
         change Complaint audit_type.

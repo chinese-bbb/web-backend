@@ -64,6 +64,11 @@ class Config:
 
     REDIS_ADDR = os.environ.get('REDIS_ADDR')
 
+    # Flask-User settings
+    USER_AUTO_LOGIN_AFTER_REGISTER = True
+    USER_ENABLE_EMAIL = False  # Disable email authentication
+    USER_REQUIRE_RETYPE_PASSWORD = False  # Simplify register form
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

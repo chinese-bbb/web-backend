@@ -3,7 +3,7 @@ import logging
 from flask import current_app as app
 from flask import session
 from flask.views import MethodView
-from flask_login import login_required
+from flask_user import login_required
 
 from .schemas import FileUploadFormParameters
 from .services import save_temp_file

@@ -2,7 +2,7 @@ import logging
 
 from flask import session
 from flask.views import MethodView
-from flask_login import login_required
+from flask_user import login_required
 
 from .schemas import CommentResponseSchema
 from .schemas import CreateCommentParameters

@@ -1,10 +1,8 @@
-# from flask_user import UserMixin
-from flask_login import UserMixin
+from flask_user import UserMixin
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
 from app.extensions import db
-from app.extensions import login_manager as login
 from app.resources.auth.models import EnumGender
 from app.resources.comments.models import Comment
 from app.resources.complaints.models import Complaint
@@ -67,8 +65,3 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
-
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))

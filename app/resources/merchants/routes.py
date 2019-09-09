@@ -3,7 +3,7 @@ import logging
 
 from flask import abort
 from flask.views import MethodView
-from flask_login import login_required
+from flask_user import login_required
 
 from .models import FuzzySearchRaw
 from .models import MerchantQueryRaw
