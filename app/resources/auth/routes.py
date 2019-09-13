@@ -99,7 +99,9 @@ class Logout(MethodView):
         resp.set_cookie(
             'remember_token', '', secure=True, httponly=True, samesite='LAX', max_age=1
         )
-        resp.delete_cookie('remember_token')
+        # resp.delete_cookie('remember_token')
+        # for key in session.keys():
+        #     session.pop(key)
         return resp
 
 
