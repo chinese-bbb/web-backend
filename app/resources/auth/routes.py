@@ -94,10 +94,12 @@ class Logout(MethodView):
         """
         log.debug('logging out user: %s', session['user_id'])
         logout_user()
-        session.clear()
         resp = make_response({'state': 'Success'})
         resp.set_cookie(
             'remember_token', '', secure=True, httponly=True, samesite='LAX', max_age=1
+        )
+        resp.set_cookie(
+            'session', '', secure=True, httponly=True, samesite='LAX', max_age=1
         )
         # resp.delete_cookie('remember_token')
         # for key in session.keys():
