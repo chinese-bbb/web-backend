@@ -12,13 +12,27 @@ Python3 is the only accepted python version for now.
 
 **NOTE**: we use secure cookies, so we must generate self-signed certs for ca and server, and run with server cert and key.
 
-For Linux:
+For Linux or MAC:
+
+Mysql clinet is required to install in development environment. Please checkout [this link](https://stackoverflow.com/questions/25459386/mac-os-x-environmenterror-mysql-config-not-found) how to install Mysql and configure in Mac.
+
 ```sh
+pip install --user virtualenv
+virtualenv -p python3 env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+```sh
+chmod +x ./tools/setup.sh
 ./tools/setup.sh
 
-# you could set the var in `.env` to skip `FLASK_APP` declaration
-FLASK_APP="application.py" python -m flask run --cert certs/server.crt --key certs/server.key --host localhost #(use -p to specify binding port)
+cp .env_template .env
+
+python -m flask run --cert certs/server.crt --key certs/server.key --host localhost #(use -p to specify binding port)
 ```
+
+
 
 For Windows:
 ```git bash
@@ -26,6 +40,7 @@ cd ./certs
 # generate the certs, then add rootca.crt and server.crt to the system certificate manager
 ./gen.sh
 ```
+
 ```powershell
 pip install --user virtualenv
 virtualenv env
