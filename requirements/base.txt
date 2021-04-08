@@ -21,4 +21,4 @@ redis~=3.3.8
 requests~=2.22.0
 sqlalchemy-utils~=0.34.0
 tencentcloud-sdk-python~=3.0.71
-webargs~=5.4.0
+webargs~=5.5.3
