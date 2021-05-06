@@ -20,7 +20,7 @@ coverage==4.5.4
 cryptography==2.7
 docutils==0.15.2
 Flask==1.1.1
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
 flask-marshmallow==0.10.1
