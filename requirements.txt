@@ -36,7 +36,7 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 jmespath==0.9.4
 lazy-object-proxy==1.4.2
-Mako==1.1.0
+Mako==1.2.2
 MarkupSafe==1.1.1
 marshmallow==3.0.0rc9
 marshmallow-enum==1.4.1
